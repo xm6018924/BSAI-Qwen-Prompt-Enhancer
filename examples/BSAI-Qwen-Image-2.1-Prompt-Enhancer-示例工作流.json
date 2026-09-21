@@ -1,0 +1,780 @@
+{
+ "id": "bsai-qwen-2.1-prompt-enhancer-example",
+ "revision": 0,
+ "last_node_id": 12,
+ "last_link_id": 11,
+ "nodes": [
+  {
+   "id": 1,
+   "type": "CLIPLoader",
+   "pos": [
+    -1400,
+    -120
+   ],
+   "size": [
+    420,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "clip_name"
+     },
+     "link": null
+    },
+    {
+     "name": "type",
+     "type": "COMBO",
+     "widget": {
+      "name": "type"
+     },
+     "link": null
+    },
+    {
+     "name": "device",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "device"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "slot_index": 0,
+     "links": [
+      1
+     ]
+    }
+   ],
+   "title": "加载官方 PE 模型 (T2I)",
+   "properties": {
+    "Node name for S&R": "CLIPLoader"
+   },
+   "widgets_values": [
+    "qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot.safetensors",
+    "qwen_image",
+    "default"
+   ]
+  },
+  {
+   "id": 2,
+   "type": "BSAI_Qwen_Prompt_Enhancer",
+   "pos": [
+    -900,
+    -160
+   ],
+   "size": [
+    500,
+    560
+   ],
+   "flags": {},
+   "order": 1,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 1
+    }
+   ],
+   "outputs": [
+    {
+     "name": "ENHANCED_PROMPT",
+     "type": "STRING",
+     "slot_index": 0,
+     "links": []
+    },
+    {
+     "name": "WH_RATIO",
+     "type": "STRING",
+     "slot_index": 1,
+     "links": []
+    },
+    {
+     "name": "RATIO_FOLLOW",
+     "type": "STRING",
+     "slot_index": 2,
+     "links": []
+    },
+    {
+     "name": "RAW_OUTPUT",
+     "type": "STRING",
+     "slot_index": 3,
+     "links": []
+    },
+    {
+     "name": "THINKING",
+     "type": "STRING",
+     "slot_index": 4,
+     "links": []
+    },
+    {
+     "name": "RECOMMENDED_STEPS",
+     "type": "INT",
+     "slot_index": 5,
+     "links": []
+    },
+    {
+     "name": "RECOMMENDED_CFG",
+     "type": "FLOAT",
+     "slot_index": 6,
+     "links": []
+    },
+    {
+     "name": "RECOMMENDED_SAMPLER",
+     "type": "STRING",
+     "slot_index": 7,
+     "links": []
+    },
+    {
+     "name": "RECOMMENDED_SCHEDULER",
+     "type": "STRING",
+     "slot_index": 8,
+     "links": []
+    }
+   ],
+   "title": "BSAI Qwen Prompt Enhancer",
+   "properties": {
+    "Node name for S&R": "BSAI_Qwen_Prompt_Enhancer"
+   },
+   "widgets_values": [
+    "官方PE (本地 Qwen3.5-9B)",
+    "一个穿红裙的女孩站在樱花树下，手里拿着奶茶，傍晚阳光",
+    "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]",
+    "",
+    1.0,
+    0.95,
+    20,
+    1.0,
+    42,
+    8192,
+    "标准质量 20步/CFG3 (推荐, 7B原生)",
+    "auto",
+    0.0,
+    true,
+    "auto",
+    "<未发现 GGUF>",
+    "",
+    "auto（按模型名自动识别 Qwen3.8/Gemma4/GLM4.6 等全部支持模型）",
+    8192,
+    -1,
+    false,
+    true,
+    "https://dashscope.aliyuncs.com/compatible-mode/v1",
+    "",
+    "qwen3.5-vl-9b",
+    120
+   ]
+  },
+  {
+   "id": 3,
+   "type": "QwenImage21_Prompt_Template",
+   "pos": [
+    -900,
+    520
+   ],
+   "size": [
+    420,
+    110
+   ],
+   "flags": {},
+   "order": 2,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [
+    {
+     "name": "SYSTEM_PROMPT",
+     "type": "STRING",
+     "slot_index": 0,
+     "links": []
+    },
+    {
+     "name": "TEMPLATE_ID",
+     "type": "STRING",
+     "slot_index": 1,
+     "links": []
+    },
+    {
+     "name": "DESCRIPTION",
+     "type": "STRING",
+     "slot_index": 2,
+     "links": []
+    }
+   ],
+   "title": "Qwen Image 2.1 官方增强提示词模板",
+   "properties": {
+    "Node name for S&R": "QwenImage21_Prompt_Template"
+   },
+   "widgets_values": [
+    "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]",
+    ""
+   ]
+  },
+  {
+   "id": 4,
+   "type": "UNETLoader",
+   "pos": [
+    0,
+    -160
+   ],
+   "size": [
+    420,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "unet_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "unet_name"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "slot_index": 0,
+     "links": [
+      2
+     ]
+    }
+   ],
+   "title": "加载 Qwen-Image-2.1 扩散模型",
+   "properties": {
+    "Node name for S&R": "UNETLoader"
+   },
+   "widgets_values": [
+    "BSAI-Qwen-Image-2.1-bf16.safetensors",
+    "default"
+   ]
+  },
+  {
+   "id": 5,
+   "type": "CLIPLoader",
+   "pos": [
+    0,
+    40
+   ],
+   "size": [
+    420,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "clip_name"
+     },
+     "link": null
+    },
+    {
+     "name": "type",
+     "type": "COMBO",
+     "widget": {
+      "name": "type"
+     },
+     "link": null
+    },
+    {
+     "name": "device",
+     "shape": 7,
+     "type": "COMBO",
+     "widget": {
+      "name": "device"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "CLIP",
+     "type": "CLIP",
+     "slot_index": 0,
+     "links": [
+      4
+     ]
+    }
+   ],
+   "title": "加载文本编码器 (Qwen3-VL-8B)",
+   "properties": {
+    "Node name for S&R": "CLIPLoader"
+   },
+   "widgets_values": [
+    "BSAI-Qwen-Image-2.1-TE.safetensors",
+    "qwen_image",
+    "default"
+   ]
+  },
+  {
+   "id": 6,
+   "type": "VAELoader",
+   "pos": [
+    0,
+    240
+   ],
+   "size": [
+    420,
+    118
+   ],
+   "flags": {},
+   "order": 0,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "vae_name",
+     "type": "COMBO",
+     "widget": {
+      "name": "vae_name"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "VAE",
+     "type": "VAE",
+     "slot_index": 0,
+     "links": [
+      5,
+      6
+     ]
+    }
+   ],
+   "title": "加载 VAE",
+   "properties": {
+    "Node name for S&R": "VAELoader"
+   },
+   "widgets_values": [
+    "BSAI-Qwen-Image-2.1-VAE.safetensors"
+   ]
+  },
+  {
+   "id": 7,
+   "type": "QwenImage21Cache",
+   "pos": [
+    480,
+    -160
+   ],
+   "size": [
+    420,
+    150
+   ],
+   "flags": {},
+   "order": 3,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 2
+    },
+    {
+     "name": "device",
+     "type": "COMBO",
+     "widget": {
+      "name": "device"
+     },
+     "link": null
+    },
+    {
+     "name": "dtype",
+     "type": "COMBO",
+     "widget": {
+      "name": "dtype"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [
+    {
+     "name": "MODEL",
+     "type": "MODEL",
+     "slot_index": 0,
+     "links": [
+      3
+     ]
+    }
+   ],
+   "title": "KV 缓存优化 (Qwen Image 2.1 Cache)",
+   "properties": {
+    "Node name for S&R": "QwenImage21Cache"
+   },
+   "widgets_values": [
+    "auto",
+    "default"
+   ]
+  },
+  {
+   "id": 8,
+   "type": "TextEncodeQwenImage21",
+   "pos": [
+    960,
+    -120
+   ],
+   "size": [
+    560,
+    460
+   ],
+   "flags": {},
+   "order": 4,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "clip",
+     "type": "CLIP",
+     "link": 4
+    },
+    {
+     "name": "vae",
+     "shape": 7,
+     "type": "VAE",
+     "link": 5
+    }
+   ],
+   "outputs": [
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "slot_index": 0,
+     "links": [
+      7
+     ]
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "slot_index": 1,
+     "links": [
+      8
+     ]
+    },
+    {
+     "name": "latent",
+     "type": "LATENT",
+     "slot_index": 2,
+     "links": [
+      9
+     ]
+    }
+   ],
+   "title": "Qwen Image 2.1 提示词编码",
+   "properties": {
+    "Node name for S&R": "TextEncodeQwenImage21"
+   },
+   "widgets_values": [
+    "A vertical, realistic portrait photograph shows a young adult woman of East Asian appearance standing beneath a mature cherry blossom tree during golden-hour sunset. The upper portion of the image is filled with dense clusters of pale pink and soft white cherry blossoms, their thin dark branches spreading diagonally across the frame from the thick, rough-barked tree trunk on the right. The blossoms form a luminous canopy, with warm sunlight filtering through them and creating glowing highlights, soft bokeh, and gentle lens flare against a peach, amber, and lavender evening sky. The tree trunk occupies much of the upper-right and right-center area, with rugged dark brown bark catching orange rim light along its ridges. In the left and central foreground, the woman is shown from roughly mid-thigh upward in a three-quarter back view, leaning close to the tree trunk with her body turned slightly away and her head turned back toward the camera. She has dark wavy hair, wears a sleeveless red dress with thin straps, a fitted bodice, and a light skirt moving in the breeze, plus small silver jewelry that catches the sunset highlights. In her right hand near her shoulder she holds a clear cup of milk tea with a visible straw, beige drink, and simple label. Around her, a wooden railing runs along the lower left, a river and a bridge appear behind the park, park trees and streetlamps stand in the distance, and scattered petals cover the ground. Near the lower right, a small chalkboard-style sign reads, in white handwritten-style lettering, \"Cherry Blossom\" on the upper line and \"Sunset\" on the lower line, with a small pink blossom drawing below the text. A low evening sun from the right backlights the woman, blossoms, railing, and tree bark, casting gentle shadows across the path while hair, shoulders, petals, and cup edges catch golden highlights, with soft haze in the distance. Cinematic and romantic, with deep red fabric against pale blossoms, dark bark, warm gold sky, and muted greenery, warm color grading, natural backlighting, and a lifestyle-fashion portrait composition centered on the contrast between the red dress, the dark tree trunk, the pale blossoms, and the glowing sunset.",
+    "低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，文字模糊扭曲，构图混乱",
+    1024
+   ]
+  },
+  {
+   "id": 9,
+   "type": "KSampler",
+   "pos": [
+    1580,
+    -120
+   ],
+   "size": [
+    320,
+    474
+   ],
+   "flags": {},
+   "order": 5,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "model",
+     "type": "MODEL",
+     "link": 3
+    },
+    {
+     "name": "positive",
+     "type": "CONDITIONING",
+     "link": 7
+    },
+    {
+     "name": "negative",
+     "type": "CONDITIONING",
+     "link": 8
+    },
+    {
+     "name": "latent_image",
+     "type": "LATENT",
+     "link": 9
+    }
+   ],
+   "outputs": [
+    {
+     "name": "LATENT",
+     "type": "LATENT",
+     "slot_index": 0,
+     "links": [
+      10
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "KSampler"
+   },
+   "widgets_values": [
+    921885725034473,
+    "randomize",
+    50,
+    4,
+    "euler",
+    "simple",
+    1
+   ]
+  },
+  {
+   "id": 10,
+   "type": "VAEDecode",
+   "pos": [
+    1960,
+    -120
+   ],
+   "size": [
+    210,
+    60
+   ],
+   "flags": {
+    "collapsed": false
+   },
+   "order": 6,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "samples",
+     "type": "LATENT",
+     "link": 10
+    },
+    {
+     "name": "vae",
+     "type": "VAE",
+     "link": 6
+    }
+   ],
+   "outputs": [
+    {
+     "name": "IMAGE",
+     "type": "IMAGE",
+     "slot_index": 0,
+     "links": [
+      11
+     ]
+    }
+   ],
+   "properties": {
+    "Node name for S&R": "VAEDecode"
+   },
+   "widgets_values": []
+  },
+  {
+   "id": 11,
+   "type": "SaveImage",
+   "pos": [
+    2200,
+    -120
+   ],
+   "size": [
+    480,
+    440
+   ],
+   "flags": {},
+   "order": 7,
+   "mode": 0,
+   "inputs": [
+    {
+     "name": "images",
+     "type": "IMAGE",
+     "link": 11
+    },
+    {
+     "name": "filename_prefix",
+     "type": "STRING",
+     "widget": {
+      "name": "filename_prefix"
+     },
+     "link": null
+    }
+   ],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "SaveImage"
+   },
+   "widgets_values": [
+    "Qwen-Image-2.1-PE增强"
+   ]
+  },
+  {
+   "id": 12,
+   "type": "EmptySD3LatentImage",
+   "pos": [
+    1960,
+    400
+   ],
+   "size": [
+    300,
+    106
+   ],
+   "flags": {},
+   "order": 8,
+   "mode": 0,
+   "inputs": [],
+   "outputs": [],
+   "properties": {
+    "Node name for S&R": "EmptySD3LatentImage"
+   },
+   "widgets_values": [
+    1024,
+    1024,
+    1
+   ]
+  }
+ ],
+ "links": [
+  [
+   1,
+   1,
+   0,
+   2,
+   0,
+   "CLIP"
+  ],
+  [
+   2,
+   4,
+   0,
+   7,
+   0,
+   "MODEL"
+  ],
+  [
+   3,
+   7,
+   0,
+   9,
+   0,
+   "MODEL"
+  ],
+  [
+   4,
+   5,
+   0,
+   8,
+   0,
+   "CLIP"
+  ],
+  [
+   5,
+   6,
+   0,
+   8,
+   1,
+   "VAE"
+  ],
+  [
+   6,
+   6,
+   0,
+   10,
+   1,
+   "VAE"
+  ],
+  [
+   7,
+   8,
+   0,
+   9,
+   1,
+   "CONDITIONING"
+  ],
+  [
+   8,
+   8,
+   1,
+   9,
+   2,
+   "CONDITIONING"
+  ],
+  [
+   9,
+   8,
+   2,
+   9,
+   3,
+   "LATENT"
+  ],
+  [
+   10,
+   9,
+   0,
+   10,
+   0,
+   "LATENT"
+  ],
+  [
+   11,
+   10,
+   0,
+   11,
+   0,
+   "IMAGE"
+  ]
+ ],
+ "groups": [
+  {
+   "id": 1,
+   "title": "① 提示词增强（合并节点 backend=官方PE，输出 ENHANCED_PROMPT，可复制到生成链或右键 TextEncode 的 prompt 转为输入后接线）",
+   "bounding": [
+    -1480,
+    -260,
+    1100,
+    900
+   ],
+   "color": "#7a9e3f",
+   "flags": {}
+  },
+  {
+   "id": 2,
+   "title": "② Qwen-Image-2.1 文生图（加载增强后的提示词）",
+   "bounding": [
+    -80,
+    -280,
+    2730,
+    880
+   ],
+   "color": "#3f789e",
+   "flags": {}
+  }
+ ],
+ "config": {},
+ "extra": {
+  "ds": {
+   "scale": 0.8,
+   "offset": [
+    300,
+    120
+   ]
+  }
+ },
+ "version": 0.4
+}

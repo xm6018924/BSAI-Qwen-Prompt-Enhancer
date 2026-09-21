@@ -1,0 +1,355 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSAI Qwen Image 2.1 · 提示词模板库海报墙</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #0a0e1a;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(0, 180, 255, 0.14), transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(255, 80, 150, 0.10), transparent 50%);
+    color: #e6e9f2;
+    min-height: 100vh;
+    padding: 40px 24px 80px;
+  }
+
+  /* 顶部 */
+  .hero { max-width: 1400px; margin: 0 auto 36px; text-align: center; }
+  .hero h1 {
+    font-size: 38px; font-weight: 800; letter-spacing: 1px;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 10px;
+  }
+  .hero p { color: #94a3b8; font-size: 15px; line-height: 1.7; max-width: 720px; margin: 0 auto; }
+  .hero .stats { margin-top: 16px; display: inline-flex; gap: 24px; color: #64748b; font-size: 13px; }
+  .hero .stats b { color: #a78bfa; font-size: 18px; }
+
+  /* 筛选条 */
+  .filters { max-width: 1400px; margin: 0 auto 28px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+  .filters button {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: #cbd5e1; padding: 8px 18px; border-radius: 999px; cursor: pointer;
+    font-size: 13px; transition: all .2s;
+  }
+  .filters button:hover { background: rgba(255,255,255,0.12); }
+  .filters button.active { background: linear-gradient(90deg, #7c3aed, #2563eb); border-color: transparent; color: #fff; }
+
+  /* 海报墙 */
+  .wall { max-width: 1400px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 22px; }
+
+  .card {
+    position: relative; background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 16px;
+    overflow: hidden; transition: transform .25s, box-shadow .25s, border-color .25s;
+  }
+  .card:hover { transform: translateY(-6px); border-color: rgba(167,139,250,0.5); box-shadow: 0 18px 40px rgba(124,58,237,0.25); }
+
+  /* 缩略图 */
+  .thumb { position: relative; width: 100%; background: #0d1220; display: flex; align-items: center; justify-content: center; padding: 18px; }
+  .thumb svg { max-width: 100%; max-height: 220px; display: block; }
+
+  /* 右上角百声AI圆形logo */
+  .logo-badge {
+    position: absolute; top: 10px; right: 10px; z-index: 5;
+    width: 40px; height: 40px; border-radius: 50%;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.45), 0 0 0 2px rgba(255,255,255,0.85);
+    pointer-events: none;
+  }
+
+  /* 卡片文字 */
+  .info { padding: 14px 16px 16px; }
+  .type-tag {
+    display: inline-block; font-size: 11px; padding: 3px 10px; border-radius: 999px;
+    margin-bottom: 8px; font-weight: 600;
+  }
+  .t-official { background: rgba(168,85,247,0.18); color: #d8b4fe; }
+  .t-official-doc { background: rgba(59,130,246,0.18); color: #93c5fd; }
+  .t-community { background: rgba(34,197,94,0.18); color: #86efac; }
+  .t-design { background: rgba(249,115,22,0.18); color: #fdba74; }
+  .t-cinema { background: rgba(239,68,68,0.18); color: #fca5a5; }
+
+  .info h3 { font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; line-height: 1.4; }
+  .info .desc { font-size: 12px; color: #94a3b8; line-height: 1.6; margin-bottom: 10px; min-height: 38px; }
+  .vars { display: flex; flex-wrap: wrap; gap: 5px; }
+  .var-chip {
+    font-size: 10.5px; padding: 2px 8px; border-radius: 6px;
+    background: rgba(255,255,255,0.06); color: #cbd5e1; font-family: "Consolas", monospace;
+  }
+
+  /* 页脚 */
+  .footer { text-align: center; margin-top: 60px; color: #475569; font-size: 13px; }
+  .footer .big-logo {
+    display: inline-flex; align-items: center; gap: 12px; margin-bottom: 12px;
+  }
+  .footer .big-logo .circle {
+    width: 56px; height: 56px; border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #2563eb, #06b6d4);
+    display: flex; align-items: center; justify-content: center; color: #fff;
+    font-weight: 800; font-size: 16px; box-shadow: 0 6px 20px rgba(124,58,237,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>BSAI · Qwen Image 2.1 提示词模板库</h1>
+  <p>内置 55 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、9 种设计版式、13 种电影资产、12 种角色卡、12 种电影海报。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
+  <div class="stats">
+    <span><b>55</b> 模板总数</span>
+    <span><b>7</b> 分类</span>
+    <span><b>9</b> 设计版式</span>
+    <span><b>12</b> 角色卡</span>
+  </div>
+</div>
+
+<div class="filters" id="filters">
+  <button class="active" data-cat="all">全部</button>
+  <button data-cat="official">官方规则</button>
+  <button data-cat="official-doc">官方文档</button>
+  <button data-cat="community">社区实践</button>
+  <button data-cat="design">设计版式</button>
+  <button data-cat="cinema">电影资产</button>
+  <button data-cat="character">角色卡</button>
+  <button data-cat="poster">电影海报</button>
+</div>
+
+<div class="wall" id="wall"></div>
+
+<div class="footer">
+  <div class="big-logo"><div class="circle">百声</div><div style="text-align:left"><div style="font-weight:700;color:#cbd5e1">百声AI · BSAI</div><div style="font-size:11px;color:#64748b">Qwen Image 2.1 Prompt Enhancer</div></div></div>
+  <div>ComfyUI custom node · 4 channels · 16 reference images · 31 templates</div>
+</div>
+
+<script>
+// 模板数据从 templates.json 动态加载（保证 name 与 ComfyUI 下拉完全一致）
+let TEMPLATES = [];
+
+function ratioFor(id) {
+  if (id === "design_short_video_cover") return "9:16";
+  if (id === "design_magazine_cover" || id === "design_book_cover" || id === "design_poster") return "2:3";
+  if (id === "design_desktop_wallpaper") return "16:9";
+  if (id === "design_magazine_inner" || id === "design_brochure_cover" || id === "design_brochure_inner") return "3:2";
+  if (id === "design_outdoor_billboard") return "21:9";
+  if (id === "cinema_film_still") return "16:9";
+  if (id === "cinema_film_storyboard") return "3x2";
+  if (id === "cinema_grid_4") return "2x2";
+  if (id === "cinema_grid_6") return "3x2";
+  if (id === "cinema_grid_9") return "3x3";
+  if (id === "cinema_grid_12") return "4x3";
+  if (id.startsWith("cinema_character") || id.startsWith("cinema_prop") || id === "cinema_scene_asset") return "16:9";
+  return "—";
+}
+
+fetch("templates.json")
+  .then(r => r.json())
+  .then(data => {
+    TEMPLATES = (data.templates || []).map(t => ({
+      id: t.id, name: t.name, type: t.type,
+      desc: t.desc || "", desc_en: t.desc_en || "", vars: t.vars || [],
+      ratio: ratioFor(t.id),
+    }));
+    })
+  .catch(err => {
+    document.getElementById("wall").innerHTML =
+      `<div style="grid-column:1/-1;text-align:center;color:#fca5a5;padding:40px">加载模板库失败: ${err}</div>`;
+  });
+
+// SVG 缩略图生成器
+function svgFor(t) {
+  const r = t.ratio;
+  let inner = "";
+  const box = "fill=none stroke=#64748b stroke-width=1.2 rx=4";
+  const line = "stroke=#94a3b8 stroke-width=1.2";
+  const fill1 = "fill=#334155";
+  const fill2 = "fill=#475569";
+
+  // 设计版式：按画幅
+  if (t.type === "design") {
+    if (r === "9:16") {
+      // 竖版短视频：上半标题块 + 下半主视觉
+      inner = `<rect ${box} x=8 y=8 width=84 height=224/>
+        <rect x=16 y=18 width=68 height=22 ${fill1} rx=3/>
+        <rect x=16 y=46 width=44 height=10 ${fill2} rx=2/>
+        <rect x=16 y=66 width=68 height=150 ${fill2} rx=4/>`;
+    } else if (r === "2:3") {
+      // 杂志/书籍/海报 竖版
+      inner = `<rect ${box} x=10 y=8 width=80 height=180/>
+        <rect x=16 y=16 width=68 height=14 ${fill1} rx=2/>
+        <rect x=16 y=36 width=68 height=100 ${fill2} rx=3/>
+        <rect x=16 y=144 width=40 height=6 ${fill1} rx=1/>
+        <rect x=16 y=156 width=56 height=6 ${fill1} rx=1/>`;
+    } else if (r === "16:9") {
+      // 桌面壁纸
+      inner = `<rect ${box} x=8 y=30 width=184 height=100/>
+        <circle cx=100 cy=80 r=28 ${fill2}/>`;
+    } else if (r === "3:2") {
+      // 横版跨页/宣传册
+      inner = `<rect ${box} x=8 y=38 width=184 height=90/>
+        <line x1=100 y1=38 x2=100 y2=128 ${line}/>
+        <rect x=16 y=48 width=36 height=8 ${fill1} rx=1/>
+        <rect x=16 y=62 width=68 height=54 ${fill2} rx=2/>
+        <rect x=110 y=48 width=74 height=70 ${fill2} rx=2/>`;
+    } else if (r === "21:9") {
+      // 超宽看板
+      inner = `<rect ${box} x=4 y=50 width=192 height=66/>
+        <rect x=14 y=66 width=100 height=14 ${fill1} rx=2/>
+        <rect x=14 y=86 width=60 height=8 ${fill2} rx=1/>
+        <rect x=130 y=66 width=56 height=38 ${fill2} rx=3/>`;
+    }
+  }
+  // 电影剧照
+  else if (t.id === "cinema_film_still") {
+    inner = `<rect x=8 y=40 width=184 height=80 ${fill2}/>
+      <rect x=8 y=40 width=184 height=80 fill=none stroke=#64748b stroke-width=1.5 rx=3/>
+      <circle cx=60 cy=80 r=14 ${fill1}/>`;
+  }
+  // 分镜板（3x2 带标注）
+  else if (t.id === "cinema_film_storyboard") {
+    inner = `<rect x=8 y=10 width=184 height=14 ${fill1} rx=2/>`;
+    for (let i=0;i<6;i++){
+      const col = i%3, row = Math.floor(i/3);
+      inner += `<rect x=${10+col*60} y=${30+row*52} width=54 height=44 ${fill2} rx=2/>
+        <text x=${12+col*60} y=${78+row*52} font-size=7 fill=#94a3b8>${i+1}</text>`;
+    }
+  }
+  // 宫格分镜
+  else if (t.id.startsWith("cinema_grid_")) {
+    const n = parseInt(t.id.split("_")[1]);
+    const cols = n===4?2 : n===6?3 : n===9?3 : 4;
+    const rows = n===4?2 : n===6?2 : n===9?3 : 3;
+    const cw = 180/cols, ch = 130/rows;
+    for (let i=0;i<n;i++){
+      const col = i%cols, row = Math.floor(i/cols);
+      inner += `<rect x=${10+col*cw} y=${30+row*ch} width=${cw-4} height=${ch-4} ${fill2} rx=2/>`;
+    }
+  }
+  // 角色视图
+  else if (t.id.startsWith("cinema_character")) {
+    const n = t.id.includes("6view")?6 : t.id.includes("4view")?4 : 3;
+    const cols = n===6?3 : n;
+    const rows = n===6?2 : 1;
+    const cw = 180/cols, ch = 100/rows;
+    for (let i=0;i<n;i++){
+      const col = i%cols, row = Math.floor(i/cols);
+      const x = 10+col*cw, y = 30+row*ch;
+      // 人形：头+身
+      inner += `<circle cx=${x+cw/2} cy=${y+18} r=6 ${fill1}/>
+        <rect x=${x+cw/2-7} y=${y+28} width=14 height=${ch-36} ${fill2} rx=4/>`;
+    }
+  }
+  // 道具视图
+  else if (t.id.startsWith("cinema_prop")) {
+    const n = t.id.includes("6view")?6 : t.id.includes("4view")?4 : 3;
+    const cols = n===6?3 : n;
+    const rows = n===6?2 : 1;
+    const cw = 180/cols, ch = 90/rows;
+    for (let i=0;i<n;i++){
+      const col = i%cols, row = Math.floor(i/cols);
+      const x = 10+col*cw, y = 35+row*ch;
+      inner += `<rect x=${x+cw/2-12} y=${y+15} width=24 height=30 ${fill2} rx=3/>
+        <rect x=${x+cw/2-8} y=${y+8} width=16 height=10 ${fill1} rx=2/>`;
+    }
+  }
+  // 场景概念图
+  else if (t.id === "cinema_scene_asset") {
+    inner = `<rect x=8 y=35 width=184 height=90 ${fill2}/>
+      <line x1=100 y1=125 x2=60 y2=55 stroke=#64748b stroke-width=1/>
+      <line x1=100 y1=125 x2=140 y2=55 stroke=#64748b stroke-width=1/>
+      <rect x=8 y=35 width=184 height=90 fill=none stroke=#64748b stroke-width=1.5 rx=3/>`;
+  }
+  // 官方/社区：规则图标
+  else {
+    inner = `<rect ${box} x=30 y=30 width=140 height=90 rx=6/>
+      <rect x=44 y=46 width=112 height=8 ${fill1} rx=2/>
+      <rect x=44 y=60 width=90 height=6 ${fill2} rx=1/>
+      <rect x=44 y=72 width=100 height=6 ${fill2} rx=1/>
+      <rect x=44 y=84 width=70 height=6 ${fill2} rx=1/>
+      <rect x=44 y=96 width=84 height=6 ${fill2} rx=1/>`;
+  }
+  // viewBox 按内容估算
+  const vb = t.ratio === "9:16" ? "0 0 100 240" :
+             t.ratio === "2:3" ? "0 0 100 196" :
+             t.ratio === "21:9" ? "0 0 200 120" :
+             "0 0 200 160";
+  return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+
+// 渲染
+const wall = document.getElementById("wall");
+const params = new URLSearchParams(location.search);
+const NODE_ID = params.get("node_id");
+const WIDGET_NAME = params.get("widget") || "system_template";
+
+// 顶部提示条（从节点打开时显示"点击卡片自动回填"）
+if (NODE_ID) {
+  const tip = document.createElement("div");
+  tip.style.cssText = "max-width:1400px;margin:0 auto 18px;text-align:center;color:#a78bfa;font-size:13px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);padding:8px 16px;border-radius:10px;";
+  tip.textContent = "✅ 已连接到 ComfyUI 节点 #${NODE_ID} · 点击任意模板卡片即可自动回填，然后关闭本页";
+  document.querySelector(".filters").insertAdjacentElement("beforebegin", tip);
+}
+
+function selectTemplate(displayName) {
+  if (NODE_ID && window.opener && !window.opener.closed && window.opener.app) {
+    try {
+      const node = window.opener.app.graph.getNodeById(Number(NODE_ID));
+      if (!node) throw new Error("节点 #${NODE_ID} 未找到");
+      const w = (node.widgets || []).find(x => x.name === WIDGET_NAME);
+      if (!w) throw new Error("未找到 widget: " + WIDGET_NAME);
+      w.value = displayName;
+      if (typeof w.callback === "function") w.callback();
+      // 高亮反馈
+      document.querySelectorAll(".card").forEach(c => c.style.outline = "");
+      event.currentTarget.style.outline = "2px solid #a78bfa";
+      setTimeout(() => window.close(), 400);
+    } catch (e) {
+      alert("回填失败: " + e.message + "\n\n请手动复制模板名填入下拉: " + displayName);
+    }
+  } else {
+    alert("请从 ComfyUI 节点上的「🖼 打开模板海报墙」按钮打开本页，才能自动回填。\n\n模板名: " + displayName);
+  }
+}
+
+function render(cat) {
+  wall.innerHTML = "";
+  TEMPLATES.filter(t => cat==="all" || t.type===cat).forEach(t => {
+    const displayName = `${t.name} [${t.id}]`;
+    const card = document.createElement("div");
+    card.className = "card";
+    card.style.cursor = "pointer";
+    card.title = NODE_ID ? "点击选用此模板" : "从节点按钮打开可自动回填";
+    card.innerHTML = `
+      <div class="thumb">
+        <img src="thumbnails/${t.id}.png" alt="${t.name}" loading="lazy"
+             style="position:absolute;inset:0;width:100%;height:100%;object-fit:contain"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <div style="display:none;position:absolute;inset:0">${svgFor(t)}</div>
+        <img src="logo.png" class="logo-badge" alt="百声AI">
+      </div>
+      <div class="info">
+        <span class="type-tag t-${t.type}">${
+          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产"}[t.type]
+        }</span>
+        <h3>${t.name}${t.ratio!=="—" ? ` <span style="color:#64748b;font-weight:400;font-size:12px">· ${t.ratio}</span>` : ""}</h3>
+        <div class="desc">${t.desc}</div>
+        ${t.desc_en ? `<div class="desc" style="opacity:0.7;font-size:12px;margin-top:4px">${t.desc_en}</div>` : ""}
+        <div class="vars">${t.vars.map(v=>`<span class="var-chip">${v}</span>`).join("")}</div>
+      </div>`;
+    card.addEventListener("click", (e) => { e.stopPropagation(); selectTemplate(displayName); });
+    wall.appendChild(card);
+  });
+}
+document.getElementById("filters").addEventListener("click", e => {
+  if (e.target.tagName !== "BUTTON") return;
+  document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
+  e.target.classList.add("active");
+  render(e.target.dataset.cat);
+});
+</script>
+</body>
+</html>
