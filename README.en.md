@@ -129,6 +129,20 @@ STYLE: Commercial photography
 - Output SYSTEM_PROMPT connects directly to the enhancer node's `system_template`
 - To use your own photo as main visual, connect the image to the enhancer node's `image_1` input
 
+### 🖼 Template Wall (Visual Picker)
+
+The template node includes a **visual template wall** — click the "🖼 Open Template Wall" button on the node to open it:
+
+| Feature | Description |
+|---|---|
+| **Large previews** | All 55 templates have thumbnails so you can see the layout at a glance |
+| **Category filter** | 7 categories: All / Official Rules / Official Docs / Community / Design / Cinema / Character / Posters |
+| **Click to use** | Click any card to auto-fill the node — no manual dropdown selection needed |
+| **Bilingual UI** | 🌐 toggle in top-right corner switches usage guide language |
+| **Variable hints** | Each card shows all variable names supported by that template |
+
+Template wall path: `web/templates_wall.html`
+
 ## 📦 Installation
 
 1. Place this plugin in `ComfyUI/custom_nodes/`:
