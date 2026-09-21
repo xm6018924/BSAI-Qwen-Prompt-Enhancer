@@ -39,14 +39,95 @@ Also compatible with other popular multimodal models:
 | **Local LLaMA** | Local GGUF + mmproj, full Qwen multimodal family support | Offline use, image interrogation, custom models |
 | **API** | OpenAI-compatible interface (e.g. Alibaba DashScope) | Online service, no local VRAM needed |
 
-### 📚 Built-in Template Library
+### 📚 Built-in Template Library (55 templates, 6 categories)
 
-18 enhancement templates ready to use:
-- **Official Authoritative**: PE-T2I / PE-I2I system rules (verbatim original)
-- **Official Formulas**: Prompt formula, poster layout templates, prompt_extend rewrite style
-- **Community Best Practices**: Six-element template, Lightning Chinese tips, style mixing, detail control
-- **Design Templates (9 types)**: Short video cover, magazine/book cover, desktop wallpaper, poster, brochure, outdoor billboard
-- **Cinema Asset Templates (13 types)**: Film stills, storyboards, character 3-view/4-view/6-view, prop 3-view, scene concept art
+The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **55 enhancement templates**:
+
+#### ① Official Authoritative (5 templates)
+- Qwen-Image-2.1 Official PE-T2I System Rules (10KB verbatim)
+- Qwen-Image-2.1 Official PE-I2I System Rules (18KB verbatim)
+- Official API prompt_extend Rewriting Style (with examples)
+- Official Prompt Formula: Subject + Scene + Style + Shot + Mood + Details
+- Official Poster / Slide Layout Template
+
+#### ② Community Best Practices (4 templates)
+- Universal Six-Element Template (Tensor.Art best practice)
+- Chinese High-Quality Description Tips (Qwen-Image-Lightning)
+- Style Mixing Template (community)
+- Detail Control Template (community)
+
+#### ③ Design Templates (9 templates, custom variables supported)
+- Short Video Cover (9:16 portrait)
+- Magazine Cover (2:3 portrait)
+- Book Cover (2:3 portrait)
+- Desktop Wallpaper (16:9 landscape)
+- Poster Design (2:3 portrait)
+- Magazine Inner Spread (3:2 landscape)
+- Brochure Cover (3:2 landscape)
+- Brochure Inner Page (3:2 landscape)
+- Outdoor Billboard (21:9 ultra-wide)
+
+#### ④ Cinema Assets (13 templates, custom variables supported)
+- Film Still (16:9 single frame)
+- Film Storyboard (3x2 with annotations)
+- 4-grid Storyboard (2x2)
+- 6-grid Storyboard (3x2)
+- 9-grid Storyboard (3x3)
+- 12-grid Storyboard (4x3)
+- Character 3-View (front/side/back)
+- Character 4-View (front/3-4/side/back)
+- Character 6-View (full body + head close-ups)
+- Prop 3-View (front/side/back)
+- Prop 4-View (front/3-4/side/back)
+- Prop 6-View (front/side/back + detail close-ups)
+- Scene Asset Concept Art
+
+#### ⑤ Character Sheets (12 templates, custom variables supported)
+- Complete Character Sheet (3-view + expressions + outfit breakdown + color palette)
+- Turnaround 4-View (front/3-4/side/back)
+- Expression Sheet (6/8 grid)
+- Outfit & Accessory Detail Breakdown
+- Character Color Palette (with color swatches)
+- Consistency Anchor (50+ fixed descriptor phrases, reusable)
+- Single Full-Body Illustration
+- Bust / Headshot Close-Up
+- Game Splash Art Card
+- Mobile UI Character Card (with info panel)
+- Pose Sheet (6-grid action variations)
+- Ancient / Chinese Style Character Design
+
+#### ⑥ Movie Posters (12 styles, custom variables supported)
+- Standard One-Sheet (portrait)
+- Ensemble Cast
+- Minimalist
+- Split-Screen Comparison
+- Environment Focus
+- Oscar Drama
+- Vintage Noir
+- Summer Blockbuster
+- Horror
+- Romance
+- Sci-Fi
+- Anime Film
+
+### Template Variable Replacement
+
+Design / cinema / character templates include placeholders like `{{TITLE}}` `{{SUBTITLE}}` `{{BRAND}}` `{{MAIN_SUBJECT}}` `{{COLOR}}` `{{STYLE}}`.
+Fill them in the node's **variables** input box, one per line as `KEY: value`. The node auto-replaces and outputs the full SYSTEM_PROMPT:
+
+```
+TITLE: Summer New Product Launch
+SUBTITLE: 2026 Autumn Collection
+BRAND: BSAI
+MAIN_SUBJECT: A girl in a red dress standing under cherry blossoms
+COLOR: Deep blue + orange gold
+STYLE: Commercial photography
+```
+
+- Variable keys are case-insensitive
+- The 4th output `USED_VARS` reports which keys were actually replaced
+- Output SYSTEM_PROMPT connects directly to the enhancer node's `system_template`
+- To use your own photo as main visual, connect the image to the enhancer node's `image_1` input
 
 ## 📦 Installation
 
