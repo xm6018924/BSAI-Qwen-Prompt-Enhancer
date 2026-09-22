@@ -70,6 +70,28 @@ function syncWidgetVisibility(node) {
   if (node.graph) node.graph.setDirtyCanvas(true, true);
 }
 
+// 【2026-09-23】仅预览醒目警告：preview_only=true 时节点变红 + tooltip 提示"未增强"
+const NODE_COLOR_DEFAULT = "#3f789e";
+const NODE_BG_DEFAULT = "#353535";
+const NODE_COLOR_PREVIEW = "#c04848";
+const NODE_BG_PREVIEW = "#3a2626";
+function syncPreviewWarning(node) {
+  if (!isMergedNode(node)) return;
+  const pv = (node.widgets || []).find((w) => w.name === "preview_only");
+  if (!pv) return;
+  const on = pv.value === true || pv.value === "true";
+  if (on) {
+    node.color = NODE_COLOR_PREVIEW;
+    node.bgcolor = NODE_BG_PREVIEW;
+    node.tooltip = "⚠ 仅预览模式已开启：所有后端均不调用模型，输出为原文直出。正式出图请关闭「仅预览」。";
+  } else {
+    node.color = NODE_COLOR_DEFAULT;
+    node.bgcolor = NODE_BG_DEFAULT;
+    node.tooltip = "";
+  }
+  try { node.setDirtyCanvas?.(true, true); } catch (_) {}
+}
+
 /**
  * 把「选模板 + 用户要求」的事件投递给「指定节点 + 模板节点」：
  *   1) 把 displayName 写到目标节点的 system_template（合并节点）或 template_name（模板节点）
@@ -196,14 +218,26 @@ app.registerExtension({
           return r;
         };
       }
+      // 1b) preview_only 值变化时同步"仅预览"醒目警告（节点变红，提示未增强）
+      const pvWidget = (node.widgets || []).find((w) => w.name === "preview_only");
+      if (pvWidget) {
+        const origPvCallback = pvWidget.callback;
+        pvWidget.callback = function (value, ...args) {
+          const r = origPvCallback ? origPvCallback.call(this, value, ...args) : undefined;
+          syncPreviewWarning(node);
+          return r;
+        };
+      }
       // 工作流加载时 widget 值在 nodeCreated 之后才回填，包一层 onConfigure 确保按存档的 backend 恢复显隐
       const origConfigure = node.onConfigure;
       node.onConfigure = function (...args) {
         const r = origConfigure ? origConfigure.apply(this, args) : undefined;
         syncWidgetVisibility(node);
+        syncPreviewWarning(node);
         return r;
       };
       syncWidgetVisibility(node);
+      syncPreviewWarning(node);
 
       // 2) 模板海报墙按钮
       const widget = (node.widgets || []).find(
@@ -249,30 +283,34 @@ app.registerExtension({
     //    callback 内手动修改 widget.value 并派发 change 事件让 Vue 重渲染。
     if (isMergedNode(node)) {
       try {
-        const DEFAULT_SYSTEM_TEMPLATE = "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]";
+        // 【2026-09-23】清除 = 切到「无模板（清空输出）」，resolve_template 返回空 system prompt，
+        // 右侧预览/输出随之清空（不再恢复官方默认模板）
+        const NONE_TEMPLATE_DISPLAY = "无模板（清空输出，不使用系统规则）[none]";
         // LiteGraph 标准按钮 widget：第四个参数是 callback（注意不是第三参数 value）
-        node.addWidget("button", "🧹 清除模板（恢复默认）", "", () => {
+        node.addWidget("button", "🧹 清除模板（清空输出）", "", () => {
           try {
             const sysW = (node.widgets || []).find(w => w.name === "system_template");
-            if (sysW) {
-              // 直接改 widget.value 并调用 callback
-              sysW.value = DEFAULT_SYSTEM_TEMPLATE;
-              if (typeof sysW.callback === "function") {
-                try { sysW.callback(DEFAULT_SYSTEM_TEMPLATE); } catch (_) {}
-              }
-              // 通知 Vue 重新渲染
-              try { sysW.onChange?.(DEFAULT_SYSTEM_TEMPLATE, null, null); } catch (_) {}
-              // 兼容更新 graph widgets_values
-              if (Array.isArray(node.widgets_values)) {
-                const idx = node.widgets.indexOf(sysW);
-                if (idx >= 0) node.widgets_values[idx] = DEFAULT_SYSTEM_TEMPLATE;
-              }
+            if (!sysW) return;
+            // 防重复触发：已是「无模板」时直接跳过，不再 queuePrompt（避免反复出图）
+            if (sysW.value === NONE_TEMPLATE_DISPLAY) {
+              console.log("[BSAI.PromptEnhancer] 清除模板按钮：已是无模板状态，跳过运行");
+              return;
+            }
+            // 只走 ComfyUI 标准变更通知（widget.callback），不手动调 onChange
+            // （onChange 是 LiteGraph/Vue 内部机制，手动调用会与 callback/queuePrompt 叠加重复执行）
+            sysW.value = NONE_TEMPLATE_DISPLAY;
+            if (typeof sysW.callback === "function") {
+              try { sysW.callback(NONE_TEMPLATE_DISPLAY); } catch (_) {}
+            }
+            // 兼容更新 graph widgets_values
+            if (Array.isArray(node.widgets_values)) {
+              const idx = node.widgets.indexOf(sysW);
+              if (idx >= 0) node.widgets_values[idx] = NONE_TEMPLATE_DISPLAY;
             }
             // 保留 custom_system_prompt 不动
             // 触发一次工作流运行（preview_only 已是 true，秒出结果）
-            try { node.setDirtyCanvas?.(true, true); } catch (_) {}
             try { app.graph?.setDirtyCanvas?.(true, true); } catch (_) {}
-            console.log("[BSAI.PromptEnhancer] 清除模板按钮执行：system_template ->", sysW?.value);
+            console.log("[BSAI.PromptEnhancer] 清除模板按钮执行：system_template ->", sysW.value);
             if (typeof app.queuePrompt === "function") {
               try { app.queuePrompt(); } catch (e) { console.warn("[BSAI.PromptEnhancer] queuePrompt 失败:", e); }
             }

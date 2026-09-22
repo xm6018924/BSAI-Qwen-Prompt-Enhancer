@@ -235,6 +235,20 @@ The enhancer node outputs 10 channels uniformly:
 
 > Right-click `steps` / `cfg` on KSampler → Convert to input, connect `RECOMMENDED_STEPS` / `RECOMMENDED_CFG`, and switching speed_preset tiers auto-updates the sampling parameters.
 
+
+## ⚠️ Preview-only (preview_only) Mode
+
+When `preview_only` is ON, **no backend model is called** — the node outputs a text preview without any enhancement:
+
+- `ENHANCED_PROMPT` = your raw `prompt_text` (passed through as-is, no enhancement)
+- `MERGED_TEXT` = template + user requirement concatenation (empty when no template)
+- The node turns **red** with a tooltip warning "not enhanced", to prevent misuse
+
+**Use case**: instant preview when picking templates in the Template Wall, or inspecting template concatenation.
+**Turn it OFF for real generation** — otherwise Official PE / Local LLaMA is skipped and images are generated from your raw text.
+
+> Note: selecting a template in the Template Wall auto-checks "preview only" for instant preview; remember to uncheck it before generating.
+
 ## 📝 Notes
 
 - All model directories use **relative paths** (`models/LLM/`, `models/text_encoders/`), works regardless of where the plugin is moved

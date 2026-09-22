@@ -66,7 +66,8 @@ except Exception:
 
 from .common import (
     build_official_chat, collect_images, get_enhanced_result,
-    image_tensor_to_data_urls, resolve_template, template_display_list,
+    image_tensor_to_data_urls, load_official_system_prompt,
+    resolve_template, template_display_list,
 )
 
 # ---- 后端选项（前端 JS 按这些标签精确匹配显隐分组，勿随意改名）----
@@ -1157,9 +1158,12 @@ class BSAI_Qwen_Prompt_Enhancer:
                 f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。\n"
                 f"\n── 当前加速档: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──",
             ]
+            # 【修复 2026-09-23】纯预览下 ENHANCED_PROMPT(第1路) 透传用户原文 prompt_text：
+            # 无模板时 merged_text 为空，若 ENHANCED_PROMPT 也空，下游 KSampler 会拿空条件
+            # 采样出随机噪点图（沙土）。MERGED_TEXT(第10路) 仍输出模板拼接，供 Show Text 预览。
             return {
                 "ui": {"text": ui_text, "merged_text": [merged_text]},
-                "result": (merged_text, "", "", merged_text, "",
+                "result": (prompt_text or "", "", "", merged_text, "",
                            int(steps), float(cfg), sampler, scheduler, merged_text),
             }
 
@@ -1234,6 +1238,13 @@ class BSAI_Qwen_Prompt_Enhancer:
             if mode == "I2I" and system_template == DEFAULT_T2I:
                 system_template = DEFAULT_I2I
             system_prompt, template_id = resolve_template(system_template, "")
+            # 【修复 2026-09-23】官方PE 是专用微调模型，无系统规则时输出不可控（乱图/沙土）：
+            # 空 system prompt 自动回退对应模式官方规则并警告。
+            if not system_prompt.strip():
+                print("[BSAI_Qwen_Prompt_Enhancer] 警告: 无模板/空 system prompt 下官方PE 输出不可控，"
+                      "已自动回退官方 %s 规则" % ("I2I" if mode == "I2I" else "T2I"))
+                system_prompt = load_official_system_prompt(mode)
+                template_id = "official_i2i" if mode == "I2I" else "official_t2i"
 
         # 3) 构造官方 chat 消息（图片 token 前置）
         n_images = int(images.shape[0]) if has_images else 0

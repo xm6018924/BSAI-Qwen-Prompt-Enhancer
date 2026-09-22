@@ -235,6 +235,20 @@ BSAI_Qwen_Prompt_Enhancer/
 
 > KSampler 上右键 `steps`/`cfg` → Convert to input，接上 `RECOMMENDED_STEPS`/`RECOMMENDED_CFG`，切换 speed_preset 档位即自动联动采样参数。
 
+
+## ⚠️ 仅预览（preview_only）模式
+
+`preview_only`（仅预览）开启时，**所有后端都不会调用模型**，节点直接输出文本预览，不做任何增强：
+
+- `ENHANCED_PROMPT` = 你的原始 `prompt_text`（原文直出，不增强）
+- `MERGED_TEXT` = 模板 + 用户要求拼接（无模板时为空）
+- 开启时节点会**变红**并提示"未增强"，防止误用
+
+**适用场景**：模板海报墙选卡时的快速预览、查看模板拼接效果。
+**正式出图必须关闭「仅预览」**，否则官方PE / 本地LLaMA 不会真正增强，出图用的是你的原文。
+
+> 提示：用模板海报墙选模板会自动勾选「仅预览」用于秒出预览，选完记得关闭再出图。
+
 ## 📝 说明
 
 - 模型目录全部使用 **相对路径**（`models/LLM/`、`models/text_encoders/`），插件移动到任何位置都能正常工作

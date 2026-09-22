@@ -61,10 +61,16 @@ _LEGACY_ALIAS_MAP = {
     "中文高质量描述技巧 [lightning_zh]": "lightning_zh",
 }
 
+# 无模板选项：显示名以 [none] 结尾时 resolve_template 返回空 system prompt（清空输出）
+NONE_TEMPLATE_DISPLAY = "无模板（清空输出，不使用系统规则）[none]"
+
 
 def template_display_list():
-    """模板库下拉列表: ['模板名 [id]', ...] + 历史别名（向后兼容旧工作流）"""
-    items = [f"{t.get('name', '?')} [{t.get('id', '?')}]" for t in load_templates()]
+    """模板库下拉列表: ['模板名 [id]', ...] + 历史别名（向后兼容旧工作流）
+    首项为「无模板（清空输出）」：选中后 resolve_template 返回空 system prompt。
+    """
+    items = [NONE_TEMPLATE_DISPLAY]
+    items += [f"{t.get('name', '?')} [{t.get('id', '?')}]" for t in load_templates()]
     # 追加历史别名（若不在标准列表中），保证旧工作流里存的旧显示名能通过 enum 校验
     for alias in _LEGACY_ALIAS_MAP:
         if alias not in items:
@@ -82,10 +88,13 @@ def _render_template(t):
 def resolve_template(template_display, custom_system_prompt=""):
     """根据下拉值 + 自定义文本 解析出最终的 system prompt 文本。
     返回 (system_prompt, template_id)
-    匹配优先级: 自定义 > 标准 name 前缀 > 历史别名 > [id] 后缀 > 兜底官方 T2I
+    匹配优先级: 自定义 > 无模板[none] > 标准 name 前缀 > 历史别名 > [id] 后缀 > 兜底官方 T2I
     """
     if custom_system_prompt and custom_system_prompt.strip():
         return custom_system_prompt.strip(), "custom"
+    # 无模板（清空输出）：选中「无模板…[none]」时返回空 system prompt，不再兜底官方规则
+    if template_display and template_display.strip().endswith("[none]"):
+        return "", "none"
     templates = load_templates()
     # 1) 标准 name 前缀匹配
     for t in templates:
