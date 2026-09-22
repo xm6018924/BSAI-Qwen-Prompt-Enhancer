@@ -129,6 +129,8 @@ STYLE: 商业摄影
 - 输出的 SYSTEM_PROMPT 接入增强节点的 `system_template`
 - 若需用自己的照片作主视觉，把图片接到增强节点的 `image_1` 输入
 
+> 💡 想修改模板内容（覆盖 / 追加要求 / 改库文件 / 新增模板）？详见 [TEMPLATE_GUIDE.md](TEMPLATE_GUIDE.md)。
+
 ### 🖼 模板海报墙（可视化选择器）
 
 模板节点自带 **可视化海报墙**，点击节点上的「🖼 打开模板海报墙」按钮即可弹出：
@@ -277,4 +279,4 @@ RTX 4090 / 1024×1024 / int8 / 25步 ≈ **7.5 秒/张**；叠加 SageAttention 
 - **勿用 TeaCache**（已冻结 14 个月，不兼容 2.1）
 - ComfyUI 需 **v0.37.0+** 才原生支持 2.1
 
-详细加速方案与硬件实测见 [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md)，技术调研见 [RESEARCH_REPORT.md](RESEARCH_REPORT.md)。
+详细加速方案与硬件实测见 [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md)，技术调研见 [RESEARCH_REPORT.md](RESEARCH_REPORT.md)。模板机制与修改方法见 [TEMPLATE_GUIDE.md](TEMPLATE_GUIDE.md)。

@@ -129,6 +129,8 @@ STYLE: Commercial photography
 - Output SYSTEM_PROMPT connects directly to the enhancer node's `system_template`
 - To use your own photo as main visual, connect the image to the enhancer node's `image_1` input
 
+> 💡 Want to modify template content (override / append requirements / edit library files / add new templates)? See [TEMPLATE_GUIDE.en.md](TEMPLATE_GUIDE.en.md).
+
 ### 🖼 Template Wall (Visual Picker)
 
 The template node includes a **visual template wall** — click the "🖼 Open Template Wall" button on the node to open it:
@@ -277,4 +279,4 @@ RTX 4090 / 1024×1024 / int8 / 25 steps ≈ **7.5 s/image**; with SageAttention 
 - **Do NOT use TeaCache** (frozen for 14 months, incompatible with 2.1)
 - ComfyUI **v0.37.0+** is required for native 2.1 support
 
-Full acceleration playbook & hardware benchmarks: [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md). Research: [RESEARCH_REPORT.md](RESEARCH_REPORT.md).
+Full acceleration playbook & hardware benchmarks: [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md). Research: [RESEARCH_REPORT.md](RESEARCH_REPORT.md). Template mechanism & modification: [TEMPLATE_GUIDE.en.md](TEMPLATE_GUIDE.en.md).
