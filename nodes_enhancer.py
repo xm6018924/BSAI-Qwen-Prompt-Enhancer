@@ -1027,6 +1027,13 @@ class BSAI_Qwen_Prompt_Enhancer:
                     "default": "",
                     "placeholder": "留空使用上方模板；填写则覆盖模板作为 system prompt",
                 }),
+                # 【v2】用户额外要求（拼到 MERGED_TEXT 输出），不进入 LLM 内部对话。
+                # 海报墙选模板时也会同步触发预览，让 Show Text 立即显示合并文本。
+                "user_requirement": ("STRING", {
+                    "multiline": True,
+                    "default": "",
+                    "placeholder": "用户对当前任务的额外要求（拼到 MERGED_TEXT 输出，与下方海报墙配合使用）\n例：封面含主标题+副标题；左侧放主视觉，右侧留白放文案；配色用深蓝+橙金。",
+                }),
                 "temperature": ("FLOAT", {"default": 0.7, "min": 0.0, "max": 2.0, "step": 0.01}),
                 "top_p": ("FLOAT", {"default": 0.95, "min": 0.0, "max": 1.0, "step": 0.01}),
                 "top_k": ("INT", {"default": 40, "min": 0, "max": 1000}),
@@ -1063,6 +1070,10 @@ class BSAI_Qwen_Prompt_Enhancer:
                 "hf_task": (["<MORE_DETAILED_CAPTION>", "<DETAILED_CAPTION>", "<CAPTION>", "<OD>", "<REGION_CAPTION>"], {"default": "<MORE_DETAILED_CAPTION>"}),
                 "hf_device": (["auto", "cuda", "cpu"], {"default": "auto"}),
                 "hf_keep_loaded": ("BOOLEAN", {"default": True}),
+                # 【v3】纯预览：勾上后跳过所有模型调用，仅输出 MERGED_TEXT。
+                # 海报墙选模板时会自动勾上 → 触发一次 queuePrompt → 下游 Show Text 立即显示。
+                # 用户后续要 LLM 增强时手动关掉再 Queue Prompt。
+                "preview_only": ("BOOLEAN", {"default": False, "label": "仅预览（跳过 LLM）"}),
             },
             "optional": {
                 "clip": ("CLIP",),
@@ -1070,9 +1081,10 @@ class BSAI_Qwen_Prompt_Enhancer:
             },
         }
 
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "INT", "FLOAT", "STRING", "STRING")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "INT", "FLOAT", "STRING", "STRING", "STRING")
     RETURN_NAMES = ("ENHANCED_PROMPT", "WH_RATIO", "RATIO_FOLLOW", "RAW_OUTPUT", "THINKING",
-                    "RECOMMENDED_STEPS", "RECOMMENDED_CFG", "RECOMMENDED_SAMPLER", "RECOMMENDED_SCHEDULER")
+                    "RECOMMENDED_STEPS", "RECOMMENDED_CFG", "RECOMMENDED_SAMPLER", "RECOMMENDED_SCHEDULER",
+                    "MERGED_TEXT")
     FUNCTION = "enhance"
     CATEGORY = "BSAI/Qwen Image 2.1"
     OUTPUT_NODE = True
@@ -1099,6 +1111,7 @@ class BSAI_Qwen_Prompt_Enhancer:
     }
 
     def enhance(self, backend, prompt_text, system_template, custom_system_prompt="",
+                user_requirement="",
                 temperature=0.7, top_p=0.95, top_k=40, repeat_penalty=1.1, seed=0,
                 max_tokens=4096, speed_preset=_DEFAULT_SPEED,
                 pe_mode="auto", min_p=0.0, thinking=True, mtp="auto",
@@ -1106,10 +1119,34 @@ class BSAI_Qwen_Prompt_Enhancer:
                 n_gpu_layers=-1, load_mtp=False, keep_loaded=True,
                 api_base="", api_key="", api_model_name="", timeout=120,
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
+                preview_only=False,
                 clip=None,
                 image_1=None, image_2=None, image_3=None, image_4=None, image_5=None, image_6=None,
                 image_7=None, image_8=None, image_9=None, image_10=None, image_11=None, image_12=None,
                 image_13=None, image_14=None, image_15=None, image_16=None):
+        # 【v3】纯预览：勾上后跳过所有模型调用，仅输出 MERGED_TEXT。
+        # 用于海报墙选模板时让下游 Show Text 立刻显示，无需加载 LLM。
+        if preview_only:
+            print(f"[BSAI_Qwen_Prompt_Enhancer] [preview] custom_system_prompt={custom_system_prompt!r} len={len(custom_system_prompt or '')} system_template={system_template!r}")
+            merged_text = self._build_preview_merged(
+                system_template=system_template,
+                custom_system_prompt=custom_system_prompt,
+                user_requirement=user_requirement,
+            )
+            steps, cfg, sampler, scheduler = self._SPEED_PRESETS.get(
+                speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 纯预览模式 → 仅输出 MERGED_TEXT，不调用任何模型")
+            ui_text = [
+                merged_text,
+                f"\n── 纯预览模式 ──\n未调用任何模型。MERGED_TEXT 已生成，下游 Show Text / KSampler 可直接使用。\n"
+                f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。",
+            ]
+            return {
+                "ui": {"text": ui_text, "merged_text": [merged_text]},
+                "result": (merged_text, "", "", merged_text, "",
+                           int(steps), float(cfg), sampler, scheduler, merged_text),
+            }
+
         images = collect_images(image_1, image_2, image_3, image_4, image_5, image_6,
                                 image_7, image_8, image_9, image_10, image_11, image_12,
                                 image_13, image_14, image_15, image_16)
@@ -1117,6 +1154,7 @@ class BSAI_Qwen_Prompt_Enhancer:
             return self._enhance_official(
                 clip=clip, prompt_text=prompt_text, pe_mode=pe_mode,
                 system_template=system_template, custom_system_prompt=custom_system_prompt,
+                user_requirement=user_requirement,
                 max_tokens=max_tokens, temperature=temperature, top_p=top_p, top_k=top_k,
                 repeat_penalty=repeat_penalty, min_p=min_p, seed=seed, thinking=thinking,
                 mtp=mtp, speed_preset=speed_preset, images=images,
@@ -1125,7 +1163,8 @@ class BSAI_Qwen_Prompt_Enhancer:
             return self._enhance_local(
                 llm_model_name=llm_model_name, mmproj_name=mmproj_name, chat_handler=chat_handler,
                 prompt_text=prompt_text, system_template=system_template,
-                custom_system_prompt=custom_system_prompt, max_tokens=max_tokens,
+                custom_system_prompt=custom_system_prompt, user_requirement=user_requirement,
+                max_tokens=max_tokens,
                 temperature=temperature, top_p=top_p, top_k=top_k, repeat_penalty=repeat_penalty,
                 seed=seed, n_ctx=n_ctx, n_gpu_layers=n_gpu_layers, load_mtp=load_mtp,
                 keep_loaded=keep_loaded, speed_preset=speed_preset, images=images,
@@ -1135,7 +1174,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                 hf_model_name=hf_model_name, hf_task=hf_task, hf_device=hf_device,
                 hf_keep_loaded=hf_keep_loaded,
                 prompt_text=prompt_text, system_template=system_template,
-                custom_system_prompt=custom_system_prompt, max_tokens=max_tokens,
+                custom_system_prompt=custom_system_prompt, user_requirement=user_requirement,
+                max_tokens=max_tokens,
                 temperature=temperature, top_p=top_p, top_k=top_k, seed=seed,
                 speed_preset=speed_preset, images=images,
             )
@@ -1143,7 +1183,8 @@ class BSAI_Qwen_Prompt_Enhancer:
             return self._enhance_api(
                 api_base=api_base, api_key=api_key, api_model_name=api_model_name,
                 prompt_text=prompt_text, system_template=system_template,
-                custom_system_prompt=custom_system_prompt, max_tokens=max_tokens,
+                custom_system_prompt=custom_system_prompt, user_requirement=user_requirement,
+                max_tokens=max_tokens,
                 temperature=temperature, top_p=top_p, top_k=top_k, seed=seed,
                 timeout=timeout, speed_preset=speed_preset, images=images,
             )
@@ -1151,6 +1192,7 @@ class BSAI_Qwen_Prompt_Enhancer:
 
     # ---------------- 官方PE ----------------
     def _enhance_official(self, clip, prompt_text, pe_mode, system_template, custom_system_prompt,
+                          user_requirement,
                           max_tokens, temperature, top_p, top_k, repeat_penalty, min_p,
                           seed, thinking, mtp, speed_preset, images):
         if clip is None:
@@ -1208,11 +1250,15 @@ class BSAI_Qwen_Prompt_Enhancer:
             )
         raw = clip.decode(ids, skip_special_tokens=False)
 
-        return self._finalize(raw, speed_preset, f"后端=官方PE 模式={mode} 模板={template_id}")
+        return self._finalize(raw, speed_preset, f"后端=官方PE 模式={mode} 模板={template_id}",
+                              system_template=system_template,
+                              custom_system_prompt=custom_system_prompt,
+                              user_requirement=user_requirement)
 
     # ---------------- 本地LLaMA ----------------
     def _enhance_local(self, llm_model_name, mmproj_name, chat_handler, prompt_text, system_template,
-                       custom_system_prompt, max_tokens, temperature, top_p, top_k, repeat_penalty,
+                       custom_system_prompt, user_requirement,
+                       max_tokens, temperature, top_p, top_k, repeat_penalty,
                        seed, n_ctx, n_gpu_layers, load_mtp, keep_loaded, speed_preset, images):
         resolved = _resolve_handler_label(chat_handler)
         if resolved == "__auto__":
@@ -1312,11 +1358,15 @@ class BSAI_Qwen_Prompt_Enhancer:
         # 结果清理（与 G 盘 BSAI_QwenNodes 对齐：去除前缀冒号等）
         raw = raw.lstrip().removeprefix(": ").strip()
 
-        return self._finalize(raw, speed_preset, f"后端=本地LLaMA 模板={template_id}")
+        return self._finalize(raw, speed_preset, f"后端=本地LLaMA 模板={template_id}",
+                              system_template=system_template,
+                              custom_system_prompt=custom_system_prompt,
+                              user_requirement=user_requirement)
 
     # ---------------- 本地HF (Transformers) ----------------
     def _enhance_hf(self, hf_model_name, hf_task, hf_device, hf_keep_loaded,
-                    prompt_text, system_template, custom_system_prompt, max_tokens,
+                    prompt_text, system_template, custom_system_prompt, user_requirement,
+                    max_tokens,
                     temperature, top_p, top_k, seed, speed_preset, images):
         if not hf_model_name or hf_model_name.startswith("<未发现"):
             raise ValueError("[BSAI_Qwen_Prompt_Enhancer] 本地HF 后端需要选择一个：models/LLM 下的 HuggingFace 模型（safetensors/bin）")
@@ -1345,11 +1395,15 @@ class BSAI_Qwen_Prompt_Enhancer:
                                  temperature, top_p, top_k, device)
             tag = f"后端=本地HF(文本) 模型={model_dir_id} 模板={template_id}"
 
-        return self._finalize(raw, speed_preset, tag)
+        return self._finalize(raw, speed_preset, tag,
+                              system_template=system_template,
+                              custom_system_prompt=custom_system_prompt,
+                              user_requirement=user_requirement)
 
     # ---------------- API ----------------
     def _enhance_api(self, api_base, api_key, api_model_name, prompt_text, system_template,
-                     custom_system_prompt, max_tokens, temperature, top_p, top_k, seed,
+                     custom_system_prompt, user_requirement,
+                     max_tokens, temperature, top_p, top_k, seed,
                      timeout, speed_preset, images):
         if not api_base.strip():
             raise ValueError("[BSAI_Qwen_Prompt_Enhancer] API 后端需要填写 api_base（OpenAI 兼容接口地址）")
@@ -1403,12 +1457,30 @@ class BSAI_Qwen_Prompt_Enhancer:
         if not raw and msg.get("reasoning_content"):
             raw = msg["reasoning_content"]
 
-        return self._finalize(raw, speed_preset, f"后端=API 模板={template_id}")
+        return self._finalize(raw, speed_preset, f"后端=API 模板={template_id}",
+                              system_template=system_template,
+                              custom_system_prompt=custom_system_prompt,
+                              user_requirement=user_requirement)
 
     # ---------------- 统一收尾 ----------------
-    def _finalize(self, raw, speed_preset, tag):
+    def _finalize(self, raw, speed_preset, tag,
+                  system_template=None, custom_system_prompt="", user_requirement=""):
         enhanced, wh_ratio, ratio_follow, raw, thinking_text = get_enhanced_result(raw)
         steps, cfg, sampler, scheduler = self._SPEED_PRESETS.get(speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
+
+        # 【v2】MERGED_TEXT = (解析后的 system prompt) + user_requirement 拼接
+        # 仅用作「下游 Show Text / 提前预览 / 直接接 KSampler」的合并版文本，
+        # 不进入 LLM 内部对话；空 user_requirement 时与 SYSTEM_PROMPT 等价。
+        try:
+            resolved_system_prompt, _tid = resolve_template(
+                system_template or "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]",
+                custom_system_prompt,
+            )
+        except Exception as _e:
+            resolved_system_prompt = ""
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 解析模板失败: {_e}")
+        merged_text = self._build_merged_text(resolved_system_prompt, user_requirement)
+
         print(f"[BSAI_Qwen_Prompt_Enhancer] {tag} wh_ratio={wh_ratio} "
               f"| 加速档={speed_preset} → steps={steps} cfg={cfg} sampler={sampler} scheduler={scheduler}")
         ui_text = [
@@ -1416,10 +1488,51 @@ class BSAI_Qwen_Prompt_Enhancer:
             f"\n── 加速采样建议 ──\n档位: {speed_preset}\n"
             f"KSampler → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler}\n"
             f"（在 KSampler 上右键 steps/cfg → Convert to input，把右侧 RECOMMENDED_* 端口接上即可）",
+            f"\n── 合并文本预览（MERGED_TEXT 输出）──\n{merged_text}",
         ]
-        return {"ui": {"text": ui_text},
+        return {"ui": {"text": ui_text, "merged_text": [merged_text]},
                 "result": (enhanced, wh_ratio, ratio_follow, raw, thinking_text,
-                           int(steps), float(cfg), sampler, scheduler)}
+                           int(steps), float(cfg), sampler, scheduler, merged_text)}
+
+    @staticmethod
+    def _build_preview_merged(system_template, custom_system_prompt, user_requirement):
+        """纯预览模式：解析模板 + 拼用户要求。不调用任何模型。
+        与 _finalize 内的逻辑同源；用于海报墙选模板时让下游立即拿到 MERGED_TEXT。
+        """
+        # 与 _enhance_official 完全一致的解析优先级
+        csp = (custom_system_prompt or "").strip()
+        if csp:
+            resolved = csp
+        else:
+            try:
+                resolved, _ = resolve_template(
+                    system_template or "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]",
+                    "",
+                )
+            except Exception as e:
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 预览模式解析模板失败: {e}")
+                resolved = ""
+        print(f"[BSAI_Qwen_Prompt_Enhancer] [preview-build] csp_len={len(csp)} resolved_head={resolved[:60]!r}")
+        return BSAI_Qwen_Prompt_Enhancer._build_merged_text(resolved, user_requirement)
+
+    @staticmethod
+    def _build_merged_text(template_text, user_requirement):
+        """模板原文 + 用户要求拼接（与模板节点 QwenImage21_Prompt_Template 同源逻辑）
+        - 空 user_requirement: merged_text == template_text（不破坏现有工作流）
+        - 非空: 在尾部追加「【用户要求】\n<要求>\n（请务必在生成时满足以上用户要求。）」
+        """
+        if not template_text:
+            template_text = ""
+        if not user_requirement or not str(user_requirement).strip():
+            return template_text
+        body = str(user_requirement).strip()
+        return (
+            template_text.rstrip()
+            + "\n\n【用户要求】\n"
+            + "用户对当前任务的额外要求：\n"
+            + body
+            + "\n（请务必在生成时满足以上用户要求。）"
+        )
 
 
 def _api_request(url, payload, headers, timeout):

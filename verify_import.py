@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 """BSAI Qwen Prompt Enhancer 插件导入验证脚本"""
 import sys
-sys.path.insert(0, r'C:\BSAI\ComfyUI-BSAI_pro_v40\ComfyUI')
-sys.path.insert(0, r'C:\BSAI\ComfyUI-BSAI_pro_v40\ComfyUI\custom_nodes')
+sys.path.insert(0, r'C:\BSAI\ComfyUI-BSAI_pro_v41\ComfyUI')
+sys.path.insert(0, r'C:\BSAI\ComfyUI-BSAI_pro_v41\ComfyUI\custom_nodes')
 
 import BSAI_Qwen_Prompt_Enhancer as P
 
@@ -73,17 +73,19 @@ it = node.INPUT_TYPES()
 assert list(it['required']['backend'][0]) == BACKEND_LABELS, 'backend 下拉与标签不一致'
 assert node.RETURN_NAMES == (
     'ENHANCED_PROMPT', 'WH_RATIO', 'RATIO_FOLLOW', 'RAW_OUTPUT', 'THINKING',
-    'RECOMMENDED_STEPS', 'RECOMMENDED_CFG', 'RECOMMENDED_SAMPLER', 'RECOMMENDED_SCHEDULER'), '9 路输出名异常'
-assert len(node.RETURN_TYPES) == 9, '输出类型数 != 9'
+    'RECOMMENDED_STEPS', 'RECOMMENDED_CFG', 'RECOMMENDED_SAMPLER', 'RECOMMENDED_SCHEDULER',
+    'MERGED_TEXT'), '10 路输出名异常'
+assert len(node.RETURN_TYPES) == 10, '输出类型数 != 10'
 print('  backend 标签:', BACKEND_LABELS)
-print('  输出 9 路 OK:', node.RETURN_NAMES)
+print('  输出 10 路 OK:', node.RETURN_NAMES)
 
-# 1) _finalize 统一收尾（9 路 result）
+# 1) _finalize 统一收尾（10 路 result）
 out = node._finalize('{"rewritten_prompt": "cat", "wh_ratio": "1:1", "ratio_follow": true}',
                      '标准质量 20步/CFG3 (推荐, 7B原生)', '测试')
-assert len(out['result']) == 9, 'finalize 结果数 != 9'
+assert len(out['result']) == 10, 'finalize 结果数 != 10'
 assert out['result'][0] == 'cat' and out['result'][1] == '1:1' and out['result'][5] == 20
-print('  _finalize OK: 9 路 result, steps=20 cfg=3.0')
+assert isinstance(out['result'][9], str) and out['result'][9], 'MERGED_TEXT 应为非空字符串'
+print('  _finalize OK: 10 路 result, steps=20 cfg=3.0')
 
 # 2) enhance() 按 backend 分发：API 后端最小调用验证（mock 掉真实 HTTP）
 calls = []
@@ -107,7 +109,7 @@ url, payload, headers, timeout = calls[0]
 assert url == 'http://127.0.0.1:1/v1/chat/completions'
 assert payload['model'] == 'qwen3.5-vl-9b' and payload['top_k'] == 40 and payload['seed'] == 42
 assert headers.get('Authorization') == 'Bearer sk-test'
-assert out['result'][0] == 'api cat' and out['result'][1] == '16:9' and len(out['result']) == 9
+assert out['result'][0] == 'api cat' and out['result'][1] == '16:9' and len(out['result']) == 10
 print('  API 分发 OK: payload=%s' % {k: payload[k] for k in ('model', 'temperature', 'max_tokens', 'top_p', 'top_k', 'seed')})
 
 # 3) API 400 降级：服务端不认 top_k/seed -> 自动用最小 payload 重试

@@ -219,6 +219,31 @@ fetch("templates.json")
       `<div style="grid-column:1/-1;text-align:center;color:#fca5a5;padding:40px">加载模板库失败: ${err}</div>`;
   });
 
+// 模板原文索引（id -> 模板原文）
+// 用于选中后立刻拼到 Show Text，不依赖后端 LLM 运行
+let TEMPLATE_TEXTS = {};
+fetch("template_texts.json")
+  .then(r => r.json())
+  .then(data => {
+    (data.templates || []).forEach(t => { TEMPLATE_TEXTS[t.id] = t.text || ""; });
+  })
+  .catch(err => {
+    console.warn("[BSAI.QwenPromptEnhancer] 加载 template_texts.json 失败，Show Text 实时预览将不可用:", err);
+  });
+
+// 拼接「模板原文 + 用户要求」与后端同源（同步 Python 端 _build_merged_text）
+function _buildMergedText(templateText, userRequirement) {
+  if (!templateText) templateText = "";
+  if (!userRequirement || !String(userRequirement).trim()) return templateText;
+  return (
+    String(templateText).replace(/\s+$/, "") +
+    "\n\n【用户要求】\n" +
+    "用户对当前任务的额外要求：\n" +
+    String(userRequirement).trim() +
+    "\n（请务必在生成时满足以上用户要求。）"
+  );
+}
+
 // SVG 缩略图生成器
 function svgFor(t) {
   const r = t.ratio;
@@ -405,28 +430,161 @@ const wall = document.getElementById("wall");
 const params = new URLSearchParams(location.search);
 const NODE_ID = params.get("node_id");
 const WIDGET_NAME = params.get("widget") || "system_template";
+const TNODE_ID = params.get("tnode_id") || "";
+const MERGED_ID = params.get("merged_id") || NODE_ID || "";
+
+// 海报墙打开时，把「当前 user_requirement」同步带过来（合并节点优先，其次是模板节点）。
+// 选中模板后立刻推回节点 → 触发预览运行 → 下游 Show Text 显示合并文本。
+let USER_REQUIREMENT_TEXT = "";
+try {
+  if (window.opener && !window.opener.closed && window.opener.app) {
+    const openerApp = window.opener.app;
+    function findNode(cls, idHint) {
+      if (idHint) {
+        const n = openerApp.graph.getNodeById(Number(idHint));
+        if (n) return n;
+      }
+      return (openerApp.graph._nodes || []).find(n =>
+        (n.comfyClass || n.constructor?.comfyClass) === cls);
+    }
+    const mnode = findNode("BSAI_Qwen_Prompt_Enhancer", MERGED_ID);
+    const tnode = findNode("QwenImage21_Prompt_Template", TNODE_ID);
+    const reqW = (mnode || tnode)?.widgets?.find(w => w.name === "user_requirement");
+    USER_REQUIREMENT_TEXT = reqW?.value || "";
+  }
+} catch (e) {
+  console.warn("[BSAI.QwenPromptEnhancer] 读取 user_requirement 失败:", e);
+}
 
 // 顶部提示条（从节点打开时显示"点击卡片自动回填"）
-if (NODE_ID) {
+if (NODE_ID || TNODE_ID || MERGED_ID) {
   const tip = document.createElement("div");
   tip.style.cssText = "max-width:1400px;margin:0 auto 18px;text-align:center;color:#a78bfa;font-size:13px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);padding:8px 16px;border-radius:10px;";
-  tip.textContent = "✅ 已连接到 ComfyUI 节点 #${NODE_ID} · 点击任意模板卡片即可自动回填，然后关闭本页";
+  const ids = [MERGED_ID ? `合并节点 #${MERGED_ID}` : null, TNODE_ID ? `模板节点 #${TNODE_ID}` : null].filter(Boolean).join(" / ");
+  tip.textContent = `✅ 已连接到 ComfyUI ${ids || NODE_ID} · 点击任意模板卡片即可：① 自动回填下拉 ② 同步推送模板原文给下游 Show Text ③ 关闭本页`;
   document.querySelector(".filters").insertAdjacentElement("beforebegin", tip);
 }
 
 function selectTemplate(displayName) {
-  if (NODE_ID && window.opener && !window.opener.closed && window.opener.app) {
+  if (window.opener && !window.opener.closed && window.opener.app) {
     try {
-      const node = window.opener.app.graph.getNodeById(Number(NODE_ID));
-      if (!node) throw new Error("节点 #${NODE_ID} 未找到");
-      const w = (node.widgets || []).find(x => x.name === WIDGET_NAME);
-      if (!w) throw new Error("未找到 widget: " + WIDGET_NAME);
-      w.value = displayName;
-      if (typeof w.callback === "function") w.callback();
+      const openerApp = window.opener.app;
+      let mainNode = null;
+      if (NODE_ID) {
+        mainNode = openerApp.graph.getNodeById(Number(NODE_ID));
+        if (!mainNode) throw new Error("节点 #" + NODE_ID + " 未找到");
+        const w = (mainNode.widgets || []).find(x => x.name === WIDGET_NAME);
+        if (!w) throw new Error("未找到 widget: " + WIDGET_NAME);
+        w.value = displayName;
+        if (typeof w.callback === "function") w.callback();
+      }
       // 高亮反馈
       document.querySelectorAll(".card").forEach(c => c.style.outline = "");
-      event.currentTarget.style.outline = "2px solid #a78bfa";
-      setTimeout(() => window.close(), 400);
+      if (event && event.currentTarget) event.currentTarget.style.outline = "2px solid #a78bfa";
+
+      // 新增：把选模板事件 + 当前 user_requirement 推到「合并节点 + 模板节点」，触发一次预览运行
+      // （海报墙现在和 prompt_enhancer.js 里 dispatchTemplateSelection 配对使用）
+      let dispatched = false;
+      if (typeof openerApp.__BSAI_PromptEnhancer_selectTemplate === "function") {
+        // 优先用 opener 注入的全局选择器（最稳定）
+        dispatched = openerApp.__BSAI_PromptEnhancer_selectTemplate({
+          templateNodeId: TNODE_ID,
+          mergedNodeId:   MERGED_ID,
+          displayName:    displayName,
+          userRequirementText: USER_REQUIREMENT_TEXT,
+        });
+      } else {
+        // 兜底：直接通过 opener.app.graph 寻找合并节点 + 模板节点 + 推值
+        try {
+          function findNode(cls, idHint) {
+            if (idHint) {
+              const n = openerApp.graph.getNodeById(Number(idHint));
+              if (n) return n;
+            }
+            return (openerApp.graph._nodes || []).find(n =>
+              (n.comfyClass || n.constructor?.comfyClass) === cls);
+          }
+          const tnode = findNode("QwenImage21_Prompt_Template", TNODE_ID);
+          const mnode = findNode("BSAI_Qwen_Prompt_Enhancer", MERGED_ID);
+
+          function pushOne(node, tplWidgetName) {
+            if (!node) return;
+            const tplW = (node.widgets || []).find(x => x.name === tplWidgetName);
+            if (tplW) {
+              tplW.value = displayName;
+              if (typeof tplW.callback === "function") tplW.callback();
+            }
+            const reqW = (node.widgets || []).find(x => x.name === "user_requirement");
+            if (reqW && USER_REQUIREMENT_TEXT) {
+              reqW.value = USER_REQUIREMENT_TEXT;
+              if (typeof reqW.callback === "function") reqW.callback();
+            }
+          }
+          pushOne(tnode, "template_name");
+          pushOne(mnode, "system_template");
+
+          if (typeof openerApp.queuePrompt === "function") openerApp.queuePrompt();
+          dispatched = !!(tnode || mnode);
+        } catch (e) {
+          console.warn("[BSAI.QwenPromptEnhancer] 兜底推送失败:", e);
+        }
+      }
+
+      // 【v3】直接定位 Show Text 节点，把合并后的 merged_text 写进它的 widget
+      // 不依赖后端运行，浏览器就能立刻刷新 Show Text 显示
+      try {
+        const tplId = (displayName.match(/\[([^\[\]]+)\]\s*$/) || [])[1];
+        const tplText = (tplId && TEMPLATE_TEXTS[tplId]) || "";
+        const merged = _buildMergedText(tplText, USER_REQUIREMENT_TEXT);
+        const allNodes = (openerApp.graph?._nodes) || [];
+        // 优先：任何已存在的 ShowText 节点
+        const showTextNodes = allNodes.filter(n => {
+          const cls = n.comfyClass || n.constructor?.comfyClass;
+          return cls === "ShowText" || cls === "ShowText|pysssss";
+        });
+        if (showTextNodes.length && tplText) {
+          for (const sn of showTextNodes) {
+            const txtW = (sn.widgets || []).find(w => w.name === "text");
+            if (txtW) {
+              txtW.value = merged;
+              if (typeof txtW.callback === "function") txtW.callback();
+              try { sn.setDirtyCanvas?.(true, true); } catch (_) {}
+            }
+          }
+          console.log(`[BSAI.QwenPromptEnhancer] 已将合并文本写到 ${showTextNodes.length} 个 Show Text 节点`);
+        }
+      } catch (e) {
+        console.warn("[BSAI.QwenPromptEnhancer] 写 Show Text widget 失败:", e);
+      }
+
+      // 【v3】把合并节点上的 preview_only 勾上，并触发一次 queuePrompt
+      // 让合并节点立刻按「纯预览」路径跑，不调用任何模型，输出 MERGED_TEXT
+      // 下游 Show Text 接 MERGED_TEXT → 立刻显示新模板 + 用户要求合并文本
+      try {
+        const mnode = MERGED_ID
+          ? openerApp.graph.getNodeById(Number(MERGED_ID))
+          : (openerApp.graph._nodes || []).find(n =>
+              (n.comfyClass || n.constructor?.comfyClass) === "BSAI_Qwen_Prompt_Enhancer");
+        if (mnode) {
+          const pv = (mnode.widgets || []).find(w => w.name === "preview_only");
+          if (pv) {
+            pv.value = true;
+            if (typeof pv.callback === "function") pv.callback();
+            try { mnode.setDirtyCanvas?.(true, true); } catch (_) {}
+          }
+          if (typeof openerApp.queuePrompt === "function") {
+            openerApp.queuePrompt();
+          }
+        }
+      } catch (e) {
+        console.warn("[BSAI.QwenPromptEnhancer] 触发预览运行失败:", e);
+      }
+
+      setTimeout(() => window.close(), 500);
+
+      if (!dispatched && !NODE_ID) {
+        alert("已复制模板名到剪贴板（请粘贴到节点的「系统提醒」下拉）:\n\n" + displayName);
+      }
     } catch (e) {
       alert("回填失败: " + e.message + "\n\n请手动复制模板名填入下拉: " + displayName);
     }
