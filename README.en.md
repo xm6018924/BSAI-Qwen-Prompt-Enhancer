@@ -216,22 +216,65 @@ BSAI_Qwen_Prompt_Enhancer/
 
 ## 🔧 Node Outputs
 
-The enhancer node outputs 9 channels uniformly:
+The enhancer node outputs 10 channels uniformly:
 
 | Output | Description |
 |---|---|
 | `ENHANCED_PROMPT` | Enhanced prompt (can connect directly to KSampler positive) |
-| `SYSTEM_PROMPT` | Actual system prompt used |
-| `REASONING_TEXT` | Model reasoning process (returned in thinking mode) |
-| `RECOMMENDED_SEED` | Recommended seed value |
-| `RECOMMENDED_STEPS` | Recommended sampling steps |
-| `RECOMMENDED_CFG` | Recommended CFG value |
-| `RECOMMENDED_SAMPLER` | Recommended sampler |
-| `RECOMMENDED_SCHEDULER` | Recommended scheduler |
 | `WH_RATIO` | Output width-height ratio (in text-to-image mode) |
+| `RATIO_FOLLOW` | Whether to follow reference image aspect ratio |
+| `RAW_OUTPUT` | Raw model output JSON |
+| `THINKING` | Model reasoning process (returned in thinking mode) |
+| `RECOMMENDED_STEPS` | Recommended sampling steps (follows speed_preset) |
+| `RECOMMENDED_CFG` | Recommended CFG value (1.0 for Qwen Image 2.1) |
+| `RECOMMENDED_SAMPLER` | Recommended sampler (euler) |
+| `RECOMMENDED_SCHEDULER` | Recommended scheduler (simple) |
+| `MERGED_TEXT` | Template text + user requirement (connect to downstream text nodes) |
+
+> Right-click `steps` / `cfg` on KSampler → Convert to input, connect `RECOMMENDED_STEPS` / `RECOMMENDED_CFG`, and switching speed_preset tiers auto-updates the sampling parameters.
 
 ## 📝 Notes
 
 - All model directories use **relative paths** (`models/LLM/`, `models/text_encoders/`), works regardless of where the plugin is moved
 - Fully aligned with the Qwen interrogation logic from other BSAI series plugins, consistent loading parameters
 - Supports `keep_loaded` to keep model in VRAM, no repeated loading during batch processing
+
+## ⚡ Acceleration Guide (Qwen Image 2.1 Latest Upgrade)
+
+Qwen Image 2.1 (7B DiT) is a **CFG-distilled model**; the official day-0 recommendation is **25 steps / cfg=1.0 / euler / simple**.
+**Do NOT reuse the old 20B cfg=3~4 values** — that causes oversaturation, overexposure and stiff composition, and doubles the model forward passes per step.
+
+### 11 Built-in Speed Presets (speed_preset)
+
+Pick a tier and `RECOMMENDED_STEPS` / `RECOMMENDED_CFG` output the matching values; wire them to KSampler to auto-link:
+
+| Tier | steps | Use case |
+|---|---|---|
+| Official Standard 25/CFG1 (default) | 25 | Daily generation (official recommendation, best quality) |
+| Fast 15/CFG1 | 15 | Iteration preview, faster |
+| Ultra 10/CFG1 | 10 | Quick drafts (slightly lower quality) |
+| High Quality 35/CFG1 | 35 | Fine generation |
+| Cache Boost 20/CFG1 | 20 | With EasyCache / Cache nodes |
+| Lightning 8/4/CFG1 | 8/4 | For after the 2.1-specific Lightning LoRA ships |
+| Legacy tiers ×4 | corrected | Keep old keys so old workflows never break |
+
+### Recommended Model & Stackable Speed-ups (by ROI)
+
+1. **Use the official int8 convrot model**: `qwen_image_2.1_int8_convrot.safetensors` (half VRAM, faster)
+2. **Launch flags**: `--fast --use-sage-attention` (fused kernels + SageAttention, 20-40% faster sampling)
+3. **TE-Speed QwenImage21 node** (third-party, output-prediction cache): wire `UNETLoader → QwenImage21Cache → TE-Speed → KSampler`, 30-40% faster
+4. **EasyCache / KV Cache**: built-in `QwenImage21Cache` node, biggest win for editing workflows
+5. **torch.compile**: `TorchCompileModel` node, 10-30% (one-time compile warm-up)
+
+### Reference Speed
+
+RTX 4090 / 1024×1024 / int8 / 25 steps ≈ **7.5 s/image**; with SageAttention + EasyCache ≈ **4-5 s**.
+
+### ⚠️ Notes
+
+- **The 2.1-specific Lightning LoRA is not released yet** (expected in 2-6 weeks); picking 8/4-step tiers now produces noisy images
+- **Do NOT use the old 20B Lightning LoRA** (e.g. `Qwen-Image-Lightning-8steps-V2.0` — different architecture, weight shape mismatch)
+- **Do NOT use TeaCache** (frozen for 14 months, incompatible with 2.1)
+- ComfyUI **v0.37.0+** is required for native 2.1 support
+
+Full acceleration playbook & hardware benchmarks: [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md). Research: [RESEARCH_REPORT.md](RESEARCH_REPORT.md).

@@ -20,9 +20,10 @@ BSAI Qwen Prompt Enhancer — 四合一增强通道节点
   · 本地HF 专属：hf_model_name / hf_task / hf_device / hf_keep_loaded
   · API 专属：api_base / api_key / api_model_name / timeout
 
-输出统一 9 路（四个后端一致）：
+输出统一 10 路（四个后端一致）：
   ENHANCED_PROMPT / WH_RATIO / RATIO_FOLLOW / RAW_OUTPUT / THINKING /
-  RECOMMENDED_STEPS / RECOMMENDED_CFG / RECOMMENDED_SAMPLER / RECOMMENDED_SCHEDULER
+  RECOMMENDED_STEPS / RECOMMENDED_CFG / RECOMMENDED_SAMPLER / RECOMMENDED_SCHEDULER /
+  MERGED_TEXT
 
 模型目录（相对路径）：ComfyUI/models/LLM  —  放置所有 GGUF / HF 模型文件
 """
@@ -75,7 +76,7 @@ BACKEND_HF = "本地HF (Transformers)"
 BACKEND_API = "API (OpenAI兼容)"
 BACKEND_LABELS = [BACKEND_PE, BACKEND_LLAMA, BACKEND_HF, BACKEND_API]
 
-_DEFAULT_SPEED = "标准质量 20步/CFG3 (推荐, 7B原生)"
+_DEFAULT_SPEED = "官方标准 25步/CFG1 (推荐)"
 
 
 # ============================================================
@@ -1098,16 +1099,30 @@ class BSAI_Qwen_Prompt_Enhancer:
         "③ 本地HF（Transformers）：加载 models/LLM 下的 HuggingFace safetensors 模型，"
         "覆盖 Florence-2（视觉 caption 反推提示词，需接 image_1）与 Llama/Gemma 等文本 LLM（chat_template 生成）。\n"
         "④ API（OpenAI兼容）：配置 api_base / api_key / model_name 调在线或本地 API。\n"
-        "公共参数三后端共用；输出统一 9 路。speed_preset 选档后 RECOMMENDED_* 端口输出对应 KSampler 参数，"
+        "公共参数四后端共用；输出统一 10 路。speed_preset 选档后 RECOMMENDED_* 端口输出对应 KSampler 参数，"
         "在 KSampler 上右键 steps/cfg → Convert to input 接上即可一键套用。"
+        "Qwen Image 2.1 为 CFG-distilled 架构，官方推荐 cfg=1.0；加速档基于官方 day-0 参数（25步/cfg1/euler/simple）。"
     )
 
     # 加速档位 → (steps, cfg, sampler, scheduler)
+    # Qwen Image 2.1 是 CFG-distilled 架构，cfg=1.0 为官方推荐值（非旧版的 3~4）
+    # 官方 day-0 联调：25步/cfg1/euler/simple（ComfyUI v0.37.0+ 原生模板）
     _SPEED_PRESETS = {
-        _DEFAULT_SPEED: (20, 3.0, "euler", "simple"),
-        "极速 8步/CFG2": (8, 2.0, "euler", "simple"),
+        # ===== 2.1 原生正确参数（基于官方 day-0 联调）=====
+        _DEFAULT_SPEED: (25, 1.0, "euler", "simple"),
+        "快速 15步/CFG1 (迭代预览)": (15, 1.0, "euler", "simple"),
+        "极速 10步/CFG1 (快速草稿)": (10, 1.0, "euler", "simple"),
+        "高质量 35步/CFG1 (精细出图)": (35, 1.0, "euler", "simple"),
+        # ===== 配合外部加速节点 =====
+        "缓存加速 20步/CFG1 (配合EasyCache节点)": (20, 1.0, "euler", "simple"),
+        # ===== 蒸馏/Lightning 档位（需对应 LoRA，2.1专用版尚未发布）=====
+        "Lightning 8步/CFG1 (需lightx2v 2.1专用LoRA)": (8, 1.0, "euler", "simple"),
+        "Lightning 4步/CFG1 (需lightx2v 2.1专用LoRA)": (4, 1.0, "euler", "simple"),
+        # ===== 旧版兼容（保留key防旧工作流失效，值已修正为2.1正确参数）=====
+        "标准质量 20步/CFG3 (推荐, 7B原生)": (25, 1.0, "euler", "simple"),
+        "极速 8步/CFG2": (8, 1.0, "euler", "simple"),
         "闪电 4步/CFG1 (需2.1 Lightning LoRA)": (4, 1.0, "euler", "simple"),
-        "旧保守 50步/CFG4": (50, 4.0, "euler", "simple"),
+        "旧保守 50步/CFG4": (35, 1.0, "euler", "simple"),
     }
 
     def enhance(self, backend, prompt_text, system_template, custom_system_prompt="",
@@ -1139,7 +1154,8 @@ class BSAI_Qwen_Prompt_Enhancer:
             ui_text = [
                 merged_text,
                 f"\n── 纯预览模式 ──\n未调用任何模型。MERGED_TEXT 已生成，下游 Show Text / KSampler 可直接使用。\n"
-                f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。",
+                f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。\n"
+                f"\n── 当前加速档: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──",
             ]
             return {
                 "ui": {"text": ui_text, "merged_text": [merged_text]},
@@ -1487,7 +1503,15 @@ class BSAI_Qwen_Prompt_Enhancer:
             enhanced,
             f"\n── 加速采样建议 ──\n档位: {speed_preset}\n"
             f"KSampler → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler}\n"
-            f"（在 KSampler 上右键 steps/cfg → Convert to input，把右侧 RECOMMENDED_* 端口接上即可）",
+            f"接线: KSampler 右键 steps/cfg → Convert to input，接入 RECOMMENDED_* 端口\n"
+            f"\n── Qwen Image 2.1 加速要点 ──\n"
+            f"1. cfg=1.0 是正确值（2.1 为 CFG-distilled 架构，无需高CFG）\n"
+            f"2. 官方默认 int8 模型: qwen_image_2.1_int8_convrot.safetensors（显存减半）\n"
+            f"3. 编辑工作流: 添加「Qwen Image 2.1 Cache」节点(device=auto,dtype=int8)复用前缀KV\n"
+            f"4. 通用提速: model→EasyCache节点→KSampler (ComfyUI v0.3.52+核心内置,约1.2-1.5x)\n"
+            f"5. 注意力加速: 启动参数加 --use-sage-attention (采样阶段快20-40%)\n"
+            f"6. Lightning 4/8步档需 lightx2v 发布 2.1 专用 LoRA（当前尚未发布，预计2-6周）\n"
+            f"7. 勿用 TeaCache（已冻结不兼容2.1）；勿用旧版20B Lightning LoRA（架构不同）",
             f"\n── 合并文本预览（MERGED_TEXT 输出）──\n{merged_text}",
         ]
         return {"ui": {"text": ui_text, "merged_text": [merged_text]},

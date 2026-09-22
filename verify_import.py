@@ -81,11 +81,11 @@ print('  输出 10 路 OK:', node.RETURN_NAMES)
 
 # 1) _finalize 统一收尾（10 路 result）
 out = node._finalize('{"rewritten_prompt": "cat", "wh_ratio": "1:1", "ratio_follow": true}',
-                     '标准质量 20步/CFG3 (推荐, 7B原生)', '测试')
+                     '官方标准 25步/CFG1 (推荐)', '测试')
 assert len(out['result']) == 10, 'finalize 结果数 != 10'
-assert out['result'][0] == 'cat' and out['result'][1] == '1:1' and out['result'][5] == 20
+assert out['result'][0] == 'cat' and out['result'][1] == '1:1' and out['result'][5] == 25
 assert isinstance(out['result'][9], str) and out['result'][9], 'MERGED_TEXT 应为非空字符串'
-print('  _finalize OK: 10 路 result, steps=20 cfg=3.0')
+print('  _finalize OK: 10 路 result, steps=25 cfg=1.0')
 
 # 2) enhance() 按 backend 分发：API 后端最小调用验证（mock 掉真实 HTTP）
 calls = []

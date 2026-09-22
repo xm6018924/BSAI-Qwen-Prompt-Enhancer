@@ -216,22 +216,65 @@ BSAI_Qwen_Prompt_Enhancer/
 
 ## 🔧 节点输出
 
-增强节点统一输出 9 路：
+增强节点统一输出 10 路：
 
 | 输出 | 说明 |
 |---|---|
 | `ENHANCED_PROMPT` | 增强后的提示词（可直接接 KSampler positive） |
-| `SYSTEM_PROMPT` | 实际使用的系统提示词 |
-| `REASONING_TEXT` | 模型思考过程（thinking 模式时返回） |
-| `RECOMMENDED_SEED` | 推荐的种子值 |
-| `RECOMMENDED_STEPS` | 推荐的采样步数 |
-| `RECOMMENDED_CFG` | 推荐的 CFG 值 |
-| `RECOMMENDED_SAMPLER` | 推荐的采样器 |
-| `RECOMMENDED_SCHEDULER` | 推荐的调度器 |
 | `WH_RATIO` | 输出的宽高比（文生图模式时） |
+| `RATIO_FOLLOW` | 是否按参考图比例输出 |
+| `RAW_OUTPUT` | 模型原始输出 JSON |
+| `THINKING` | 模型思考过程（thinking 模式时返回） |
+| `RECOMMENDED_STEPS` | 推荐的采样步数（随 speed_preset 档位联动） |
+| `RECOMMENDED_CFG` | 推荐的 CFG 值（Qwen Image 2.1 为 1.0） |
+| `RECOMMENDED_SAMPLER` | 推荐的采样器（euler） |
+| `RECOMMENDED_SCHEDULER` | 推荐的调度器（simple） |
+| `MERGED_TEXT` | 模板原文 + 用户要求拼接文本（可直接接下游文本节点） |
+
+> KSampler 上右键 `steps`/`cfg` → Convert to input，接上 `RECOMMENDED_STEPS`/`RECOMMENDED_CFG`，切换 speed_preset 档位即自动联动采样参数。
 
 ## 📝 说明
 
 - 模型目录全部使用 **相对路径**（`models/LLM/`、`models/text_encoders/`），插件移动到任何位置都能正常工作
 - 与 BSAI 系列其他插件的 Qwen 反推逻辑完全对齐，加载参数一致
 - 支持 `keep_loaded` 保持模型驻留显存，批量处理时不用反复加载
+
+## ⚡ 加速指南（Qwen Image 2.1 最新升级）
+
+Qwen Image 2.1（7B DiT）为 **CFG-distilled 架构**，官方 day-0 推荐参数为 **25步 / cfg=1.0 / euler / simple**。
+**不要再用旧版 20B 的 cfg=3~4**，否则会过饱和、过曝、构图僵硬，且每步要多跑一次模型前向。
+
+### 内置 11 档加速预设（speed_preset）
+
+选档后 `RECOMMENDED_STEPS` / `RECOMMENDED_CFG` 直接输出对应参数，KSampler 接线即可联动：
+
+| 档位 | steps | 用途 |
+|---|---|---|
+| 官方标准 25步/CFG1（默认） | 25 | 日常出图（官方推荐，画质最优） |
+| 快速 15步/CFG1 | 15 | 迭代预览，更快 |
+| 极速 10步/CFG1 | 10 | 快速草稿（画质略降） |
+| 高质量 35步/CFG1 | 35 | 精细出图 |
+| 缓存加速 20步/CFG1 | 20 | 配合 EasyCache / Cache 节点 |
+| Lightning 8/4步/CFG1 | 8/4 | 待 2.1 专用 Lightning LoRA 发布后使用 |
+| 旧版兼容档 ×4 | 修正值 | 保留旧 key，防旧工作流失效 |
+
+### 推荐模型与叠加加速（按收益排序）
+
+1. **模型用官方 int8 convrot 版**：`qwen_image_2.1_int8_convrot.safetensors`（显存减半、更快）
+2. **启动参数**：`--fast --use-sage-attention`（fused kernels + SageAttention 注意力加速，采样阶段快 20-40%）
+3. **TE-Speed QwenImage21 节点**（第三方，输出预测缓存）：接线 `UNETLoader → QwenImage21Cache → TE-Speed → KSampler`，提速 30-40%
+4. **EasyCache / KV Cache**：ComfyUI 内置 `QwenImage21Cache`，编辑工作流加速明显
+5. **torch.compile**：`TorchCompileModel` 节点，10-30%（首次编译有冷启动）
+
+### 参考速度
+
+RTX 4090 / 1024×1024 / int8 / 25步 ≈ **7.5 秒/张**；叠加 SageAttention + EasyCache 后约 **4-5 秒**。
+
+### ⚠️ 注意事项
+
+- **2.1 专用 Lightning LoRA 尚未发布**（预计 2-6 周），当前选 8/4 步档会出噪图
+- **勿用旧版 20B Lightning LoRA**（如 `Qwen-Image-Lightning-8steps-V2.0`，架构不同，权重形状不匹配）
+- **勿用 TeaCache**（已冻结 14 个月，不兼容 2.1）
+- ComfyUI 需 **v0.37.0+** 才原生支持 2.1
+
+详细加速方案与硬件实测见 [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md)，技术调研见 [RESEARCH_REPORT.md](RESEARCH_REPORT.md)。
