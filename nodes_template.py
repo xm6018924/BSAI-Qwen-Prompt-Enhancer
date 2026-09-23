@@ -32,7 +32,10 @@ class QwenImage21_Prompt_Template:
     # 【v1.01】一键兼容旧工作流存档：模板库版本变化后，旧存档 template_name 可能不在当前下拉列表，
     # 放行 combo 校验避免 "Value not in list" 红框报错阻塞整图；运行时 get_template 对未知模板给出中文提示。
     @staticmethod
-    def VALIDATE_INPUTS(input_name, input_value):
+    def VALIDATE_INPUTS(*args, **kwargs):
+        # v1.01.1: 兼容所有 ComfyUI 版本的调用方式（部分版本无参调用 VALIDATE_INPUTS()）。
+        # 固定签名 (input_name, input_value) 会抛 "missing 2 required positional arguments"，
+        # 可变参数对任何调用方式都放行 combo 校验，实现跨版本一键自愈。
         return None
 
     @classmethod

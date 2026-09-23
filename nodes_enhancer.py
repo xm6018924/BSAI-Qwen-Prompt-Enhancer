@@ -1015,7 +1015,10 @@ class BSAI_Qwen_Prompt_Enhancer:
     # 这里放行所有 combo 校验：开图不红框、不阻塞；运行时后端逻辑会给出友好中文提示，
     # 前端 JS（prompt_enhancer.js）还会在加载工作流时自动把非法 combo 值重置为当前列表首项。
     @staticmethod
-    def VALIDATE_INPUTS(input_name, input_value):
+    def VALIDATE_INPUTS(*args, **kwargs):
+        # v1.01.1: 兼容所有 ComfyUI 版本的调用方式（部分版本无参调用 VALIDATE_INPUTS()）。
+        # 固定签名 (input_name, input_value) 会抛 "missing 2 required positional arguments"，
+        # 可变参数对任何调用方式都放行 combo 校验，实现跨版本一键自愈。
         return None
 
     @classmethod

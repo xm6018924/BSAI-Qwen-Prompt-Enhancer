@@ -8,6 +8,16 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.01.1 (2026-09-24) — 修复跨 ComfyUI 版本的校验签名兼容 / Fix VALIDATE_INPUTS signature across ComfyUI versions
+
+> **v1.01 在部分 ComfyUI 版本上会报新错：`Exception when validating inner node: BSAI_Qwen_Prompt_Enhancer.VALIDATE_INPUTS() missing 2 required positional arguments: 'input_name' and 'input_value'`。**
+> 原因：这些版本以**无参方式**调用 `VALIDATE_INPUTS()`，v1.01 固定签名 `(input_name, input_value)` 因而抛错。
+> **v1.01.1 已改为可变参数签名 `VALIDATE_INPUTS(*args, **kwargs)`，兼容无参 / 两参 / 带 kwargs 的所有调用方式，任何 ComfyUI 版本都开图即用、不再红框。** 请把插件更新到 v1.01.1（`git pull` 或重新下载）。
+>
+> **v1.01 could fail on some ComfyUI builds with: `Exception when validating inner node: ...VALIDATE_INPUTS() missing 2 required positional arguments: 'input_name' and 'input_value'`** — those builds call `VALIDATE_INPUTS()` with **no arguments**. **v1.01.1 switches to a variadic signature `VALIDATE_INPUTS(*args, **kwargs)` that accepts any calling convention (no args / two args / kwargs), so every ComfyUI version loads cleanly with no red frame.** Update the plugin to v1.01.1 (`git pull` or re-download).
+
+---
+
 ### v1.01 (2026-09-24) — 跨电脑打开工作流红框报错一键自愈 / One-click fix: validation errors when opening workflows saved on another PC
 
 > **遇到 `Value not in list: hf_model_name: 'Florence-2-base [...]' not in ['<未发现 HF 模型>']`、节点红框「无效输入」、控制台刷 `Output will be ignored`？** 这是**旧工作流存档的下拉值在本机不存在**（例如另一台电脑选了 Florence-2，本机 `models/LLM` 下没这个模型）。
@@ -383,7 +393,7 @@ RTX 4090 / 1024×1024 / int8 / 25步 ≈ **7.5 秒/张**；叠加 SageAttention 
 
 **原因**：工作流是在**另一台电脑**保存的，`hf_model_name`（本地 HF 后端）选了 `Florence-2-base [Florence2ForConditionalGeneration]`；当前电脑的 `ComfyUI/models/LLM` 下**没有该模型**（未下载 / 目录不同），下拉列表只剩 `<未发现 HF 模型>`，ComfyUI 校验失败 → 红框 + 整图被忽略。
 
-**✅ 一键解决（v1.01+，无需任何手动操作）**：升级到 **v1.01**，插件内置两层自愈：
+**✅ 一键解决（v1.01.1+，无需任何手动操作）**：升级到 **v1.01.1**，插件内置两层自愈：
 
 1. **后端放行**：`VALIDATE_INPUTS` 跳过 combo 的 value-in-list 校验 → 开图不再红框、不再阻塞整图；
 2. **前端自动重置**：加载工作流时把非法下拉值自动重置为当前列表首项，并在节点 tooltip 提示「下拉选项已自动重置」。
@@ -399,7 +409,7 @@ hf download microsoft/Florence-2-base --local-dir ComfyUI/models/LLM/Florence-2-
 
 ### Q：其他下拉也报 `Value not in list`？
 
-同一原因（旧存档值不在当前选项列表，如模板库版本变化后的 `system_template`、模型目录变化后的 `llm_model_name`）。v1.01 对**全部下拉**统一做了自愈，重启 ComfyUI 后打开工作流即自动重置，无需手动改节点。
+同一原因（旧存档值不在当前选项列表，如模板库版本变化后的 `system_template`、模型目录变化后的 `llm_model_name`）。v1.01.1 对**全部下拉**统一做了自愈，重启 ComfyUI 后打开工作流即自动重置，无需手动改节点。
 
 ---
 
