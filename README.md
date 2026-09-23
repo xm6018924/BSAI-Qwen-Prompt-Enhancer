@@ -6,6 +6,20 @@
 
 **中文** | [English](README.en.md)
 
+## 🚀 最新更新 / Latest Updates
+
+### v0.9 (2026-09-23) — 后端稳定性修复 + 模板输出修复 / Backend Stability + Template Output Fixes
+
+**核心：彻底解决"本地 LLaMA 首次调用 Invalid chat handler: None"报错；清除模板后不再残留；预览选模板时 ENHANCED_PROMPT 正确走模板输出。**
+**Fixes: "Invalid chat handler: None" on first local-LLaMA call; no stale output after clearing the template; ENHANCED_PROMPT now correctly follows the selected template in preview mode.**
+
+- **`keep_loaded` 默认关闭 + 用后清理**：修复 llama-cpp 在 keep_loaded=false 路径下加载后立即 `_clear_cache()` 提前 close LLM，导致 chat handler 被置空（`Invalid chat handler: None`）的问题。现在模型用完才清理，handler 始终有效 / `keep_loaded` now defaults off with post-use cleanup — the LLM is closed only after the call finishes, so the chat handler stays valid (fixes `Invalid chat handler: None`)
+- **清理时机修复**：`_enhance_local` 的缓存清理不再干扰本轮调用，多后端（官方PE / 本地LLaMA / 本地HF / API）首次调用均稳定 / Cleanup timing fixed so it never interrupts the current call; all backends (Official PE / Local LLaMA / Local HF / API) are stable on first call
+- **ENHANCED_PROMPT 模板优先**：预览模式下选择模板后，ENHANCED_PROMPT 输出端口的预览正确显示模板拼接结果（有模板→模板，无模板→原文），不再出现"选了官方PE却直出原文" / In preview mode, ENHANCED_PROMPT now correctly shows the merged template (template if set, raw text otherwise) — no more "selected Official PE but got the raw text"
+- **清除模板按钮新版**：点击清除后预览与输出端口彻底清空，不再反复输出旧模板内容 / New "Clear Template" button: preview and output ports are fully cleared — no more repeated stale template output
+
+---
+
 ## ✨ 功能特性
 
 ### 🔥 支持千问家族全部模型

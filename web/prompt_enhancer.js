@@ -291,29 +291,41 @@ app.registerExtension({
           try {
             const sysW = (node.widgets || []).find(w => w.name === "system_template");
             if (!sysW) return;
-            // 防重复触发：已是「无模板」时直接跳过，不再 queuePrompt（避免反复出图）
-            if (sysW.value === NONE_TEMPLATE_DISPLAY) {
-              console.log("[BSAI.PromptEnhancer] 清除模板按钮：已是无模板状态，跳过运行");
+            const pvW = (node.widgets || []).find(w => w.name === "preview_only");
+            const isNone = sysW.value === NONE_TEMPLATE_DISPLAY;
+            const pvOn = pvW && (pvW.value === true || pvW.value === "true");
+            // 防重复触发：已是「无模板」且「仅预览」已关 → 无动作，不 queuePrompt（避免反复出图）
+            if (isNone && !pvOn) {
+              console.log("[BSAI.PromptEnhancer] 清除模板按钮：已是无模板且仅预览已关，跳过运行");
               return;
             }
-            // 只走 ComfyUI 标准变更通知（widget.callback），不手动调 onChange
-            // （onChange 是 LiteGraph/Vue 内部机制，手动调用会与 callback/queuePrompt 叠加重复执行）
+            // ① system_template -> 无模板（清空输出）：只走标准变更通知，不手动调 onChange
             sysW.value = NONE_TEMPLATE_DISPLAY;
             if (typeof sysW.callback === "function") {
               try { sysW.callback(NONE_TEMPLATE_DISPLAY); } catch (_) {}
             }
+            // ② preview_only -> 关（清除模板时一并退出「仅预览」，恢复正式出图，
+            //    消除海报墙自动勾选遗留的直出状态）
+            if (pvW && pvOn) {
+              pvW.value = false;
+              if (typeof pvW.callback === "function") {
+                try { pvW.callback(false); } catch (_) {}
+              }
+              syncPreviewWarning(node);
+            }
             // 兼容更新 graph widgets_values
             if (Array.isArray(node.widgets_values)) {
-              const idx = node.widgets.indexOf(sysW);
-              if (idx >= 0) node.widgets_values[idx] = NONE_TEMPLATE_DISPLAY;
+              const i1 = node.widgets.indexOf(sysW);
+              if (i1 >= 0) node.widgets_values[i1] = NONE_TEMPLATE_DISPLAY;
+              if (pvW) {
+                const i2 = node.widgets.indexOf(pvW);
+                if (i2 >= 0) node.widgets_values[i2] = false;
+              }
             }
-            // 保留 custom_system_prompt 不动
-            // 触发一次工作流运行（preview_only 已是 true，秒出结果）
+            // ③ 不自动 queuePrompt：清除模板只复位状态，是否运行由用户手动 Queue
+            //    （避免误触发 LLM 真增强/反复出图）
             try { app.graph?.setDirtyCanvas?.(true, true); } catch (_) {}
-            console.log("[BSAI.PromptEnhancer] 清除模板按钮执行：system_template ->", sysW.value);
-            if (typeof app.queuePrompt === "function") {
-              try { app.queuePrompt(); } catch (e) { console.warn("[BSAI.PromptEnhancer] queuePrompt 失败:", e); }
-            }
+            console.log("[BSAI.PromptEnhancer] 清除模板按钮执行：system_template -> 无模板, preview_only -> 关");
           } catch (e) {
             console.warn("[BSAI.PromptEnhancer] 清除模板按钮执行失败:", e);
           }

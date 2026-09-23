@@ -1055,7 +1055,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 "n_ctx": ("INT", {"default": 8192, "min": 512, "max": 65536}),
                 "n_gpu_layers": ("INT", {"default": -1, "min": -1, "max": 200}),
                 "load_mtp": ("BOOLEAN", {"default": False}),
-                "keep_loaded": ("BOOLEAN", {"default": True}),
+                "keep_loaded": ("BOOLEAN", {"default": False}),
                 # ---- API 专属 ----
                 "api_base": ("STRING", {
                     "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
@@ -1132,7 +1132,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 max_tokens=4096, speed_preset=_DEFAULT_SPEED,
                 pe_mode="auto", min_p=0.0, thinking=True, mtp="auto",
                 llm_model_name="", mmproj_name="", chat_handler="", n_ctx=8192,
-                n_gpu_layers=-1, load_mtp=False, keep_loaded=True,
+                n_gpu_layers=-1, load_mtp=False, keep_loaded=False,
                 api_base="", api_key="", api_model_name="", timeout=120,
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
                 preview_only=False,
@@ -1152,18 +1152,22 @@ class BSAI_Qwen_Prompt_Enhancer:
             steps, cfg, sampler, scheduler = self._SPEED_PRESETS.get(
                 speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
             print(f"[BSAI_Qwen_Prompt_Enhancer] 纯预览模式 → 仅输出 MERGED_TEXT，不调用任何模型")
+            # 【修复 2026-09-23】纯预览同样释放常驻 LLM（此前 keep_loaded=true 遗留的 27B 占 ~20GB 显存），
+            # 否则预览/后续出图仍会被常驻 LLM 拖死。_clear_cache 只清本地 LLaMA 缓存，不影响 clip。
+            _clear_cache()
             ui_text = [
                 merged_text,
                 f"\n── 纯预览模式 ──\n未调用任何模型。MERGED_TEXT 已生成，下游 Show Text / KSampler 可直接使用。\n"
                 f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。\n"
                 f"\n── 当前加速档: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──",
             ]
-            # 【修复 2026-09-23】纯预览下 ENHANCED_PROMPT(第1路) 透传用户原文 prompt_text：
-            # 无模板时 merged_text 为空，若 ENHANCED_PROMPT 也空，下游 KSampler 会拿空条件
-            # 采样出随机噪点图（沙土）。MERGED_TEXT(第10路) 仍输出模板拼接，供 Show Text 预览。
+            # 【修复 2026-09-23 v2】海报墙选模板后，ENHANCED_PROMPT(第1路) 输出模板拼接 merged_text：
+            # 无论后端模式，选模板后提示词统一走 ENHANCED_PROMPT 展示模板效果（用户需求）。
+            # 无模板且无用户要求时 merged_text 为空 → 回退用户原文 prompt_text，防空条件出沙土图。
+            enhanced_out = merged_text if (merged_text or "").strip() else (prompt_text or "")
             return {
                 "ui": {"text": ui_text, "merged_text": [merged_text]},
-                "result": (prompt_text or "", "", "", merged_text, "",
+                "result": (enhanced_out, "", "", merged_text, "",
                            int(steps), float(cfg), sampler, scheduler, merged_text),
             }
 
@@ -1301,8 +1305,6 @@ class BSAI_Qwen_Prompt_Enhancer:
         system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
 
         llm, mmproj_actually_active = _load_llm(llm_model_name, mmproj_name, chat_handler, n_ctx, n_gpu_layers, load_mtp)
-        if not keep_loaded:
-            _clear_cache()
 
         user_content = []
         if images is not None and mmproj_actually_active:
@@ -1384,6 +1386,12 @@ class BSAI_Qwen_Prompt_Enhancer:
 
         # 结果清理（与 G 盘 BSAI_QwenNodes 对齐：去除前缀冒号等）
         raw = raw.lstrip().removeprefix(": ").strip()
+
+        # 【修复 2026-09-23】keep_loaded=false：LLM 用完后再卸载。
+        # 之前"加载完立即 _clear_cache"会把刚拿到/命中的 llm close 掉，
+        # 导致后续 create_chat_completion 报 Invalid chat handler: None。
+        if not keep_loaded:
+            _clear_cache()
 
         return self._finalize(raw, speed_preset, f"后端=本地LLaMA 模板={template_id}",
                               system_template=system_template,

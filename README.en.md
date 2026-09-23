@@ -6,6 +6,19 @@
 
 [中文版](README.md) | **English**
 
+## 🚀 Latest Updates
+
+### v0.9 (2026-09-23) — Backend Stability + Template Output Fixes
+
+**Fixes the "Invalid chat handler: None" error on first local-LLaMA call, stale output after clearing the template, and ENHANCED_PROMPT not following the selected template in preview mode.**
+
+- **`keep_loaded` now defaults off with post-use cleanup** — the LLM is closed only after the call finishes, so the chat handler stays valid (fixes `Invalid chat handler: None`)
+- **Cleanup timing fixed** so it never interrupts the current call; all backends (Official PE / Local LLaMA / Local HF / API) are stable on first call
+- **ENHANCED_PROMPT template-first**: in preview mode, ENHANCED_PROMPT correctly shows the merged template (template if set, raw text otherwise) — no more "selected Official PE but got the raw text"
+- **New "Clear Template" button**: preview and output ports are fully cleared — no more repeated stale template output
+
+---
+
 ## ✨ Features
 
 ### 🔥 Full Qwen Family Model Support
