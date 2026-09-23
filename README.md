@@ -8,6 +8,17 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.01.2 (2026-09-24) — 兼容新旧两代 ComfyUI 的校验语义 / Compatible with old & new ComfyUI validation semantics
+
+> **新版 ComfyUI 上报 `Custom validation failed for node: backend - None`（每个输入都报）？**
+> 新版以 `VALIDATE_INPUTS(**全部输入)` 方式调用并**要求返回 `True`**（返回 None/False 都判失败）；旧版则以 `VALIDATE_INPUTS(input_name, input_value)` 两位置参调用、返回 None 表示通过。
+> **v1.01.2 已按调用形态自动判别返回值**（kwargs 形态返回 True、两位置参返回 None），新旧版 ComfyUI 全部通过校验，开图即用。请更新到 v1.01.2。
+>
+> **Newer ComfyUI shows `Custom validation failed for node: backend - None` (for every input)?** New builds call `VALIDATE_INPUTS(**all_inputs)` and **require `True`** (None/False both count as failure); legacy builds call `VALIDATE_INPUTS(input_name, input_value)` and treat None as pass.
+> **v1.01.2 detects the calling convention and returns the right value** (True for kwargs form, None for two-positional form), so both old and new ComfyUI pass validation cleanly on load. Update to v1.01.2.
+
+---
+
 ### v1.01.1 (2026-09-24) — 修复跨 ComfyUI 版本的校验签名兼容 / Fix VALIDATE_INPUTS signature across ComfyUI versions
 
 > **v1.01 在部分 ComfyUI 版本上会报新错：`Exception when validating inner node: BSAI_Qwen_Prompt_Enhancer.VALIDATE_INPUTS() missing 2 required positional arguments: 'input_name' and 'input_value'`。**

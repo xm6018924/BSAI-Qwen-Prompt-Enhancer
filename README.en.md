@@ -8,6 +8,13 @@
 
 ## 🚀 Latest Updates
 
+### v1.01.2 (2026-09-24) — Compatible with old & new ComfyUI validation semantics
+
+> **Newer ComfyUI shows `Custom validation failed for node: backend - None` (for every input)?** New builds call `VALIDATE_INPUTS(**all_inputs)` and **require `True`** (None/False both count as failure); legacy builds call `VALIDATE_INPUTS(input_name, input_value)` and treat None as pass.
+> **v1.01.2 detects the calling convention and returns the right value** (True for kwargs form, None for two-positional form), so both old and new ComfyUI pass validation cleanly on load. Update to v1.01.2.
+
+---
+
 ### v1.01.1 (2026-09-24) — Fix VALIDATE_INPUTS signature across ComfyUI versions
 
 > **v1.01 could fail on some ComfyUI builds with: `Exception when validating inner node: BSAI_Qwen_Prompt_Enhancer.VALIDATE_INPUTS() missing 2 required positional arguments: 'input_name' and 'input_value'`** — those builds call `VALIDATE_INPUTS()` with **no arguments**, while v1.01's fixed signature `(input_name, input_value)` then throws.
