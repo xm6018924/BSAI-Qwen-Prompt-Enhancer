@@ -8,6 +8,15 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.01 (2026-09-24) — 跨电脑打开工作流红框报错一键自愈 / One-click fix: validation errors when opening workflows saved on another PC
+
+> **遇到 `Value not in list: hf_model_name: 'Florence-2-base [...]' not in ['<未发现 HF 模型>']`、节点红框「无效输入」、控制台刷 `Output will be ignored`？** 这是**旧工作流存档的下拉值在本机不存在**（例如另一台电脑选了 Florence-2，本机 `models/LLM` 下没这个模型）。
+> **升级到 v1.01 后自动解决，无需任何手动操作**：后端 `VALIDATE_INPUTS` 放行 combo 校验（不再红框/阻塞整图）+ 前端加载时自动把非法下拉值重置为列表首项。手动根治方法见文末「常见问题 / Troubleshooting」。
+>
+> **See `Value not in list: hf_model_name: ... not in ['<未发现 HF 模型>']`, a red "Invalid input" frame, or `Output will be ignored` spam?** The workflow saved a dropdown value that does not exist on this machine (e.g. Florence-2 was selected on another PC but is not in this PC's `models/LLM`). **v1.01 fixes this automatically — zero manual steps**: backend `VALIDATE_INPUTS` pass-through (no red frame / no blocked graph) + frontend auto-reset of invalid combo values on load. Manual root-cause fix in "Troubleshooting" at the end of this README.
+
+---
+
 ### v0.9 (2026-09-23) — 后端稳定性修复 + 模板输出修复 / Backend Stability + Template Output Fixes
 
 **核心：彻底解决"本地 LLaMA 首次调用 Invalid chat handler: None"报错；清除模板后不再残留；预览选模板时 ENHANCED_PROMPT 正确走模板输出。**
