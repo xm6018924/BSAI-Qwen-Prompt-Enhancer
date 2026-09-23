@@ -128,13 +128,13 @@
 
 <div class="hero">
   <h1>BSAI · Qwen Image 2.1 提示词模板库</h1>
-  <p>内置 55 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、9 种设计版式、13 种电影资产、12 种角色卡、12 种电影海报。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
+  <p>内置 <b id="stat-total">59</b> 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、<b id="stat-design">9</b> 种设计版式、<b id="stat-cinema">13</b> 种电影资产、<b id="stat-character">16</b> 种角色卡、<b id="stat-poster">12</b> 种电影海报。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
   <div class="stats">
-    <span><b>55</b> 模板总数</span>
-    <span><b>7</b> 分类</span>
-    <span><b>9</b> 设计版式</span>
-    <span><b>12</b> 角色卡</span>
-    <span><b>12</b> 电影海报</span>
+    <span><b id="stat-total-b">59</b> 模板总数</span>
+    <span><b id="stat-cat-b">7</b> 分类</span>
+    <span><b id="stat-design-b">9</b> 设计版式</span>
+    <span><b id="stat-character-b">16</b> 角色卡</span>
+    <span><b id="stat-poster-b">12</b> 电影海报</span>
   </div>
 </div>
 
@@ -182,12 +182,28 @@
 
 <div class="footer">
   <div class="big-logo"><div class="circle">百声</div><div style="text-align:left"><div style="font-weight:700;color:#cbd5e1">百声AI · BSAI</div><div style="font-size:11px;color:#64748b">Qwen Image 2.1 Prompt Enhancer</div></div></div>
-  <div>ComfyUI custom node · 55 templates · 7 categories · 3 backends</div>
+  <div>ComfyUI custom node · <b id="footer-total">59</b> templates · <b id="footer-cat">7</b> categories · 3 backends</div>
 </div>
 
 <script>
 // 模板数据从 templates.json 动态加载（保证 name 与 ComfyUI 下拉完全一致）
 let TEMPLATES = [];
+
+// v0.10: 顶部说明/统计数字从模板数据自动统计（新增模板后无需手动改数量）
+function updateStats(list) {
+  const cnt = { official: 0, "official-doc": 0, community: 0, design: 0, cinema: 0, character: 0, poster: 0 };
+  list.forEach(t => { if (t.type in cnt) cnt[t.type]++; });
+  const total = list.length;
+  const cats = Object.keys(cnt).filter(k => cnt[k] > 0).length;
+  const set = (id, v) => { const el = document.getElementById(id); if (el) el.textContent = v; };
+  set("stat-total", total);      set("stat-design", cnt.design);
+  set("stat-cinema", cnt.cinema); set("stat-character", cnt.character);
+  set("stat-poster", cnt.poster);
+  set("stat-total-b", total);    set("stat-cat-b", cats);
+  set("stat-design-b", cnt.design); set("stat-character-b", cnt.character);
+  set("stat-poster-b", cnt.poster);
+  set("footer-total", total);    set("footer-cat", cats);
+}
 
 function ratioFor(id) {
   if (id === "design_short_video_cover") return "9:16";
@@ -213,6 +229,7 @@ fetch("templates.json")
       desc: t.desc || "", desc_en: t.desc_en || "", vars: t.vars || [],
       ratio: ratioFor(t.id),
     }));
+    updateStats(TEMPLATES);
     })
   .catch(err => {
     document.getElementById("wall").innerHTML =

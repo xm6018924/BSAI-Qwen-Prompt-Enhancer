@@ -16,6 +16,8 @@
 - **Cleanup timing fixed** so it never interrupts the current call; all backends (Official PE / Local LLaMA / Local HF / API) are stable on first call
 - **ENHANCED_PROMPT template-first**: in preview mode, ENHANCED_PROMPT correctly shows the merged template (template if set, raw text otherwise) — no more "selected Official PE but got the raw text"
 - **New "Clear Template" button**: preview and output ports are fully cleared — no more repeated stale template output
+- **Character-sheet templates upgraded (57 templates)**: the full reference sheet now follows the GPT Image 2 character-board methodology (free layout / psychology 4-element / multi-outfit layering / reference-first), plus 2 new templates — psychology profile and multi-outfit wardrobe
+- **Character-sheet templates re-upgraded (59 templates)**: the full reference sheet now adds **silhouette / pose-action / detail-closeup zones** (Krea2 all-in-one dynamic sheet methodology), plus 2 new templates — single-reference to multi-view, and silhouette design
 
 ---
 
@@ -52,9 +54,9 @@ Also compatible with other popular multimodal models:
 | **Local LLaMA** | Local GGUF + mmproj, full Qwen multimodal family support | Offline use, image interrogation, custom models |
 | **API** | OpenAI-compatible interface (e.g. Alibaba DashScope) | Online service, no local VRAM needed |
 
-### 📚 Built-in Template Library (55 templates, 6 categories)
+### 📚 Built-in Template Library (59 templates, 6 categories)
 
-The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **55 enhancement templates**:
+The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **59 enhancement templates**:
 
 #### ① Official Authoritative (5 templates)
 - Qwen-Image-2.1 Official PE-T2I System Rules (10KB verbatim)
@@ -95,8 +97,8 @@ The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **55 enh
 - Prop 6-View (front/side/back + detail close-ups)
 - Scene Asset Concept Art
 
-#### ⑤ Character Sheets (12 templates, custom variables supported)
-- Complete Character Sheet (3-view + expressions + outfit breakdown + color palette)
+#### ⑤ Character Sheets (16 templates, custom variables supported)
+- Complete Character Sheet (3-view + expressions + outfit breakdown + color palette) [upgraded: GPT Image 2 character-board + Krea2 all-in-one dynamic sheet methodology]
 - Turnaround 4-View (front/3-4/side/back)
 - Expression Sheet (6/8 grid)
 - Outfit & Accessory Detail Breakdown
@@ -108,6 +110,10 @@ The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **55 enh
 - Mobile UI Character Card (with info panel)
 - Pose Sheet (6-grid action variations)
 - Ancient / Chinese Style Character Design
+- Psychology Profile (traits / inner conflict / behavior patterns / emotional baseline) [NEW]
+- Multi-Outfit Wardrobe + Layering (16:9 two outfits / 21:9 three outfits) [NEW]
+- Single-Reference to Multi-View Sheet (reference-driven completion) [NEW]
+- Silhouette Design (contour / body proportion / outline recognition) [NEW]
 
 #### ⑥ Movie Posters (12 styles, custom variables supported)
 - Standard One-Sheet (portrait)
@@ -150,7 +156,7 @@ The template node includes a **visual template wall** — click the "🖼 Open T
 
 | Feature | Description |
 |---|---|
-| **Large previews** | All 55 templates have thumbnails so you can see the layout at a glance |
+| **Large previews** | All 59 templates have thumbnails so you can see the layout at a glance |
 | **Category filter** | 7 categories: All / Official Rules / Official Docs / Community / Design / Cinema / Character / Posters |
 | **Click to use** | Click any card to auto-fill the node — no manual dropdown selection needed |
 | **Bilingual UI** | 🌐 toggle in top-right corner switches usage guide language |

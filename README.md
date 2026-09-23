@@ -17,6 +17,8 @@
 - **清理时机修复**：`_enhance_local` 的缓存清理不再干扰本轮调用，多后端（官方PE / 本地LLaMA / 本地HF / API）首次调用均稳定 / Cleanup timing fixed so it never interrupts the current call; all backends (Official PE / Local LLaMA / Local HF / API) are stable on first call
 - **ENHANCED_PROMPT 模板优先**：预览模式下选择模板后，ENHANCED_PROMPT 输出端口的预览正确显示模板拼接结果（有模板→模板，无模板→原文），不再出现"选了官方PE却直出原文" / In preview mode, ENHANCED_PROMPT now correctly shows the merged template (template if set, raw text otherwise) — no more "selected Official PE but got the raw text"
 - **清除模板按钮新版**：点击清除后预览与输出端口彻底清空，不再反复输出旧模板内容 / New "Clear Template" button: preview and output ports are fully cleared — no more repeated stale template output
+- **角色卡模板升级（57 个模板）**：完整设定总表融合 GPT Image 2 角色提示板方法论（自由排版 / 心理特质四要素 / 多套服装叠穿 / 参考图优先），新增「心理特质四要素」「多套服装+叠穿设定」2 个模板 / Character-sheet templates upgraded: the full reference sheet now follows the GPT Image 2 character-board methodology (free layout / psychology 4-element / multi-outfit layering / reference-first), plus 2 new templates (psychology profile, multi-outfit wardrobe)
+- **角色卡模板再升级（59 个模板）**：完整设定总表追加 **剪影区 / 动作姿态区 / 局部细节放大区**（Krea2 全能动态设计表方法论），新增「单图转多视角设计表」「剪影设计」2 个模板 / Character-sheet templates re-upgraded: the full reference sheet now adds **silhouette / pose-action / detail-closeup zones** (Krea2 all-in-one dynamic sheet methodology), plus 2 new templates (single-reference to multi-view, silhouette design)
 
 ---
 
@@ -53,9 +55,9 @@
 | **本地 LLaMA** | 本地 GGUF + mmproj，支持千问全系列多模态模型 | 离线使用、图像反推、自定义模型 |
 | **API** | OpenAI 兼容接口（如阿里云百炼） | 在线服务、无需本地显存 |
 
-### 📚 内置模板库（55 个模板，6 大分类）
+### 📚 内置模板库（59 个模板，6 大分类）
 
-`Qwen Image 2.1 官方增强提示词模板` 节点内置 **55 个增强模板**：
+`Qwen Image 2.1 官方增强提示词模板` 节点内置 **59 个增强模板**：
 
 #### ① 官方权威（5 个）
 - Qwen-Image-2.1 官方 PE-T2I 系统规则（10KB 原文）
@@ -96,8 +98,8 @@
 - 道具六视图（正/侧/背+细节特写）
 - 场景资产概念图
 
-#### ⑤ 角色卡（12 个，支持自定义变量）
-- 完整设定总表（三视图+表情+服装拆解+配色板）
+#### ⑤ 角色卡（16 个，支持自定义变量）
+- 完整设定总表（三视图+表情+服装拆解+配色板）【已升级：融合 GPT Image 2 角色提示板 + Krea2 全能动态设计表方法论】
 - 转面四视图（正/3-4/侧/背）
 - 表情差分表（6/8 宫格）
 - 服装与配饰细节拆解
@@ -109,6 +111,10 @@
 - 手游式 UI 角色卡（带信息面板）
 - 姿势差分表（6 宫格动作）
 - 古风/国风角色设定
+- 心理特质四要素（心理特征/内在冲突/行为模式/情绪基线）【新增】
+- 多套服装+叠穿设定（16:9 两套 / 21:9 三套）【新增】
+- 单图转多视角设计表（参考图驱动补全）【新增】
+- 剪影设计（轮廓/身材比例/外轮廓辨识）【新增】
 
 #### ⑥ 电影海报（12 个风格，支持自定义变量）
 - 标准竖版 One-Sheet
@@ -151,7 +157,7 @@ STYLE: 商业摄影
 
 | 功能 | 说明 |
 |---|---|
-| **大图预览** | 55 个模板全部配有缩略图，一眼看清版式布局 |
+| **大图预览** | 59 个模板全部配有缩略图，一眼看清版式布局 |
 | **分类筛选** | 7 大分类一键切换：全部 / 官方规则 / 官方文档 / 社区实践 / 设计版式 / 电影资产 / 角色卡 / 电影海报 |
 | **点击即用** | 点击任意卡片自动回填到节点，无需手动选择下拉 |
 | **中英双语** | 右上角 🌐 切换使用说明语言 |
