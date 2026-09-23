@@ -55,7 +55,7 @@ Also compatible with other popular multimodal models:
 | **Local LLaMA** | Local GGUF + mmproj, full Qwen multimodal family support | Offline use, image interrogation, custom models |
 | **API** | OpenAI-compatible interface (e.g. Alibaba DashScope) | Online service, no local VRAM needed |
 
-### 📚 Built-in Template Library (74 templates, 7 categories)
+### 📚 Built-in Template Library (102 templates, 10 categories)
 
 The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **74 enhancement templates**:
 
@@ -174,8 +174,8 @@ The template node includes a **visual template wall** — click the "🖼 Open T
 
 | Feature | Description |
 |---|---|
-| **Large previews** | All 74 templates have thumbnails so you can see the layout at a glance |
-| **Category filter** | 8 categories: All / Official Rules / Official Docs / Community / Design / Cinema / Character / Posters / Art Styles |
+| **Large previews** | All 102 templates have thumbnails so you can see the layout at a glance |
+| **Category filter** | 10 categories: All / Official Rules / Official Docs / Community / Design / Cinema / Character / Posters / Art Styles / Character Poses / Web Inspiration |
 | **Click to use** | Click any card to auto-fill the node — no manual dropdown selection needed |
 | **Bilingual UI** | 🌐 toggle in top-right corner switches usage guide language |
 | **Variable hints** | Each card shows all variable names supported by that template |

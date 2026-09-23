@@ -87,6 +87,8 @@
   .t-character { background: rgba(236,72,153,0.18); color: #f9a8d4; }
   .t-poster { background: rgba(251,146,60,0.18); color: #fdba74; }
   .t-style { background: rgba(20,184,166,0.18); color: #5eead4; }
+  .t-pose { background: rgba(99,102,241,0.18); color: #a5b4fc; }
+  .t-inspiration { background: rgba(251,113,133,0.18); color: #fda4af; }
 
   .info h3 { font-size: 15px; font-weight: 700; color: #f1f5f9; margin-bottom: 6px; line-height: 1.4; }
   .info .desc { font-size: 12.5px; color: #94a3b8; line-height: 1.6; margin-bottom: 10px; min-height: 40px; }
@@ -129,14 +131,16 @@
 
 <div class="hero">
   <h1>BSAI · Qwen Image 2.1 提示词模板库</h1>
-  <p>内置 <b id="stat-total">74</b> 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、<b id="stat-design">9</b> 种设计版式、<b id="stat-cinema">13</b> 种电影资产、<b id="stat-character">16</b> 种角色卡、<b id="stat-poster">12</b> 种电影海报、<b id="stat-style">15</b> 种艺术风格。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
+  <p>内置 <b id="stat-total">102</b> 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、<b id="stat-design">9</b> 种设计版式、<b id="stat-cinema">13</b> 种电影资产、<b id="stat-character">16</b> 种角色卡、<b id="stat-poster">12</b> 种电影海报、<b id="stat-style">15</b> 种艺术风格、<b id="stat-pose">16</b> 种人物动作姿势、<b id="stat-inspiration">12</b> 种灵感精选。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
   <div class="stats">
-    <span><b id="stat-total-b">74</b> 模板总数</span>
-    <span><b id="stat-cat-b">8</b> 分类</span>
+    <span><b id="stat-total-b">102</b> 模板总数</span>
+    <span><b id="stat-cat-b">10</b> 分类</span>
     <span><b id="stat-design-b">9</b> 设计版式</span>
     <span><b id="stat-character-b">16</b> 角色卡</span>
     <span><b id="stat-poster-b">12</b> 电影海报</span>
     <span><b id="stat-style-b">15</b> 艺术风格</span>
+    <span><b id="stat-pose-b">16</b> 人物姿势</span>
+    <span><b id="stat-inspiration-b">12</b> 灵感精选</span>
   </div>
 </div>
 
@@ -150,7 +154,7 @@
       <li>点击上方分类按钮筛选不同类型的模板</li>
       <li>点击任意模板卡片即可选用该模板，自动回填到节点并关闭页面</li>
       <li>支持 {{TITLE}}、{{MAIN_SUBJECT}}、{{COLOR}} 等变量自定义替换</li>
-      <li>模板分为 8 大类：官方规则、官方文档、社区实践、设计版式、电影资产、角色卡、电影海报、艺术风格</li>
+      <li>模板分为 10 大类：官方规则、官方文档、社区实践、设计版式、电影资产、角色卡、电影海报、艺术风格、人物动作姿势、灵感精选</li>
       <li>缩略图为预览效果，实际输出以模型生成为准</li>
       <li>所有模板均可用于官方 PE / 本地 LLaMA / API 三种后端</li>
     </ul>
@@ -162,7 +166,7 @@
       <li>Click category buttons above to filter templates by type</li>
       <li>Click any template card to select it — auto-fills the node and closes the page</li>
       <li>Supports custom variable replacement: {{TITLE}}, {{MAIN_SUBJECT}}, {{COLOR}}, etc.</li>
-      <li>8 categories: Official Rules, Official Docs, Community, Design, Cinema Assets, Character Sheets, Movie Posters, Art Styles</li>
+      <li>10 categories: Official Rules, Official Docs, Community, Design, Cinema Assets, Character Sheets, Movie Posters, Art Styles, Character Poses, Web Inspiration</li>
       <li>Thumbnails are for preview only; actual output depends on model generation</li>
       <li>All templates work with all three backends: Official PE / Local LLaMA / API</li>
     </ul>
@@ -179,6 +183,8 @@
   <button data-cat="character">角色卡</button>
   <button data-cat="poster">电影海报</button>
   <button data-cat="style">艺术风格</button>
+  <button data-cat="pose">人物姿势</button>
+  <button data-cat="inspiration">灵感精选</button>
 </div>
 
 <div class="wall" id="wall"></div>
@@ -194,7 +200,7 @@ let TEMPLATES = [];
 
 // v0.10: 顶部说明/统计数字从模板数据自动统计（新增模板后无需手动改数量）
 function updateStats(list) {
-  const cnt = { official: 0, "official-doc": 0, community: 0, design: 0, cinema: 0, character: 0, poster: 0, style: 0 };
+  const cnt = { official: 0, "official-doc": 0, community: 0, design: 0, cinema: 0, character: 0, poster: 0, style: 0, pose: 0, inspiration: 0 };
   list.forEach(t => { if (t.type in cnt) cnt[t.type]++; });
   const total = list.length;
   const cats = Object.keys(cnt).filter(k => cnt[k] > 0).length;
@@ -202,9 +208,11 @@ function updateStats(list) {
   set("stat-total", total);      set("stat-design", cnt.design);
   set("stat-cinema", cnt.cinema); set("stat-character", cnt.character);
   set("stat-poster", cnt.poster); set("stat-style", cnt.style);
+  set("stat-pose", cnt.pose);    set("stat-inspiration", cnt.inspiration);
   set("stat-total-b", total);    set("stat-cat-b", cats);
   set("stat-design-b", cnt.design); set("stat-character-b", cnt.character);
   set("stat-poster-b", cnt.poster); set("stat-style-b", cnt.style);
+  set("stat-pose-b", cnt.pose);  set("stat-inspiration-b", cnt.inspiration);
   set("footer-total", total);    set("footer-cat", cats);
 }
 
@@ -630,7 +638,7 @@ function render(cat) {
       </div>
       <div class="info">
         <span class="type-tag t-${t.type}">${
-          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产",character:"角色卡",poster:"电影海报",style:"艺术风格"}[t.type] || t.type
+          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产",character:"角色卡",poster:"电影海报",style:"艺术风格",pose:"人物姿势",inspiration:"灵感精选"}[t.type] || t.type
         }</span>
         <h3>${t.name}${t.ratio!=="—" ? ` <span style="color:#64748b;font-weight:400;font-size:12px">· ${t.ratio}</span>` : ""}</h3>
         <div class="desc">${t.desc}</div>
