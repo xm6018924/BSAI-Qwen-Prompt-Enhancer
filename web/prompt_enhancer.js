@@ -56,6 +56,40 @@ function setWidgetHidden(widget, hidden) {
   widget.options.hidden = hidden;
 }
 
+/**
+ * 【v1.01】combo 自愈：工作流存档里的下拉值在当前选项列表中不存在时（典型：
+ * hf_model_name 存档为 'Florence-2-base [...]' 但本机 models/LLM 下没有该模型，
+ * 列表只剩 '<未发现 HF 模型>'），ComfyUI 会报 "Value not in list" 红框并阻塞整图。
+ * 这里在加载工作流时自动把非法值重置为当前列表首项（不弹窗、不打断），
+ * 用户重新下拉选择真实模型即可；配合后端 VALIDATE_INPUTS 放行实现开图即用。
+ */
+function autoFixComboValues(node) {
+  if (!node || !Array.isArray(node.widgets)) return 0;
+  let fixed = 0;
+  for (const w of node.widgets) {
+    if (!w || w.type !== "combo" || !w.options || !Array.isArray(w.options.values)) continue;
+    const vals = w.options.values;
+    if (!vals.length || vals.includes(w.value)) continue;
+    const old = w.value;
+    w.value = vals[0];
+    if (typeof w.callback === "function") { try { w.callback(w.value); } catch (_) {} }
+    if (Array.isArray(node.widgets_values)) {
+      const i = node.widgets.indexOf(w);
+      if (i >= 0) node.widgets_values[i] = w.value;
+    }
+    try { node.setDirtyCanvas?.(true, true); } catch (_) {}
+    console.log(
+      `[BSAI.PromptEnhancer] 自愈 combo '${w.name}': '${old}' -> '${vals[0]}'（存档值不在当前选项，已自动重置）`
+    );
+    fixed++;
+  }
+  if (fixed > 0) {
+    node.tooltip = `⚠ ${fixed} 个下拉选项已自动重置（旧存档值对应的模型/模板在本机不可用），请重新选择。`;
+    try { node.setDirtyCanvas?.(true, true); } catch (_) {}
+  }
+  return fixed;
+}
+
 function syncWidgetVisibility(node) {
   if (!isMergedNode(node)) return;
   const backendWidget = (node.widgets || []).find((w) => w.name === "backend");
@@ -232,6 +266,7 @@ app.registerExtension({
       const origConfigure = node.onConfigure;
       node.onConfigure = function (...args) {
         const r = origConfigure ? origConfigure.apply(this, args) : undefined;
+        autoFixComboValues(node);
         syncWidgetVisibility(node);
         syncPreviewWarning(node);
         return r;
@@ -264,6 +299,13 @@ app.registerExtension({
     // 3) 模板节点：把 user_requirement 输入框放到「system_template」之下，并把
     //    它跟按钮「🖼 打开模板海报墙」对齐，方便用户一眼看到两处自定义输入。
     if (isTemplateNode(node)) {
+      // 【v1.01】加载工作流时自愈 combo（template_name 旧值不在当前模板列表时自动重置）
+      const tplOrigConfigure = node.onConfigure;
+      node.onConfigure = function (...args) {
+        const r = tplOrigConfigure ? tplOrigConfigure.apply(this, args) : undefined;
+        autoFixComboValues(node);
+        return r;
+      };
       try {
         node.addWidget("button", WALL_BUTTON_LABEL, null, () => {
           const url =

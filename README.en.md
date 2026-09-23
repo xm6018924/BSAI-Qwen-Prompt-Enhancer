@@ -331,3 +331,37 @@ RTX 4090 / 1024×1024 / int8 / 25 steps ≈ **7.5 s/image**; with SageAttention 
 - ComfyUI **v0.37.0+** is required for native 2.1 support
 
 Full acceleration playbook & hardware benchmarks: [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md). Research: [RESEARCH_REPORT.md](RESEARCH_REPORT.md). Template mechanism & modification: [TEMPLATE_GUIDE.en.md](TEMPLATE_GUIDE.en.md).
+
+
+---
+
+## ❓ Troubleshooting
+
+### Q: Opening a workflow shows `Value not in list: hf_model_name: 'Florence-2-base [...]' not in ['<未发现 HF 模型>']`, the node turns red with "Invalid input", and the console logs `Output will be ignored`?
+
+**Cause**: The workflow was saved on **another PC**. Its `hf_model_name` (Local HF backend) was set to `Florence-2-base [Florence2ForConditionalGeneration]`, but **that model is not present** under this machine's `ComfyUI/models/LLM` (not downloaded / different layout). The dropdown only contains `<未发现 HF 模型>`, so ComfyUI's combo validation fails → red frame + the whole graph gets ignored.
+
+**✅ One-click fix (v1.01+, zero manual steps)**: Upgrade to **v1.01** — the plugin ships two layers of self-healing:
+
+1. **Backend pass-through**: `VALIDATE_INPUTS` skips the combo value-in-list check → no red frame on load, graph is no longer blocked;
+2. **Frontend auto-reset**: on workflow load, invalid combo values are automatically reset to the first item of the current list, and the node tooltip says "dropdown options were auto-reset".
+
+After upgrading, open the workflow as usual and simply re-pick the model that actually exists on this machine from the `hf_model_name` dropdown.
+
+**Manual fix (root cause)**: put the Florence-2 model into `ComfyUI/models/LLM/` (Transformers folder layout: `models/LLM/<model-dir>/model.safetensors` + `config.json` etc.). Download example:
+
+```
+pip install -U huggingface_hub
+hf download microsoft/Florence-2-base --local-dir ComfyUI/models/LLM/Florence-2-base
+```
+
+### Q: Other dropdowns also report `Value not in list`?
+
+Same cause (stored value not in the current option list — e.g. `system_template` after template-library updates, `llm_model_name` after model-folder changes). v1.01 applies the same self-healing to **all** dropdowns; restart ComfyUI and open the workflow — values are auto-reset, no manual node editing needed.
+
+---
+
+## v1.01 (2026-09-24) — One-click compatibility for saved workflows
+
+- **Fix: red-frame errors when opening workflows saved on another PC** — combo values stored in the workflow that are missing from the current option list (e.g. Florence-2 selected on another machine but not downloaded here) no longer trigger "Invalid input" / `Value not in list` / `Output will be ignored`. Backend VALIDATE_INPUTS pass-through + frontend auto-reset of invalid combo values on load.
+- **Bilingual troubleshooting added to README**.

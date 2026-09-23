@@ -364,3 +364,37 @@ RTX 4090 / 1024×1024 / int8 / 25步 ≈ **7.5 秒/张**；叠加 SageAttention 
 - ComfyUI 需 **v0.37.0+** 才原生支持 2.1
 
 详细加速方案与硬件实测见 [ACCELERATION_GUIDE.md](ACCELERATION_GUIDE.md)，技术调研见 [RESEARCH_REPORT.md](RESEARCH_REPORT.md)。模板机制与修改方法见 [TEMPLATE_GUIDE.md](TEMPLATE_GUIDE.md)。
+
+
+---
+
+## ❓ 常见问题 / Troubleshooting
+
+### Q：打开工作流报错 `Value not in list: hf_model_name: 'Florence-2-base [...]' not in ['<未发现 HF 模型>']`，节点弹红框「无效输入」，控制台刷 `Output will be ignored`？
+
+**原因**：工作流是在**另一台电脑**保存的，`hf_model_name`（本地 HF 后端）选了 `Florence-2-base [Florence2ForConditionalGeneration]`；当前电脑的 `ComfyUI/models/LLM` 下**没有该模型**（未下载 / 目录不同），下拉列表只剩 `<未发现 HF 模型>`，ComfyUI 校验失败 → 红框 + 整图被忽略。
+
+**✅ 一键解决（v1.01+，无需任何手动操作）**：升级到 **v1.01**，插件内置两层自愈：
+
+1. **后端放行**：`VALIDATE_INPUTS` 跳过 combo 的 value-in-list 校验 → 开图不再红框、不再阻塞整图；
+2. **前端自动重置**：加载工作流时把非法下拉值自动重置为当前列表首项，并在节点 tooltip 提示「下拉选项已自动重置」。
+
+升级后打开工作流即恢复正常，在 `hf_model_name` 下拉里重新选择本机实际存在的模型即可。
+
+**手动解决（根治）**：把 Florence-2 模型放入 `ComfyUI/models/LLM/`（目录结构：`models/LLM/<模型目录>/model.safetensors` + `config.json` 等 Transformers 目录格式）。下载参考：
+
+```
+pip install -U huggingface_hub
+hf download microsoft/Florence-2-base --local-dir ComfyUI/models/LLM/Florence-2-base
+```
+
+### Q：其他下拉也报 `Value not in list`？
+
+同一原因（旧存档值不在当前选项列表，如模板库版本变化后的 `system_template`、模型目录变化后的 `llm_model_name`）。v1.01 对**全部下拉**统一做了自愈，重启 ComfyUI 后打开工作流即自动重置，无需手动改节点。
+
+---
+
+## v1.01 (2026-09-24) — 一键兼容旧工作流 / One-click compatibility for saved workflows
+
+- **修复跨电脑打开工作流红框报错**：combo 存档值不在当前选项列表（典型：另一台电脑选了 Florence-2，本机未下载该模型）时，不再弹「无效输入」/ 刷 `Value not in list` / `Output will be ignored`。后端 `VALIDATE_INPUTS` 放行 + 前端加载时自动重置非法下拉值，开图即用 / Fixes red-frame validation errors when opening workflows saved on another PC (stored combo values missing on this machine, e.g. Florence-2 not downloaded): backend VALIDATE_INPUTS pass-through + frontend auto-reset of invalid combo values on load.
+- **README 双语新增疑难解答** / Bilingual troubleshooting added.

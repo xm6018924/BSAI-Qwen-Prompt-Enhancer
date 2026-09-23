@@ -29,6 +29,12 @@ DEFAULT_MERGED_FOOTER = "\n（请务必在生成时满足以上用户要求。�
 
 
 class QwenImage21_Prompt_Template:
+    # 【v1.01】一键兼容旧工作流存档：模板库版本变化后，旧存档 template_name 可能不在当前下拉列表，
+    # 放行 combo 校验避免 "Value not in list" 红框报错阻塞整图；运行时 get_template 对未知模板给出中文提示。
+    @staticmethod
+    def VALIDATE_INPUTS(input_name, input_value):
+        return None
+
     @classmethod
     def INPUT_TYPES(cls):
         return {
