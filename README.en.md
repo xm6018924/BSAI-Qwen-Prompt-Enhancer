@@ -386,3 +386,34 @@ Same cause (stored value not in the current option list — e.g. `system_templat
 
 - **Fix: red-frame errors when opening workflows saved on another PC** — combo values stored in the workflow that are missing from the current option list (e.g. Florence-2 selected on another machine but not downloaded here) no longer trigger "Invalid input" / `Value not in list` / `Output will be ignored`. Backend VALIDATE_INPUTS pass-through + frontend auto-reset of invalid combo values on load.
 - **Bilingual troubleshooting added to README**.
+
+
+## 🔄 Update & self-check (for other PCs)
+
+> **Symptom**: another PC still shows `Custom validation failed for node: X - None` or `Value not in list` when opening the workflow.
+> **99% of the time the plugin is not updated to v1.01.2 (or ComfyUI wasn't fully restarted after updating).** Confirm with these two steps:
+
+**Step 1 — Update to v1.01.2** (inside the plugin folder `ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer`):
+
+```bash
+git pull origin main
+# or re-download the latest repo zip and overwrite (ComfyUI Manager users: click UPDATE ALL and select this plugin)
+```
+
+**Step 2 — Fully restart ComfyUI** (not just refresh the browser page): close the ComfyUI process and start it again.
+
+**Verify it took effect**: after restart, the first screen of the ComfyUI console should show the banner:
+
+```
+[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 v1.01.2 (2026-09-24) | ...
+```
+
+- You see `v1.01.2` → updated; reopen the workflow and it works.
+- No such line / version is v1.01.1 or older → the update didn't land: check whether `git pull` succeeded, whether ComfyUI was fully restarted, or whether files were copied from an old G-drive/zip.
+
+**Check version from the command line**:
+
+```bash
+git -C ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer log --oneline -1
+# should show 5ea6300 or a newer commit
+```

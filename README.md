@@ -428,3 +428,34 @@ hf download microsoft/Florence-2-base --local-dir ComfyUI/models/LLM/Florence-2-
 
 - **修复跨电脑打开工作流红框报错**：combo 存档值不在当前选项列表（典型：另一台电脑选了 Florence-2，本机未下载该模型）时，不再弹「无效输入」/ 刷 `Value not in list` / `Output will be ignored`。后端 `VALIDATE_INPUTS` 放行 + 前端加载时自动重置非法下拉值，开图即用 / Fixes red-frame validation errors when opening workflows saved on another PC (stored combo values missing on this machine, e.g. Florence-2 not downloaded): backend VALIDATE_INPUTS pass-through + frontend auto-reset of invalid combo values on load.
 - **README 双语新增疑难解答** / Bilingual troubleshooting added.
+
+
+## 🔄 更新与自查（其他电脑务必看这里）/ Update & self-check (for other PCs)
+
+> **症状**：其他电脑打开工作流仍报 `Custom validation failed for node: X - None` 或 `Value not in list`。
+> **99% 是因为插件没更新到 v1.01.2（或更新后没重启）。** 请按下面两步确认：
+
+**第 1 步 — 更新插件到 v1.01.2**（在插件目录 `ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer` 执行）：
+
+```bash
+git pull origin main
+# 或重新下载最新仓库 zip 覆盖（ComfyUI Manager 用户：点 UPDATE ALL 后选本插件）
+```
+
+**第 2 步 — 完全重启 ComfyUI**（不是刷新浏览器页面）：关掉 ComfyUI 进程，重新启动。
+
+**自查是否已生效**：重启后看 ComfyUI 控制台第一屏，应有横幅：
+
+```
+[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 v1.01.2 (2026-09-24) | ...
+```
+
+- 看到 `v1.01.2` → 已更新，重新打开工作流即正常。
+- 没有这行 / 版本号是 v1.01.1 或更早 → 插件没更新成功：检查插件目录里 `git pull` 是否成功、ComfyUI 是否完全重启、或从 G 盘/旧 zip 拷的是不是旧文件。
+
+**命令行确认版本**：
+
+```bash
+git -C ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer log --oneline -1
+# 应显示 5ea6300 或更新的提交
+```

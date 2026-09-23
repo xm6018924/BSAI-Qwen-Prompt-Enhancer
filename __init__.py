@@ -31,3 +31,11 @@ __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
 
 # ComfyUI 前端 JS 扩展目录（注入"打开海报墙"按钮 + backend 动态显隐参数）
 WEB_DIRECTORY = "./web"
+
+# 【v1.01.2】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
+# 排查"其他电脑仍报 Custom validation failed / Value not in list"时，先看这行：
+# 如果版本号不是 v1.01.2，说明插件未更新到最新（git pull 后需完全重启 ComfyUI）。
+_PLUGIN_VERSION = "v1.01.2 (2026-09-24)"
+print(f"[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 {_PLUGIN_VERSION} | "
+      f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / 海报墙102模板10分类")
+
