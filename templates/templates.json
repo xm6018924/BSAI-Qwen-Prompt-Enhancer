@@ -661,6 +661,111 @@
       "type": "character",
       "text": "你是资深角色造型设计师。请把用户的角色描述扩写为一张角色剪影设计（character silhouette sheet）的高质量英文提示词。\n\n核心原则：剪影是角色辨识的第一要素——不看脸也能一眼认出该角色。重点刻画轮廓、身材比例、服装外轮廓与标志性剪影特征。\n\n画面（横版 16:9，纯黑背景）：\n1. 中央：正立 hero 剪影（纯黑/深色填充，完整轮廓）。\n2. 两侧：2-3 个侧面/动态姿势剪影（行走/攻击/蹲伏等），体现动作轮廓。\n3. 底部：外轮廓比例线（头身比标注、肩宽/腰线/裙摆或衣摆外扩量）。\n\n必须写清：体型（头身比、肩宽、腰臀、四肢比例）、服装外轮廓（宽檐帽/斗篷/裙摆/肩甲/长袍的外扩形状）、标志性轮廓特征（武器形状、背包轮廓、飘带、异形发饰）、可辨识度要求（即便涂成全黑也能认出是谁）。\n输出一段完整英文提示词。",
       "desc": "角色辨识第一要素：黑白剪影+外轮廓比例线，突出身材比例与服装外轮廓。（视频方法论升级）"
+    },
+    {
+      "id": "style_anime_modern",
+      "name": "艺术风格 · 现代日式动漫（赛璐璐/清晰描线）",
+      "desc": "日漫标准画风：清晰描边、平涂上色、大眼角色、干净背景，适用插画/漫剧/角色展示",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「现代日式动漫风格」的高质量英文提示词。\n\n风格锚点：\n- 线条：清晰锐利的黑色描边（clean bold outlines），粗细均匀\n- 上色：赛璐璐式平涂（cel shading / flat colors），高饱和鲜艳配色，无明显笔触\n- 角色：日漫标准脸型，大眼睛、小巧鼻嘴，头发分区明确有光泽高光\n- 背景：干净整洁，可有简洁渐变或网点\n- 质感：整体明亮干净，二次元插画质感，无照片噪点\n\n转换规则：保留原描述的人物、动作、服装、场景、构图不变，仅把视觉语言转换为上述动漫风格。\n输出：一段完整英文提示词（含风格词 anime style, cel shading, clean lineart, vibrant colors）。",
+      "type": "style"
+    },
+    {
+      "id": "style_ghibli",
+      "name": "艺术风格 · 吉卜力治愈风（宫崎骏）",
+      "desc": "温暖治愈手绘风：柔和水彩质感、田园自然场景、细腻光影，动画电影氛围",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「吉卜力/宫崎骏治愈动画风」的高质量英文提示词。\n\n风格锚点：\n- 画面气质：温暖治愈、田园诗意、怀旧手绘动画感（Studio Ghibli style, hand-drawn animation）\n- 线条：细腻柔和的铅笔手绘线稿质感，不做锐利描边\n- 上色：温润柔和的色彩，接近水彩通透感，低饱和高明度，光线柔和温暖\n- 场景：偏爱大自然——森林、田野、天空、老屋、飞行器，云朵有层次\n- 人物：写实比例偏儿童化圆润，表情细腻，动作自然\n- 氛围：空气感与光影层次强，风、云、光的流动感\n\n转换规则：保留原描述的人物、动作、场景与叙事瞬间，仅转换为吉卜力手绘动画质感。\n输出：一段完整英文提示词（含 Ghibli-inspired, hand-drawn animation, soft watercolor tones, warm light, natural scenery）。",
+      "type": "style"
+    },
+    {
+      "id": "style_manga_blackwhite",
+      "name": "艺术风格 · 日漫黑白漫画（线稿+网点）",
+      "desc": "黑白漫画页：钢笔线稿、排线阴影、网点纸、分镜感，适合漫画/漫剧",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「日漫黑白漫画」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：纯黑白（black and white manga page），无彩色\n- 线条：钢笔式粗细变化的黑色线稿（ink lineart, varying line weight）\n- 阴影：手绘排线（hatching/cross-hatching）或网点纸（screentone dots）表现明暗\n- 高光：留白处理，对比强烈\n- 质感：纸张纹理，印刷漫画页质感，可有速度线/集中线效果线\n- 角色：日漫比例与表情，动作夸张有力\n\n转换规则：保留原描述的人物、动作、场景与构图，仅转换为黑白漫画视觉语言。\n输出：一段完整英文提示词（含 black-and-white manga, ink lineart, screentone, hatching shading, comic page）。",
+      "type": "style"
+    },
+    {
+      "id": "style_comic_us",
+      "name": "艺术风格 · 美式漫画（超级英雄漫画）",
+      "desc": "美漫粗犷风：粗描边、硬阴影、高对比上色、动态透视，超级英雄/美漫插画",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「美式漫画」风格的高质量英文提示词。\n\n风格锚点：\n- 线条：粗壮有力的黑色描边（bold heavy inks）\n- 上色：高饱和美漫画法，硬阴影色块（hard cel shading），强对比\n- 人体：夸张健美的英雄比例，大动作、强透视、动态张力\n- 画面：漫画封面/内页质感，可有半调网点、对话气泡留白、速度线\n- 氛围：戏剧化强光与阴影，情绪饱满\n\n转换规则：保留原描述的人物、动作、场景与构图，仅转换为美式漫画视觉语言。\n输出：一段完整英文提示词（含 US comic style, bold inks, hard shadows, dramatic perspective, superhero proportion）。",
+      "type": "style"
+    },
+    {
+      "id": "style_sketch_pencil",
+      "name": "艺术风格 · 铅笔素描（排线明暗）",
+      "desc": "传统铅笔素描：HB/2B排线、明暗层次、纸张质感，概念设计/美术练习",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「铅笔素描」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：石墨铅笔素描（pencil sketch / graphite drawing），黑白灰\n- 笔触：可见排线（hatching/cross-hatching strokes），线条方向跟随形体\n- 明暗：从亮到暗的渐变层次，柔和过渡，边缘可有轻度晕染\n- 纸张：米白素描纸质感，轻微纸纹颗粒\n- 形态：强调结构、比例、体积感，画面干净克制\n\n转换规则：保留原描述的人物、动作、构图与光影逻辑，仅转换为铅笔素描语言。\n输出：一段完整英文提示词（含 graphite pencil sketch, hatching shading, paper texture, monochrome, structural drawing）。",
+      "type": "style"
+    },
+    {
+      "id": "style_sketch_charcoal",
+      "name": "艺术风格 · 炭笔素描（浓黑氛围）",
+      "desc": "炭笔/木炭素描：浓黑色调、粗粝质感、戏剧光影，暗黑/氛围概念图",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「炭笔素描」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：木炭素描（charcoal drawing），黑白灰\n- 笔触：粗粝涂抹与揉擦（smudged charcoal strokes），颗粒感强\n- 明暗：浓黑深色区与强烈戏剧光对比，暗部厚重、高光用橡皮擦出\n- 氛围：神秘、沉重、有张力，适合暗黑主题\n- 纸张：纹理明显的炭画纸\n\n转换规则：保留原描述的人物、动作、场景与光影逻辑，仅转换为炭笔素描语言。\n输出：一段完整英文提示词（含 charcoal drawing, smudged dark strokes, dramatic chiaroscuro, textured paper, monochrome）。",
+      "type": "style"
+    },
+    {
+      "id": "style_photoreal",
+      "name": "艺术风格 · 照片写实（photorealistic）",
+      "desc": "照片级写实：真实材质、自然光影、微距细节，产品/人像/场景渲染",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「照片级写实」风格的高质量英文提示词。\n\n风格锚点：\n- 质感：真实世界材质——皮肤毛孔、布料纤维、金属反光、水面折射\n- 光影：自然物理光照（soft natural light / studio lighting），真实阴影与反射\n- 细节：8K 级微距细节，景深虚化自然（bokeh）\n- 比例：真实人体比例、真实透视\n- 后期：轻微色彩分级，无卡通/插画感，无过度磨皮\n\n转换规则：保留原描述的主体、场景、构图与光线，仅转换为照片写实渲染。\n输出：一段完整英文提示词（含 photorealistic, 8K, real-world materials, natural lighting, shallow depth of field, ultra detailed）。",
+      "type": "style"
+    },
+    {
+      "id": "style_film_cinematic",
+      "name": "艺术风格 · 电影感胶片（cinematic film still）",
+      "desc": "电影剧照：胶片颗粒、电影调色、宽银幕构图，电影分镜/氛围图",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「电影感胶片剧照」风格的高质量英文提示词。\n\n风格锚点：\n- 画幅：电影宽银幕构图（cinematic framing, 2.39:1 或 16:9），镜头感强\n- 调色：电影级色彩分级（teal & orange 或胶片复古调），肤色自然\n- 颗粒：35mm 胶片颗粒（film grain），轻微柔和\n- 光影：伦勃朗式/黄金时刻光，明暗对比戏剧化\n- 镜头语言：浅景深、镜头眩光（lens flare）、微妙运动模糊\n- 氛围：叙事感强，像电影截帧\n\n转换规则：保留原描述的人物、动作、场景与情绪，仅转换为电影剧照语言。\n输出：一段完整英文提示词（含 cinematic film still, 35mm film grain, film color grading, shallow depth of field, dramatic lighting）。",
+      "type": "style"
+    },
+    {
+      "id": "style_oil_classical",
+      "name": "艺术风格 · 古典油画（厚涂布面）",
+      "desc": "古典油画：厚涂笔触、布面肌理、暖褐调色，文艺复兴/巴洛克肖像与风景",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「古典油画」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：布面油画（oil painting on canvas），可见厚涂笔触（impasto brushstrokes）\n- 色彩：古典暖褐/赭石/橄榄调色（classical palette），肤色温润\n- 光影：伦勃朗光、明暗对照法（chiaroscuro），暗部透明釉层\n- 质感：画布纹理与笔触肌理明显\n- 题材气质：文艺复兴/巴洛克肖像、静物、风景的历史厚重感\n\n转换规则：保留原描述的人物、动作、场景与构图，仅转换为古典油画语言。\n输出：一段完整英文提示词（含 classical oil painting, impasto strokes, canvas texture, chiaroscuro, renaissance palette）。",
+      "type": "style"
+    },
+    {
+      "id": "style_watercolor",
+      "name": "艺术风格 · 水彩插画（透明纸纹）",
+      "desc": "透明水彩：晕染渐变、留白、纸纹颗粒，清新治愈插画/绘本",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「水彩插画」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：透明水彩（watercolor painting），纸面晕染（color bleeding）\n- 技法：湿画法晕染、干笔飞白、留白高光\n- 色彩：清透明亮，低饱和自然色，色彩自然交融\n- 质感：水彩纸纹理（cold-press paper grain），边缘柔和\n- 气质：清新、轻盈、治愈，适合绘本与插画\n\n转换规则：保留原描述的人物、动作、场景与构图，仅转换为水彩插画语言。\n输出：一段完整英文提示词（含 watercolor illustration, transparent washes, color bleeding, paper grain, soft edges, light colors）。",
+      "type": "style"
+    },
+    {
+      "id": "style_ink_wash",
+      "name": "艺术风格 · 中国水墨（留白墨韵）",
+      "desc": "国画水墨：浓淡墨韵、留白构图、写意笔触，山水/人物/花鸟文人画",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「中国水墨画」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：宣纸水墨（Chinese ink wash painting / shuimo），墨分五色\n- 笔触：写意笔法（freehand brushwork），枯湿浓淡变化，飞白效果\n- 构图：大面积留白（negative space），疏密有致，意境含蓄\n- 色彩：以黑白墨色为主，可点缀极少量赭石/花青淡彩\n- 气质：空灵、文人意境、气韵生动，忌讳满构图\n\n转换规则：保留原描述的主体、意境与构图逻辑，转换为水墨写意语言，可适度简化为更写意的表达。\n输出：一段完整英文提示词（含 Chinese ink wash painting, xieyi freehand brushwork, sumi ink, white space composition, minimalist）。",
+      "type": "style"
+    },
+    {
+      "id": "style_ukiyoe",
+      "name": "艺术风格 · 浮世绘（和风版画）",
+      "desc": "日本浮世绘：木版画线条、和风配色、波浪/艺伎/歌舞伎题材",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「浮世绘」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：日本木版画（ukiyo-e woodblock print），江户时代印刷质感\n- 线条：细而果断的黑色轮廓线，画面图案化、平面化\n- 色彩：和风限定配色——靛蓝、朱红、赭黄、墨黑、米白（indigo, vermilion, ochre）\n- 题材气质：海浪（神奈川冲浪里式）、艺伎、武士、花鸟、浮世风景\n- 质感：轻微纸纹与印版错位，无现代光影\n\n转换规则：保留原描述的人物、动作与场景要素，转换为浮世绘平面版画语言，人物可和风化。\n输出：一段完整英文提示词（含 ukiyo-e woodblock print, bold outlines, flat colors, indigo and vermilion palette, Edo period）。",
+      "type": "style"
+    },
+    {
+      "id": "style_cyberpunk",
+      "name": "艺术风格 · 赛博朋克霓虹（未来都市）",
+      "desc": "赛博朋克：霓虹光污染、雨夜街道、义体科技感，科幻场景/角色",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「赛博朋克」风格的高质量英文提示词。\n\n风格锚点：\n- 场景：未来都市雨夜街道（rain-soaked cyberpunk city），高密度霓虹招牌\n- 光影：霓虹光污染（neon glow, pink/cyan/teal），强反射水面与玻璃，体积雾\n- 元素：全息广告、义体改造（cybernetics）、无人机、机械义肢、数据流\n- 色调：冷蓝紫+霓虹粉青对撞，暗部深黑\n- 气质：高科技低生活（high tech, low life），疏离与压迫感\n\n转换规则：保留原描述的人物、动作与核心场景要素，补足赛博朋克环境与灯光语言。\n输出：一段完整英文提示词（含 cyberpunk, neon-lit rainy city, holographic ads, cybernetic enhancements, volumetric fog, high contrast）。",
+      "type": "style"
+    },
+    {
+      "id": "style_pixel",
+      "name": "艺术风格 · 像素艺术（16-bit 复古）",
+      "desc": "像素游戏风：16-bit 像素块、复古调色板、游戏场景/角色立绘",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「像素艺术」风格的高质量英文提示词。\n\n风格锚点：\n- 媒介：像素点阵（pixel art），16-bit 分辨率风格，可见像素块\n- 配色：复古游戏调色板（retro palette），限制色数、高对比\n- 造型：用像素块概括形体，轮廓锯齿自然，细节以少胜多\n- 气质：经典 2D 游戏画面（SNES/Game Boy 时代），可含 UI 血条/像素字体感\n- 场景：游戏场景/角色立绘/物品栏质感\n\n转换规则：保留原描述的主体、动作与场景，转换为像素画语言，构图可简化为可辨识的像素形象。\n输出：一段完整英文提示词（含 16-bit pixel art, retro color palette, chunky pixels, SNES style, game sprite）。",
+      "type": "style"
+    },
+    {
+      "id": "style_3d_pixar",
+      "name": "艺术风格 · 3D 皮克斯动画（渲染质感）",
+      "desc": "3D 动画电影风：皮克斯质感、圆润造型、全局光照，角色/场景渲染",
+      "text": "你是资深风格转换师。请把用户的画面描述转写为「3D 动画电影」风格的高质量英文提示词。\n\n风格锚点：\n- 渲染：高质量 3D 渲染（3D render, octane/pixar style），全局光照（global illumination）\n- 造型：圆润可爱的角色比例（stylized proportion），大而传神的眼睛\n- 材质：柔滑皮肤、布料绒毛、软硬质感分明，次表面散射（subsurface scattering）\n- 色彩：明亮饱和，玩具/动画电影调色，色彩明快\n- 氛围：柔和环境光，轻微景深，电影感镜头\n\n转换规则：保留原描述的人物、动作、场景与情绪，转换为 3D 动画渲染语言。\n输出：一段完整英文提示词（含 3D render, pixar-style animation, stylized proportions, global illumination, subsurface scattering, soft lighting）。",
+      "type": "style"
     }
   ]
 }

@@ -18,6 +18,7 @@
 - **New "Clear Template" button**: preview and output ports are fully cleared — no more repeated stale template output
 - **Character-sheet templates upgraded (57 templates)**: the full reference sheet now follows the GPT Image 2 character-board methodology (free layout / psychology 4-element / multi-outfit layering / reference-first), plus 2 new templates — psychology profile and multi-outfit wardrobe
 - **Character-sheet templates re-upgraded (59 templates)**: the full reference sheet now adds **silhouette / pose-action / detail-closeup zones** (Krea2 all-in-one dynamic sheet methodology), plus 2 new templates — single-reference to multi-view, and silhouette design
+- **Art-style template library (74 templates)**: new **Art Styles** category with 15 style templates modeled on the ComfyUI EasyUse style-library format — modern anime / Ghibli healing / B&W manga / US comic / pencil sketch / charcoal sketch / photorealistic / cinematic film still / classical oil painting / watercolor / Chinese ink wash / ukiyo-e / cyberpunk neon / 16-bit pixel art / 3D Pixar animation; the poster wall now has the Art Styles filter and live category stats
 
 ---
 
@@ -54,9 +55,9 @@ Also compatible with other popular multimodal models:
 | **Local LLaMA** | Local GGUF + mmproj, full Qwen multimodal family support | Offline use, image interrogation, custom models |
 | **API** | OpenAI-compatible interface (e.g. Alibaba DashScope) | Online service, no local VRAM needed |
 
-### 📚 Built-in Template Library (59 templates, 6 categories)
+### 📚 Built-in Template Library (74 templates, 7 categories)
 
-The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **59 enhancement templates**:
+The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **74 enhancement templates**:
 
 #### ① Official Authoritative (5 templates)
 - Qwen-Image-2.1 Official PE-T2I System Rules (10KB verbatim)
@@ -129,6 +130,23 @@ The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **59 enh
 - Sci-Fi
 - Anime Film
 
+#### ⑦ Art Styles (15 style-conversion templates) [NEW]
+- Modern Japanese Anime (cel shading / clean lineart)
+- Ghibli Healing Style (Miyazaki)
+- B&W Manga (ink lineart + screentone)
+- US Comic (superhero comic)
+- Pencil Sketch (hatching shading)
+- Charcoal Sketch (dark atmosphere)
+- Photorealistic
+- Cinematic Film Still
+- Classical Oil Painting (impasto canvas)
+- Watercolor Illustration (transparent paper grain)
+- Chinese Ink Wash (negative-space composition)
+- Ukiyo-e (woodblock print)
+- Cyberpunk Neon (future city)
+- 16-bit Pixel Art (retro)
+- 3D Pixar Animation (rendered)
+
 ### Template Variable Replacement
 
 Design / cinema / character templates include placeholders like `{{TITLE}}` `{{SUBTITLE}}` `{{BRAND}}` `{{MAIN_SUBJECT}}` `{{COLOR}}` `{{STYLE}}`.
@@ -156,8 +174,8 @@ The template node includes a **visual template wall** — click the "🖼 Open T
 
 | Feature | Description |
 |---|---|
-| **Large previews** | All 59 templates have thumbnails so you can see the layout at a glance |
-| **Category filter** | 7 categories: All / Official Rules / Official Docs / Community / Design / Cinema / Character / Posters |
+| **Large previews** | All 74 templates have thumbnails so you can see the layout at a glance |
+| **Category filter** | 8 categories: All / Official Rules / Official Docs / Community / Design / Cinema / Character / Posters / Art Styles |
 | **Click to use** | Click any card to auto-fill the node — no manual dropdown selection needed |
 | **Bilingual UI** | 🌐 toggle in top-right corner switches usage guide language |
 | **Variable hints** | Each card shows all variable names supported by that template |

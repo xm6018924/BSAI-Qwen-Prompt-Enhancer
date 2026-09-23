@@ -19,6 +19,7 @@
 - **清除模板按钮新版**：点击清除后预览与输出端口彻底清空，不再反复输出旧模板内容 / New "Clear Template" button: preview and output ports are fully cleared — no more repeated stale template output
 - **角色卡模板升级（57 个模板）**：完整设定总表融合 GPT Image 2 角色提示板方法论（自由排版 / 心理特质四要素 / 多套服装叠穿 / 参考图优先），新增「心理特质四要素」「多套服装+叠穿设定」2 个模板 / Character-sheet templates upgraded: the full reference sheet now follows the GPT Image 2 character-board methodology (free layout / psychology 4-element / multi-outfit layering / reference-first), plus 2 new templates (psychology profile, multi-outfit wardrobe)
 - **角色卡模板再升级（59 个模板）**：完整设定总表追加 **剪影区 / 动作姿态区 / 局部细节放大区**（Krea2 全能动态设计表方法论），新增「单图转多视角设计表」「剪影设计」2 个模板 / Character-sheet templates re-upgraded: the full reference sheet now adds **silhouette / pose-action / detail-closeup zones** (Krea2 all-in-one dynamic sheet methodology), plus 2 new templates (single-reference to multi-view, silhouette design)
+- **艺术风格模板库（74 个模板）**：参照 ComfyUI EasyUse 风格库体系新增 **「艺术风格」分类 15 个风格模板**（现代日式动漫 / 吉卜力治愈风 / 日漫黑白漫画 / 美式漫画 / 铅笔素描 / 炭笔素描 / 照片写实 / 电影感胶片 / 古典油画 / 水彩插画 / 中国水墨 / 浮世绘 / 赛博朋克霓虹 / 像素艺术 / 3D 皮克斯动画），海报墙同步新增「艺术风格」分类与动态统计 / Art-style template library (74 templates): new **Art Styles** category with 15 style templates (modern anime / Ghibli / manga B&W / US comic / pencil sketch / charcoal / photoreal / film still / classical oil / watercolor / Chinese ink wash / ukiyo-e / cyberpunk / pixel art / 3D Pixar), poster wall now has the Art Styles filter and live stats
 
 ---
 
@@ -55,9 +56,9 @@
 | **本地 LLaMA** | 本地 GGUF + mmproj，支持千问全系列多模态模型 | 离线使用、图像反推、自定义模型 |
 | **API** | OpenAI 兼容接口（如阿里云百炼） | 在线服务、无需本地显存 |
 
-### 📚 内置模板库（59 个模板，6 大分类）
+### 📚 内置模板库（74 个模板，7 大分类）
 
-`Qwen Image 2.1 官方增强提示词模板` 节点内置 **59 个增强模板**：
+`Qwen Image 2.1 官方增强提示词模板` 节点内置 **74 个增强模板**：
 
 #### ① 官方权威（5 个）
 - Qwen-Image-2.1 官方 PE-T2I 系统规则（10KB 原文）
@@ -130,6 +131,23 @@
 - 科幻片 Sci-Fi
 - 动画电影 Anime Film
 
+#### ⑦ 艺术风格（15 个风格转换模板）【新增】
+- 现代日式动漫（赛璐璐/清晰描线）
+- 吉卜力治愈风（宫崎骏）
+- 日漫黑白漫画（线稿+网点）
+- 美式漫画（超级英雄漫画）
+- 铅笔素描（排线明暗）
+- 炭笔素描（浓黑氛围）
+- 照片写实（photorealistic）
+- 电影感胶片（cinematic film still）
+- 古典油画（厚涂布面）
+- 水彩插画（透明纸纹）
+- 中国水墨（留白墨韵）
+- 浮世绘（和风版画）
+- 赛博朋克霓虹（未来都市）
+- 像素艺术（16-bit 复古）
+- 3D 皮克斯动画（渲染质感）
+
 ### 模板变量替换
 
 设计/电影/角色类模板内置 `{{TITLE}}` `{{SUBTITLE}}` `{{BRAND}}` `{{MAIN_SUBJECT}}` `{{COLOR}}` `{{STYLE}}` 等占位符。
@@ -157,8 +175,8 @@ STYLE: 商业摄影
 
 | 功能 | 说明 |
 |---|---|
-| **大图预览** | 59 个模板全部配有缩略图，一眼看清版式布局 |
-| **分类筛选** | 7 大分类一键切换：全部 / 官方规则 / 官方文档 / 社区实践 / 设计版式 / 电影资产 / 角色卡 / 电影海报 |
+| **大图预览** | 74 个模板全部配有缩略图，一眼看清版式布局 |
+| **分类筛选** | 8 大分类一键切换：全部 / 官方规则 / 官方文档 / 社区实践 / 设计版式 / 电影资产 / 角色卡 / 电影海报 / 艺术风格 |
 | **点击即用** | 点击任意卡片自动回填到节点，无需手动选择下拉 |
 | **中英双语** | 右上角 🌐 切换使用说明语言 |
 | **变量提示** | 每张卡片显示该模板支持的所有变量名 |
