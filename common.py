@@ -43,15 +43,78 @@ def load_official_system_prompt(pe_mode):
 
 
 def load_templates():
-    """加载模板库 templates.json -> {id: {name, desc, file|text, ...}}"""
+    """加载模板库 -> 模板 dict 列表（内置 templates.json + 用户模板区 user_templates/ 合并）。
+    用户模板区的文件会被自动汇聚，作为「共享用户模板」供所有工作流与海报墙使用。
+    """
     try:
         with open(TEMPLATES_JSON, "r", encoding="utf-8") as f:
             data = json.load(f)
         templates = data.get("templates", [])
-        return templates
     except Exception as e:
         print(f"[BSAI_Qwen_Prompt_Enhancer] 模板库加载失败: {e}")
-        return []
+        templates = []
+    templates += load_user_templates()
+    return templates
+
+
+# 用户模板区：插件根目录下的 user_templates/ 目录
+# 用户把自己的自定义模板 JSON 放进去（可建子目录），会被自动合并进模板库（type=user）。
+# 支持的 JSON 结构（三选一）：
+#   1) 单个模板对象  {"id","name","desc","text":"模板全文"}
+#   2) 模板对象 + 文件引用 {"id","name","desc","file":"相对插件根的 txt/md 路径"}
+#   3) 模板列表       {"templates":[{...},{...}]}
+USER_TEMPLATES_DIR = os.path.join(PLUGIN_ROOT, "user_templates")
+
+# 用户模板扫描提示只打印一次，避免每次 load_templates 刷屏
+_USER_TEMPLATES_LOGGED = {"done": False}
+
+
+def load_user_templates():
+    """扫描 user_templates/ 下所有 *.json（含子目录），汇聚为模板 dict 列表。
+    - 自动补全 type="user"（若未显式指定）。
+    - id 与内置模板冲突时自动加 "user_" 前缀，避免解析歧义。
+    - 解析失败的文件会打印提示并跳过，不影响其它模板。
+    """
+    out = []
+    if not os.path.isdir(USER_TEMPLATES_DIR):
+        return out
+    builtin_ids = set()
+    try:
+        with open(TEMPLATES_JSON, "r", encoding="utf-8") as f:
+            builtin_ids = {t.get("id") for t in json.load(f).get("templates", [])}
+    except Exception:
+        pass
+    used_ids = set(builtin_ids)
+    for root, _dirs, files in os.walk(USER_TEMPLATES_DIR):
+        for fn in sorted(files):
+            if not fn.lower().endswith(".json"):
+                continue
+            path = os.path.join(root, fn)
+            try:
+                with open(path, "r", encoding="utf-8") as f:
+                    raw = json.load(f)
+            except Exception as e:
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 用户模板解析失败(跳过): {path} -> {e}")
+                continue
+            items = raw if isinstance(raw, list) else raw.get("templates", [raw] if isinstance(raw, dict) else [])
+            if not isinstance(items, list):
+                continue
+            for it in items:
+                if not isinstance(it, dict) or not it.get("name"):
+                    continue
+                t = dict(it)
+                t.setdefault("type", "user")
+                t.setdefault("desc", "用户自定义共享模板")
+                tid = str(t.get("id") or t["name"])
+                if tid in used_ids:
+                    tid = "user_" + tid
+                    t["id"] = tid
+                used_ids.add(tid)
+                out.append(t)
+    if out and not _USER_TEMPLATES_LOGGED["done"]:
+        print(f"[BSAI_Qwen_Prompt_Enhancer] 用户模板区已汇聚 {len(out)} 个自定义模板 (user_templates/)")
+        _USER_TEMPLATES_LOGGED["done"] = True
+    return out
 
 
 # 历史重命名别名表：旧显示名 -> 模板 id

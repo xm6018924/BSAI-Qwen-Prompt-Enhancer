@@ -34,10 +34,51 @@ __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
 # ComfyUI 前端 JS 扩展目录（注入"打开海报墙"按钮 + backend 动态显隐参数）
 WEB_DIRECTORY = "./web"
 
-# 【v1.02.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
-# 排查"其他电脑仍报 Custom validation failed / Value not in list / 节点 undefined"时，先看这行：
-# 如果版本号不是 v1.02.0，说明插件未更新到最新（git pull 后需完全重启 ComfyUI）。
-_PLUGIN_VERSION = "v1.02.0 (2026-09-24)"
+# 【v1.03.0】动态模板 API：/api/bsai/templates
+# 返回内置模板 + 用户模板区（user_templates/）的合并结果（含全文），
+# 供海报墙与前端下拉实时读取：用户每次新增自定义模板，无需改静态文件即可立即生效。
+def _register_template_api():
+    try:
+        import json as _json
+        from server import PromptServer
+        from .common import PLUGIN_ROOT, load_text, TEMPLATES_JSON, load_user_templates
+
+        server = PromptServer.instance
+
+        @server.routes.get("/api/bsai/templates")
+        def _bsai_templates():
+            try:
+                with open(TEMPLATES_JSON, "r", encoding="utf-8") as f:
+                    data = _json.load(f)
+            except Exception:
+                data = {"meta": {}, "templates": []}
+            templates = list(data.get("templates", [])) + load_user_templates()
+            items = []
+            for t in templates:
+                if t.get("file"):
+                    txt = load_text(os.path.join(PLUGIN_ROOT, t["file"]), "")
+                else:
+                    txt = t.get("text", "")
+                items.append({
+                    "id": t.get("id"),
+                    "name": t.get("name"),
+                    "type": t.get("type", "?"),
+                    "desc": t.get("desc", ""),
+                    "text": txt,
+                })
+            return {
+                "meta": data.get("meta", {}),
+                "templates": items,
+            }
+
+        print("[BSAI_Qwen_Prompt_Enhancer] 模板 API 已注册: GET /api/bsai/templates")
+    except Exception as e:
+        print(f"[BSAI_Qwen_Prompt_Enhancer] 模板 API 注册失败(不影响节点): {e}")
+
+_register_template_api()
+
+# 【v1.03.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
+_PLUGIN_VERSION = "v1.03.0 (2026-09-24)"
 print(f"[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 {_PLUGIN_VERSION} | "
-      f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙102模板10分类 / MarkdownNote兼容 / 潜空间放大示例")
+      f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / MarkdownNote兼容 / 潜空间放大示例 / 动态模板API")
 

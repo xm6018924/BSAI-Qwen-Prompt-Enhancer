@@ -1,0 +1,16 @@
+{
+  "templates": [
+    {
+      "id": "user_example_poster",
+      "name": "用户模板 · 示例：极简产品海报",
+      "desc": "用户自定义模板示例：产品居中、大字标题、留白极简（复制本文件修改即可）",
+      "text": "你是资深商业设计师。请把用户的画面描述转写为「极简产品海报」的高质量英文提示词。\n\n风格锚点：\n- 主体：产品/商品居中放置，高清写实渲染（studio product photography）\n- 背景：纯净浅灰/纯白渐变背景，柔光，地面反射\n- 排版：产品上方超大号无衬线标题（bold sans-serif headline），下方一行小号说明文字，字距宽松\n- 配色：黑白灰 + 单一品牌点缀色\n- 留白：大量负空间，构图极简高级\n\n转换规则：保留原描述的产品与文字内容，仅把视觉语言转换为极简产品海报。\n输出：一段完整英文提示词（含 minimalist product poster, centered product, clean gradient background, bold typography, studio lighting, premium whitespace）。"
+    },
+    {
+      "id": "user_example_variables",
+      "name": "用户模板 · 示例：变量模板（含{{占位符}}）",
+      "desc": "用户自定义模板示例：支持 {{KEY}} 变量替换（在节点 variables 里填 KEY: value）",
+      "text": "你是资深平面设计师。请把用户的画面描述转写为「{{STYLE}}」风格的高质量英文提示词。\n\n风格锚点：\n- 主视觉：{{MAIN_SUBJECT}}，作为画面绝对主体\n- 配色：{{COLOR}}\n- 排版：主标题“{{TITLE}}”超大压版，副标题“{{SUBTITLE}}”置于下方\n- 品牌：{{BRAND}} 的品牌标识小字置于角落\n- 氛围：高级、克制、商业质感\n\n转换规则：保留原描述的主体与上述文字内容，仅把视觉语言转换为目标风格。\n输出：一段完整英文提示词（含{{STYLE}}风格关键词）。"
+    }
+  ]
+}

@@ -8,6 +8,24 @@
 
 ## 🚀 Latest Updates
 
+### v1.03.0 (2026-09-24) — Template Library Upgrades: 16 Typography + 16 Art Styles + User Template Area
+
+> **Built-in template library grows from 102 to 134 (11 categories), plus a new User Template Area — drop your custom template JSON into `user_templates/`, and it merges automatically as a shared template for every workflow and the template wall.**
+
+**What's new:**
+
+1. **Typography templates (16, new `typography` category)**: global classic & cutting-edge typography styles — Swiss International / Bauhaus / Constructivist / New Ugly / Memphis / Vintage Victorian / Minimal Bold / Editorial / Newspaper / Japanese / Chinese Calligraphy / Glitch / Neon / 3D Extruded / Pixel / Hand-drawn.
+2. **Art styles (15 → 31)**: added Impressionism / Post-Impressionism (Van Gogh) / Cubism / Surrealism / Pop Art / Expressionism / Abstract Expressionism / Art Deco / Art Nouveau / Baroque / Rococo / Pointillism / Fauvism / Futurism / Vaporwave / Acid Graphics.
+3. **User Template Area (new `user` category)**: `user_templates/` folder under the plugin root. Accepts three JSON layouts (single object / object + external file / list), supports `{{KEY}}` variable placeholders, and auto-prefixes `user_` on id conflicts. **Other machines get all shared templates after `git pull`.**
+4. **Dynamic template API `GET /api/bsai/templates`**: the template wall fetches this endpoint first (built-in + user templates merged live, including full text); static files remain the fallback — no static edits needed for new templates.
+5. **Thumbnails**: all 32 new templates ship with unified thumbnails (dark gradient + category label + BSAI circular logo).
+
+**How to use the User Template Area:** open `custom_nodes/BSAI_Qwen_Prompt_Enhancer/user_templates/README.md` (format docs), drop your template JSON into that folder → **fully restart ComfyUI** → the template dropdown and the wall's "User Templates" category show it. See `示例模板.json` in the same folder for examples.
+
+---
+
+
+
 ### v1.02.0 (2026-09-24) — One-click install of all missing nodes for example workflows
 
 > **Another PC shows red frames `node type not found / undefined` when opening BSAI example workflows (e.g. `SetNode`, `GetNode`, `Image Comparer (rgthree)`, `QwenImage21_T2IPromptRewrite`, `DLSS5Settings`, `DLSS5EnhanceImages`)?**
@@ -103,9 +121,9 @@ Also compatible with other popular multimodal models:
 | **Local LLaMA** | Local GGUF + mmproj, full Qwen multimodal family support | Offline use, image interrogation, custom models |
 | **API** | OpenAI-compatible interface (e.g. Alibaba DashScope) | Online service, no local VRAM needed |
 
-### 📚 Built-in Template Library (102 templates, 10 categories)
+### 📚 Built-in Template Library (134 templates, 11 categories + User Templates)
 
-The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **74 enhancement templates**:
+The `Qwen Image 2.1 Official Prompt Enhancement Template` node includes **134 enhancement templates**:
 
 #### ① Official Authoritative (5 templates)
 - Qwen-Image-2.1 Official PE-T2I System Rules (10KB verbatim)
