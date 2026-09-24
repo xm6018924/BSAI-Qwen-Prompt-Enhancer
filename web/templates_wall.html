@@ -209,6 +209,9 @@ let TEMPLATES = [];
 // v1.04.2: 静态资源统一走插件绝对路径 —— 从直达路由 /bsai_templates_wall 打开时，
 // 相对路径 thumbnails/x.png 会解析到服务器根目录(404)导致缩略图看不见。
 const WALL_BASE = "/extensions/BSAI_Qwen_Prompt_Enhancer";
+// v1.06.0: 缩略图 URL 加版本参数(cache-buster)，强制浏览器绕过旧图缓存加载新缩略图；
+// 以后每次替换缩略图/logo 时把 WALL_VER 改成新值即可（如 20260924-v106）。
+const WALL_VER = "20260924-v105";
 
 // v0.10: 顶部说明/统计数字从模板数据自动统计（新增模板后无需手动改数量）
 function updateStats(list) {
@@ -666,10 +669,10 @@ function render(cat) {
     card.title = NODE_ID ? "点击选用此模板" : "从节点按钮打开可自动回填";
     card.innerHTML = `
       <div class="thumb">
-        <img src="${WALL_BASE}/thumbnails/${t.id}.png" alt="${t.name}" loading="lazy" class="thumb-img"
+        <img src="${WALL_BASE}/thumbnails/${t.id}.png?v=${WALL_VER}" alt="${t.name}" loading="lazy" class="thumb-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div style="display:none;position:absolute;inset:0;align-items:center;justify-content:center">${svgFor(t)}</div>
-        <img src="${WALL_BASE}/logo.png" class="logo-badge" alt="百声AI">
+        <img src="${WALL_BASE}/logo.png?v=${WALL_VER}" class="logo-badge" alt="百声AI">
       </div>
       <div class="info">
         <span class="type-tag t-${t.type}">${

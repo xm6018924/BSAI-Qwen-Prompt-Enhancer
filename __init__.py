@@ -41,6 +41,7 @@ def _register_template_api():
     try:
         import json as _json
         from server import PromptServer
+        from aiohttp import web
         from .common import PLUGIN_ROOT, load_text, TEMPLATES_JSON, load_user_templates
 
         server = PromptServer.instance
@@ -66,10 +67,10 @@ def _register_template_api():
                     "desc": t.get("desc", ""),
                     "text": txt,
                 })
-            return {
-                "meta": data.get("meta", {}),
-                "templates": items,
-            }
+            return web.json_response(
+                {"meta": data.get("meta", {}), "templates": items},
+                headers={"Cache-Control": "no-store, max-age=0"},
+            )
 
         print("[BSAI_Qwen_Prompt_Enhancer] 模板 API 已注册: GET /api/bsai/templates")
     except Exception as e:
@@ -91,7 +92,8 @@ def _register_wall_route():
 
         @server.routes.get("/bsai_templates_wall")
         async def _bsai_wall(request):
-            return web.FileResponse(wall_html)
+            # v1.06.0: 禁止缓存——浏览器每次打开海报墙都拉取最新 HTML/缩略图列表
+            return web.FileResponse(wall_html, headers={"Cache-Control": "no-store, max-age=0"})
 
         print("[BSAI_Qwen_Prompt_Enhancer] 海报墙直达路由已注册: GET /bsai_templates_wall")
     except Exception as e:
