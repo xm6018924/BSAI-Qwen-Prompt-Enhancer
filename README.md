@@ -43,6 +43,7 @@ Jev（llama.cpp 新技术的 ComfyUI 落地）不再让模型逐 token 手写 JS
 > | `Image Comparer (rgthree)` | [rgthree-comfy](https://github.com/rgthree/rgthree-comfy) |
 > | `QwenImage21_T2IPromptRewrite` | [ComfyUI-Qwen-Image-2.1-Prompt-Enhancer](https://github.com/benjiyaya/ComfyUI-Qwen-Image-2.1-Prompt-Enhancer)（需下载官方 PE-T2I 模型放 `models/text_encoders/`） |
 > | `DLSS5Settings` / `DLSS5EnhanceImages`（潜空间放大） | [ComfyUI-DLSS5-Enhancer](https://github.com/Blueforcer/ComfyUI-DLSS5-Enhancer)（NVIDIA DLSS5 神经渲染；需按需运行 `install_runtime.py` 下载运行时） |
+> ⚠️ `install_runtime.py` 内置 URL 已过时（404），请用 `install_example_deps.bat` 提示的 `--url` 命令（tag 为 `v3.0`）；国内网络不通时在 URL 前加镜像前缀 `https://gh-proxy.com/` 或 `https://ghfast.top/`。
 > | `easy cleanGpuUsed` / `easy clearCacheAll` | [ComfyUI-Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) |
 > | `PathchSageAttentionKJ` / `GetImageSizeAndCount` | [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) |
 >

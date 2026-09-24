@@ -60,8 +60,10 @@ if exist "%CN%\comfyui-easy-use\__init__.py" (
 
 echo [3/4] DLSS5 潜空间放大运行时 (可选, 需 NVIDIA RTX) ...
 if exist "%CN%\ComfyUI-DLSS5-Enhancer\install_runtime.py" (
-  echo   DLSS5EnhanceImages 节点需要 DLSS5 运行时。按需手动执行:
-  echo   python "%CN%\ComfyUI-DLSS5-Enhancer\install_runtime.py"
+  echo   DLSS5EnhanceImages 节点需要 DLSS5 运行时。按需运行下面命令:
+  echo   python "%CN%\ComfyUI-DLSS5-Enhancer\install_runtime.py" --url "https://github.com/Merserk/dlss5-visual-enhancer/releases/download/v3.0/DLSS.5.Visual.Enhancer.v3.0.zip"
+  echo   (注意: URL 必须带 tag 前缀 v3.0; 国内 GitHub 不通时在 URL 前加镜像前缀
+  echo     https://gh-proxy.com/ 或 https://ghfast.top/ 再运行)
   echo   跳过不影响其它节点
 )
 
