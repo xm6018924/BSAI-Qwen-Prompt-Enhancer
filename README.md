@@ -35,6 +35,12 @@ cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
 > 同时修复一个被长期掩盖的隐藏 BUG：模板 API `GET /api/bsai/templates` 的 handler 缺少 `request` 参数（aiohttp 必传）导致该接口**一直返回 HTTP 500**——海报墙此前靠静态文件回退才正常显示。现已修复，刷新按钮可正常获取**含用户模板区**的完整模板库。
 > **注意**：升级后**必须重启 ComfyUI** 让新后端代码生效；若升级后首次点刷新仍提示 500，说明 ComfyUI 尚未重启（旧代码仍在内存）。
 
+**v1.06.0 补丁4 — 模板缩略图自动同步（Auto thumbnail sync for saved/uploaded templates）：**
+> **保存为模板**时，自动把最近一张生成图作为模板缩略图下载到海报墙（`web/thumbnails/{id}.png`）；**上传模板**时自动同步 JSON 自带的缩略图（支持 base64 / http(s) URL / 本地路径，也可在 multipart 里带 `thumbnail` 文件字段）；上传模板无缩略图时，后端自动用 PIL 程序合成 448×448 占位卡（绿色分类条 + 模板名 + 描述 + 百声AI 底标），老用户模板首次打开海报墙时也会惰性补齐。**其他电脑 `git pull` 后重启 ComfyUI 即可，保存/上传模板后缩略图自动出现在海报墙，无需手动放图。**
+> When you click **Save as Template**, the latest generated image is automatically downloaded as the template thumbnail onto the wall (`web/thumbnails/{id}.png`). When you **upload a template**, any thumbnail embedded in its JSON (base64 / http(s) URL / local path, or a multipart `thumbnail` file field) is synced automatically; if there is no thumbnail, the backend programmatically renders a 448×448 placeholder card (green category bar + template name + description + "百声AI · BSAI" footer). Legacy user templates are lazily backfilled the first time the wall is opened. **On other machines: `git pull`, restart ComfyUI, done — no manual steps.**
+> 新增后端接口 `GET /bsai_latest_output`（返回 output 目录最近一张生成图，供前端保存模板时自动取用）；前端「💾 保存为模板」按钮保存前自动请求该接口并把图片 URL 随保存请求一起提交。
+> New backend endpoint `GET /bsai_latest_output` (returns the newest image in the output folder for the Save button to pick up); the front-end Save button now fetches it and submits the image URL along with the save request.
+
 ---
 
 

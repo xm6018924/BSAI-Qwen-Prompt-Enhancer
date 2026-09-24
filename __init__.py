@@ -37,6 +37,129 @@ WEB_DIRECTORY = "./web"
 # 【v1.03.0】动态模板 API：/api/bsai/templates
 # 返回内置模板 + 用户模板区（user_templates/）的合并结果（含全文），
 # 供海报墙与前端下拉实时读取：用户每次新增自定义模板，无需改静态文件即可立即生效。
+
+# 【v1.06.0】缩略图自动同步工具链（保存/上传模板时自动生成或同步缩略图到海报墙）
+def _bsai_thumb_dir():
+    d = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web", "thumbnails")
+    os.makedirs(d, exist_ok=True)
+    return d
+
+
+def _bsai_thumb_path(tid):
+    return os.path.join(_bsai_thumb_dir(), "%s.png" % tid)
+
+
+def _bsai_save_thumb_bytes(raw, dest):
+    if not raw:
+        return False
+    try:
+        with open(dest, "wb") as f:
+            f.write(raw)
+        return os.path.getsize(dest) > 100
+    except Exception as e:
+        print("[BSAI_Qwen_Prompt_Enhancer] 缩略图写盘失败: %s" % e)
+        return False
+
+
+def _bsai_save_thumb_from_url(url, dest):
+    try:
+        import urllib.request as _u
+        with _u.urlopen(url, timeout=20) as r:
+            return _bsai_save_thumb_bytes(r.read(), dest)
+    except Exception as e:
+        print("[BSAI_Qwen_Prompt_Enhancer] 缩略图 URL 下载失败: %s -> %s" % (url, e))
+        return False
+
+
+def _bsai_save_thumb_from_b64(b64, dest):
+    try:
+        import base64 as _b
+        if "," in b64:
+            b64 = b64.split(",", 1)[1]
+        return _bsai_save_thumb_bytes(_b.b64decode(b64), dest)
+    except Exception as e:
+        print("[BSAI_Qwen_Prompt_Enhancer] 缩略图 base64 解码失败: %s" % e)
+        return False
+
+
+def _bsai_gen_thumb_placeholder(name, desc, tid):
+    """PIL 程序合成 448x448 用户模板占位缩略图（绿色分类条+模板名+描述+百声AI底标），
+    自动同步到海报墙 thumbnails/{tid}.png。无 PIL 环境时跳过（海报墙 onerror 有 SVG 兜底）。"""
+    try:
+        from PIL import Image, ImageDraw, ImageFont
+    except Exception:
+        return False
+    dest = _bsai_thumb_path(tid)
+    W, H = 448, 448
+    img = Image.new("RGB", (W, H), "#0f172a")
+    d = ImageDraw.Draw(img)
+    d.rectangle([0, 0, W, 48], fill="#16a34a")
+    d.rectangle([0, H - 58, W, H], fill="#1e293b")
+    try:
+        f_label = ImageFont.truetype("C:/Windows/Fonts/msyhbd.ttc", 20)
+        f_name = ImageFont.truetype("C:/Windows/Fonts/msyhbd.ttc", 34)
+        f_desc = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 17)
+        f_logo = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 18)
+    except Exception:
+        f_label = f_name = f_desc = f_logo = ImageFont.load_default()
+    d.text((18, 12), "用户模板 · USER TEMPLATE", font=f_label, fill="#ffffff")
+    nm = str(name or tid or "模板")
+    d.text((24, 110), nm[:10], font=f_name, fill="#fbbf24")
+    ds = str(desc or "").strip() or "用户自定义共享模板"
+    d.text((24, 200), ds[:30], font=f_desc, fill="#cbd5e1")
+    d.text((W // 2 - 66, H - 48), "百声AI · BSAI", font=f_logo, fill="#94a3b8")
+    img.save(dest, "PNG")
+    return True
+
+
+def _bsai_ensure_user_thumb(tid, name, desc):
+    """缩略图缺失时惰性生成占位卡（老用户模板/合成失败自动补齐）"""
+    if not tid:
+        return False
+    dest = _bsai_thumb_path(tid)
+    if os.path.exists(dest) and os.path.getsize(dest) > 100:
+        return True
+    return _bsai_gen_thumb_placeholder(name, desc, tid)
+
+
+def _bsai_apply_thumbnail(tid, thumb, raw_bytes=None):
+    """按优先级落地缩略图：raw_bytes > base64/URL/本地路径 > 程序合成"""
+    if not tid:
+        return False
+    dest = _bsai_thumb_path(tid)
+    if raw_bytes:
+        return _bsai_save_thumb_bytes(raw_bytes, dest)
+    if isinstance(thumb, str) and thumb:
+        if thumb.startswith("data:") or thumb.startswith("base64,"):
+            return _bsai_save_thumb_from_b64(thumb, dest)
+        if thumb.startswith("http://") or thumb.startswith("https://"):
+            return _bsai_save_thumb_from_url(thumb, dest)
+        if os.path.isfile(thumb):
+            try:
+                with open(thumb, "rb") as f:
+                    return _bsai_save_thumb_bytes(f.read(), dest)
+            except Exception:
+                return False
+    return _bsai_gen_thumb_placeholder("", "", tid)
+
+
+def _bsai_latest_output_url():
+    """output 目录最新一张生成图 -> (view 相对 URL or None, 文件名)"""
+    try:
+        import glob as _g
+        out = os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "..", "output"))
+        pats = []
+        for ext in ("png", "jpg", "jpeg", "webp"):
+            pats += _g.glob(os.path.join(out, "*.%s" % ext))
+        if not pats:
+            return None, None
+        fn = max(pats, key=os.path.getmtime)
+        import urllib.parse as _up
+        return "/view?filename=%s&type=output&subfolder=" % _up.quote(os.path.basename(fn)), os.path.basename(fn)
+    except Exception:
+        return None, None
+
+
 def _register_template_api():
     try:
         import json as _json
@@ -60,6 +183,8 @@ def _register_template_api():
                     txt = load_text(os.path.join(PLUGIN_ROOT, t["file"]), "")
                 else:
                     txt = t.get("text", "")
+                if t.get("type") == "user":
+                    _bsai_ensure_user_thumb(t.get("id"), t.get("name", ""), t.get("desc", ""))
                 items.append({
                     "id": t.get("id"),
                     "name": t.get("name"),
@@ -140,12 +265,20 @@ def _register_user_template_api():
             desc = str(data.get("desc") or "用户自定义共享模板").strip()
             if not text:
                 return web.json_response({"ok": False, "message": "模板内容为空，无法保存"})
-            tid = "user_" + name.lower().replace(" ", "_")
             path = _unique_path(name)
+            tid = "user_" + os.path.splitext(os.path.basename(path))[0].lower().replace(" ", "_")
             payload = {"id": tid, "name": name, "type": "user", "desc": desc, "text": text}
             with open(path, "w", encoding="utf-8") as f:
                 _json.dump(payload, f, ensure_ascii=False, indent=2)
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 已保存用户模板: {os.path.basename(path)}")
+            # 【v1.06.0】缩略图自动同步：请求带 thumbnail(URL/base64) 则落地；无则程序合成占位卡
+            thumb = data.get("thumbnail") or ""
+            if isinstance(thumb, str) and thumb.startswith("/view"):
+                try:
+                    thumb = "http://%s%s" % (request.host or "127.0.0.1:8188", thumb)
+                except Exception:
+                    thumb = ""
+            _bsai_apply_thumbnail(tid, thumb)
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 已保存用户模板: {os.path.basename(path)} (缩略图已同步海报墙)")
             return web.json_response({"ok": True, "name": name, "file": os.path.basename(path), "id": tid})
 
         @server.routes.post("/bsai_upload_user_template")
@@ -166,20 +299,37 @@ def _register_user_template_api():
                 items = parsed if isinstance(parsed, list) else parsed.get("templates", [parsed] if isinstance(parsed, dict) else [])
                 if not isinstance(items, list) or not items:
                     return web.json_response({"ok": False, "message": "JSON 中没有模板条目（需含 name 字段）"})
+                # 【v1.06.0】multipart 可选 thumbnail 文件字段（单模板场景使用）
+                thumb_bytes = None
+                try:
+                    nxt = await reader.next()
+                    if nxt and nxt.name == "thumbnail":
+                        thumb_bytes = await nxt.read()
+                except Exception:
+                    thumb_bytes = None
                 saved = []
                 for it in items:
                     if not isinstance(it, dict) or not it.get("name"):
                         continue
                     nm = _safe_name(str(it["name"]))
                     path = _unique_path(nm)
+                    tid = "user_" + os.path.splitext(os.path.basename(path))[0].lower().replace(" ", "_")
                     payload = dict(it)
-                    payload.setdefault("id", "user_" + nm.lower().replace(" ", "_"))
+                    payload["id"] = tid
                     payload.setdefault("type", "user")
                     payload.setdefault("desc", "用户自定义共享模板")
                     # file 引用字段在共享模板场景不可靠（相对路径可能不存在），一律内联 text
                     payload.pop("file", None)
+                    it_thumb = payload.pop("thumbnail", None)
                     with open(path, "w", encoding="utf-8") as f:
                         _json.dump(payload, f, ensure_ascii=False, indent=2)
+                    # 【v1.06.0】缩略图自动同步：multipart文件 > JSON内thumbnail(URL/base64/本地路径) > 程序合成占位卡
+                    if len(items) == 1 and thumb_bytes:
+                        _bsai_apply_thumbnail(tid, None, raw_bytes=thumb_bytes)
+                    elif isinstance(it_thumb, str) and it_thumb:
+                        _bsai_apply_thumbnail(tid, it_thumb)
+                    else:
+                        _bsai_apply_thumbnail(tid, None)
                     saved.append(os.path.basename(path))
                 if not saved:
                     return web.json_response({"ok": False, "message": "JSON 中无有效模板条目（缺少 name 字段）"})
@@ -188,7 +338,15 @@ def _register_user_template_api():
             except Exception as e:
                 return web.json_response({"ok": False, "message": "上传失败: %s" % e})
 
-        print("[BSAI_Qwen_Prompt_Enhancer] 用户模板写入 API 已注册: POST /bsai_save_user_template / POST /bsai_upload_user_template")
+        @server.routes.get("/bsai_latest_output")
+        def _bsai_latest_output(request):
+            """返回 output 目录最新一张生成图（供前端保存模板时自动作为缩略图）"""
+            url, fn = _bsai_latest_output_url()
+            if not url:
+                return web.json_response({"ok": False, "message": "output 目录暂无生成图片"})
+            return web.json_response({"ok": True, "url": url, "filename": fn})
+
+        print("[BSAI_Qwen_Prompt_Enhancer] 用户模板写入 API 已注册: POST /bsai_save_user_template / POST /bsai_upload_user_template / GET /bsai_latest_output")
     except Exception as e:
         print(f"[BSAI_Qwen_Prompt_Enhancer] 用户模板写入 API 注册失败(不影响节点): {e}")
 

@@ -36,6 +36,10 @@ cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
 > Also fixed a long-hidden bug: the `GET /api/bsai/templates` handler was missing the required `request` parameter (aiohttp always passes one), so the API **always returned HTTP 500** — the wall only worked via static-file fallback. Now fixed; the refresh button gets the full library including user templates.
 > **Note**: **restart ComfyUI after upgrading** for the new backend code to take effect; if the first refresh after upgrade still shows 500, ComfyUI has not been restarted yet (old code still in memory).
 
+**v1.06.0 Patch 4 - Auto thumbnail sync for saved/uploaded templates:**
+> Clicking **Save as Template** automatically downloads the latest generated image as the template thumbnail onto the wall (`web/thumbnails/{id}.png`). Uploading a template syncs any thumbnail embedded in its JSON (base64 / http(s) URL / local path, or a multipart `thumbnail` file field); if there is no thumbnail, the backend programmatically renders a 448x448 placeholder card (green category bar + template name + description + "BSAI" footer). Legacy user templates are lazily backfilled the first time the wall is opened. **On other machines: `git pull`, restart ComfyUI, done - no manual steps.**
+> New backend endpoint `GET /bsai_latest_output` returns the newest image in the output folder; the front-end Save button fetches it and submits the image URL together with the save request.
+
 ---
 
 

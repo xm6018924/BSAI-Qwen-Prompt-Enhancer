@@ -357,10 +357,19 @@ app.registerExtension({
             const name = prompt("模板名称（将保存到用户模板区 user_templates/）：", "");
             if (!name || !name.trim()) return;
             const desc = prompt("模板描述（可空，将显示在海报墙卡片）：", "用户自定义共享模板");
+            // 【v1.06.0】缩略图自动同步：保存前取最近生成图作为模板缩略图（后端下载落地；无图则后端自动合成占位卡）
+            let thumb = "";
+            try {
+              const lt = await fetch("/bsai_latest_output");
+              if (lt.ok) {
+                const lj = await lt.json();
+                if (lj && lj.ok && lj.url) thumb = lj.url;
+              }
+            } catch (_) { /* 后端不可用时静默，缩略图走后端合成 */ }
             const resp = await fetch("/bsai_save_user_template", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ name: name.trim(), desc: (desc || "").trim(), text: text.trim() }),
+              body: JSON.stringify({ name: name.trim(), desc: (desc || "").trim(), text: text.trim(), thumbnail: thumb }),
             });
             const j = await resp.json();
             if (j && j.ok) {
