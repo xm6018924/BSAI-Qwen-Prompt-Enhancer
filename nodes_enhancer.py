@@ -754,7 +754,44 @@ def _detect_family_from_name(model_name):
     return ""
 
 
-def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, load_mtp):
+def _build_accel_kwargs(n_cmoe=0, kv_cache_quant="auto", use_mmap=True,
+                        use_mlock=False, flash_attn="auto", threads=0):
+    """llama.cpp 极限提速参数映射（-ncmoe / -ctk/-ctv / --no-mmap / --mlock / -fa / -t）。
+    仅 MoE 模型的 n_cmoe 有收益（专家拆分显存/内存），稠密模型无效。
+    llama-cpp-python 0.3.36：n_cmoe 暂未暴露，检测到支持会自动透传（升级后即生效）。
+    """
+    out = {"use_mmap": bool(use_mmap), "use_mlock": bool(use_mlock)}
+    q = str(kv_cache_quant).lower()
+    # llama.h llama_type: f16=1, q8_0=8, q4_0=2
+    kv = {"auto": None, "f16": 1, "q8_0": 8, "q4_0": 2}.get(q)
+    if kv is not None:
+        out["type_k"] = kv
+        out["type_v"] = kv
+    fa = str(flash_attn).lower()
+    if fa == "on":
+        out["flash_attn_type"] = 1  # LLAMA_FLASH_ATTN_TYPE_ENABLED
+    elif fa == "off":
+        out["flash_attn_type"] = 0  # LLAMA_FLASH_ATTN_TYPE_DISABLED
+    # auto: 不传 → 默认 AUTO(-1)
+    if int(threads) > 0:
+        out["n_threads"] = int(threads)
+    if int(n_cmoe) > 0:
+        try:
+            sig = inspect.signature(Llama.__init__)
+            if "n_cmoe" in sig.parameters:
+                out["n_cmoe"] = int(n_cmoe)
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 已启用 MoE 专家拆分加速 n_cmoe={n_cmoe}")
+            else:
+                print("[BSAI_Qwen_Prompt_Enhancer] 当前 llama-cpp-python 不支持 n_cmoe（需支持 -ncmoe 的新构建），"
+                      "已跳过专家拆分；升级 llama-cpp-python 后此参数自动生效。")
+        except Exception:
+            pass
+    return out
+
+
+def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, load_mtp,
+              n_cmoe=0, kv_cache_quant="auto", use_mmap=True, use_mlock=False,
+              flash_attn="auto", threads=0):
     """加载本地 GGUF 模型 — 精确对齐 BSAI_ComfyUI_Nodes 的 BSAI_QwenNodes.py 加载逻辑。
     优先使用 Qwen35ChatHandler / Qwen3VLChatHandler / Gemma4ChatHandler 等专用 handler，
     不用 MTMDChatHandler（部分版本缺符号，会导致崩溃）。"""
@@ -764,7 +801,9 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
             "安装方法：在 ComfyUI 的 python 环境中执行 pip install llama-cpp-python"
         )
 
-    key = (model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, load_mtp)
+    key = (model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, load_mtp,
+           int(n_cmoe or 0), str(kv_cache_quant).lower(), bool(use_mmap), bool(use_mlock),
+           str(flash_attn).lower(), int(threads or 0))
     if key in _LLM_CACHE and _LLM_CACHE[key] is not None:
         cached_llm, cached_active = _LLM_CACHE[key]
         return cached_llm, cached_active
@@ -925,6 +964,16 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
         "verbose": False,
     }
 
+    # ── 视频同款极限提速参数（n_cmoe / KV量化 / mmap / mlock / flash-attn / 线程）──
+    llama_kwargs.update(_build_accel_kwargs(
+        n_cmoe=int(n_cmoe or 0),
+        kv_cache_quant=str(kv_cache_quant),
+        use_mmap=bool(use_mmap),
+        use_mlock=bool(use_mlock),
+        flash_attn=str(flash_attn),
+        threads=int(threads or 0),
+    ))
+
     display_name = os.path.basename(model_path)
     handler_label = type(chat_handler).__name__ if chat_handler else "None"
     print(f"[BSAI_Qwen_Prompt_Enhancer] 加载本地 LLaMA: {display_name} "
@@ -1072,6 +1121,19 @@ class BSAI_Qwen_Prompt_Enhancer:
                 "n_ctx": ("INT", {"default": 8192, "min": 512, "max": 65536}),
                 "n_gpu_layers": ("INT", {"default": -1, "min": -1, "max": 200}),
                 "load_mtp": ("BOOLEAN", {"default": False}),
+                # ---- 极限提速参数（视频同款 llama.cpp：显存+内存混合模式）----
+                "n_cmoe": ("INT", {
+                    "default": 0, "min": 0, "max": 256, "step": 1,
+                    "tooltip": "MoE专家拆分到CPU/内存层数(-ncmoe)。仅MoE有效，稠密无效。\nQwen-35B-A3B实测约24最稳；0=关闭。当前0.3.36暂未支持，升级后自动生效。",
+                }),
+                "kv_cache_quant": (["auto(f16不量化)", "q8_0", "q4_0"], {
+                    "default": "auto(f16不量化)",
+                    "tooltip": "KV缓存量化(-ctk/-ctv，q4_0=视频效果)。降显存提速，精度略降。",
+                }),
+                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap；内存不足/换页可关闭(--no-mmap)。"}),
+                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock(--mlock)锁内存防换出。"}),
+                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa。auto=模型支持即启用。"}),
+                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t 线程数(视频示例14)；0=自动。"}),
                 "keep_loaded": ("BOOLEAN", {"default": False}),
                 # ---- API 专属 ----
                 "api_base": ("STRING", {
@@ -1150,6 +1212,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                 pe_mode="auto", min_p=0.0, thinking=True, mtp="auto",
                 llm_model_name="", mmproj_name="", chat_handler="", n_ctx=8192,
                 n_gpu_layers=-1, load_mtp=False, keep_loaded=False,
+                n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                flash_attn="auto", threads=0,
                 api_base="", api_key="", api_model_name="", timeout=120,
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
                 preview_only=False,
@@ -1209,6 +1273,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                 temperature=temperature, top_p=top_p, top_k=top_k, repeat_penalty=repeat_penalty,
                 seed=seed, n_ctx=n_ctx, n_gpu_layers=n_gpu_layers, load_mtp=load_mtp,
                 keep_loaded=keep_loaded, speed_preset=speed_preset, images=images,
+                n_cmoe=n_cmoe, kv_cache_quant=kv_cache_quant, use_mmap=use_mmap,
+                use_mlock=use_mlock, flash_attn=flash_attn, threads=threads,
             )
         if backend == BACKEND_HF:
             return self._enhance_hf(
@@ -1307,7 +1373,9 @@ class BSAI_Qwen_Prompt_Enhancer:
     def _enhance_local(self, llm_model_name, mmproj_name, chat_handler, prompt_text, system_template,
                        custom_system_prompt, user_requirement,
                        max_tokens, temperature, top_p, top_k, repeat_penalty,
-                       seed, n_ctx, n_gpu_layers, load_mtp, keep_loaded, speed_preset, images):
+                       seed, n_ctx, n_gpu_layers, load_mtp, keep_loaded, speed_preset, images,
+                       n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                       flash_attn="auto", threads=0):
         resolved = _resolve_handler_label(chat_handler)
         if resolved == "__auto__":
             chat_handler = _pick_chat_handler(llm_model_name)
@@ -1321,7 +1389,15 @@ class BSAI_Qwen_Prompt_Enhancer:
 
         system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
 
-        llm, mmproj_actually_active = _load_llm(llm_model_name, mmproj_name, chat_handler, n_ctx, n_gpu_layers, load_mtp)
+        llm, mmproj_actually_active = _load_llm(
+            llm_model_name, mmproj_name, chat_handler, n_ctx, n_gpu_layers, load_mtp,
+            n_cmoe=int(n_cmoe or 0),
+            kv_cache_quant=str(kv_cache_quant).split("(")[0].strip(),
+            use_mmap=bool(use_mmap),
+            use_mlock=bool(use_mlock),
+            flash_attn=str(flash_attn).strip(),
+            threads=int(threads or 0),
+        )
 
         user_content = []
         if images is not None and mmproj_actually_active:
