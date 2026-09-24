@@ -47,7 +47,7 @@ def _register_template_api():
         server = PromptServer.instance
 
         @server.routes.get("/api/bsai/templates")
-        def _bsai_templates():
+        def _bsai_templates(request):
             try:
                 with open(TEMPLATES_JSON, "r", encoding="utf-8") as f:
                     data = _json.load(f)

@@ -30,6 +30,11 @@ cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
 **v1.06.0 补丁2 — 旧工作流报「无效输入 / 输入值类型错误」（threads / timeout）一键自愈（Numeric self-heal）：**
 > 旧工作流存档里 `threads`、`timeout` 等数值参数若存成字符串/错误类型，选中模板预览时会红框报"无效输入"。本补丁在前端新增 `autoFixNumericValues`：加载工作流时自动把所有 INT/FLOAT 数值参数重置为正确的 number 并同步存档（后端另有 `int()` 强转双保险）。**其他电脑 `git pull` 后重启 ComfyUI 即可，旧工作流打开即自动修复，无需手动改参数。**
 
+**v1.06.0 补丁3 — 海报墙「🔄 刷新」按钮 + 模板 API 500 修复（Refresh button + template API 500 fix）：**
+> 海报墙分类栏新增绿色「🔄 刷新」按钮：一键重新拉取模板库（后端实时合并用户模板区），新保存/上传的模板**无需关闭重开海报墙**，点击刷新立即出现；刷新期间按钮置灰，完成弹出成功/失败提示。
+> 同时修复一个被长期掩盖的隐藏 BUG：模板 API `GET /api/bsai/templates` 的 handler 缺少 `request` 参数（aiohttp 必传）导致该接口**一直返回 HTTP 500**——海报墙此前靠静态文件回退才正常显示。现已修复，刷新按钮可正常获取**含用户模板区**的完整模板库。
+> **注意**：升级后**必须重启 ComfyUI** 让新后端代码生效；若升级后首次点刷新仍提示 500，说明 ComfyUI 尚未重启（旧代码仍在内存）。
+
 ---
 
 

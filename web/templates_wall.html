@@ -742,13 +742,17 @@ function refreshTemplates() {
       setTimeout(() => ok.remove(), 2500);
     })
     .catch(err => {
-      console.warn("[BSAI.QwenPromptEnhancer] 刷新模板失败:", err);
+      console.warn("[BSAI.QwenPromptEnhancer] 刷新模板失败，回退静态模板库:", err);
+      // 兼容未重启 ComfyUI 的情况：动态 API 不可用时先回退内置模板，不白屏报错
+      _loadStaticTemplates()
+        .then(() => { render(currentCat); })
+        .catch(() => {});
       busy(false);
       const fail = document.createElement("div");
-      fail.textContent = "⚠ 刷新失败：" + err.message + "（请确认 ComfyUI 正在运行）";
-      fail.style.cssText = "position:fixed;top:16px;right:24px;z-index:99;background:#dc2626;color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);";
+      fail.textContent = "⚠ 动态模板库暂不可用，已加载内置模板。若想看到新保存/上传的用户模板，请重启 ComfyUI 后再点刷新。";
+      fail.style.cssText = "position:fixed;top:16px;right:24px;z-index:99;background:#d97706;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);max-width:420px;line-height:1.5;";
       document.body.appendChild(fail);
-      setTimeout(() => fail.remove(), 4000);
+      setTimeout(() => fail.remove(), 5000);
     });
 }
 

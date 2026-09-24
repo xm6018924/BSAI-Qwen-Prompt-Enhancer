@@ -31,6 +31,11 @@ cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
 **v1.06.0 Patch 2 — One-click self-heal for "invalid input / wrong input value type" (threads / timeout):**
 > Old workflow saves may store numeric params (`threads`, `timeout`, etc.) as strings/wrong types, causing red-box "invalid input" errors when previewing templates. This patch adds frontend `autoFixNumericValues`: on workflow load it auto-resets all INT/FLOAT numeric widgets to proper numbers and syncs the saved values (backend `int()` casts remain as a second line of defense). **On other PCs: `git pull` and restart ComfyUI — old workflows auto-repair on open, no manual edits needed.**
 
+**v1.06.0 Patch 3 — Template wall [Refresh] button + template API 500 fix:**
+> The wall's category bar now has a green [Refresh] button: one click refetches the template library (backend merges the user template area live), so newly saved/uploaded templates appear **without closing/reopening the wall**; the button shows a busy state and success/failure toasts.
+> Also fixed a long-hidden bug: the `GET /api/bsai/templates` handler was missing the required `request` parameter (aiohttp always passes one), so the API **always returned HTTP 500** — the wall only worked via static-file fallback. Now fixed; the refresh button gets the full library including user templates.
+> **Note**: **restart ComfyUI after upgrading** for the new backend code to take effect; if the first refresh after upgrade still shows 500, ComfyUI has not been restarted yet (old code still in memory).
+
 ---
 
 
