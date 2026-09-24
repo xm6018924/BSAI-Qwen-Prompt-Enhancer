@@ -8,6 +8,29 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.04.0 (2026-09-24) — 海报墙打不开（ERR_INVALID_RESPONSE）一键修复 / Fix: template wall ERR_INVALID_RESPONSE with one-click repair
+
+> **其他电脑点击「🖼 打开模板海报墙」报 `ERR_INVALID_RESPONSE`（网页似乎有问题 / 已永久移动）？**
+> 这是 `/extensions/` 前端静态路由在部分 ComfyUI 版本或系统代理环境下返回无效响应导致的。v1.04.0 已彻底修复：
+
+**修复内容：**
+
+1. **海报墙直达路由**：插件新增 `GET /bsai_templates_wall`，由插件直接返回海报墙 HTML，完全绕开 `/extensions/` 静态路由——**任何 ComfyUI 版本、任何网络环境都能打开**。
+2. **按钮自动升级**：插件升级后，节点上的「🖼 打开模板海报墙」按钮自动改用直达路由，**无需任何手动操作**。
+3. **一键诊断自愈 `fix_wall.bat`**：双击即完成——探测 ComfyUI 端口 → 测试直达路由 → 若系统代理拦截了 127.0.0.1/localhost 自动加入例外（原值备份为 `fix_wall_proxy_backup.reg`）→ 自动打开海报墙。
+4. **手动访问地址**（端口以实际为准）：`http://127.0.0.1:8188/bsai_templates_wall`
+
+**一键解决步骤（其他电脑）：**
+```bash
+# 方式一（推荐）：更新插件后重启 ComfyUI，按钮直接可用
+cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
+# 方式二：双击插件目录里的 fix_wall.bat，自动诊断、自愈并打开海报墙
+fix_wall.bat
+```
+
+---
+
+
 ### v1.03.0 (2026-09-24) — 模板库三大新增：排版设计 + 全球画风扩展 + 用户模板区 / New: 16 Typography + 16 Art Styles + User Template Area
 
 > **内置模板库从 102 个扩到 134 个（11 大分类），并新增「用户模板区」——把你自己的自定义模板 JSON 放进 `user_templates/` 目录，自动汇聚成共享模板，所有工作流与海报墙即时可用。**

@@ -283,8 +283,10 @@ app.registerExtension({
         node.addWidget("button", WALL_BUTTON_LABEL, null, () => {
           // 把当前节点 id 和 widget name 写到 URL，让海报墙能回填到正确位置
           // 同时让海报墙在选中卡片时把模板原文实时推送到模板节点预览
+          // v1.04.0: 改用插件直达路由 /bsai_templates_wall —— 部分 ComfyUI 版本/网络环境下
+          // /extensions/ 静态路由返回无效响应（ERR_INVALID_RESPONSE），直达路由由插件直接返回 HTML。
           const url =
-            `/extensions/BSAI_Qwen_Prompt_Enhancer/templates_wall.html` +
+            `/bsai_templates_wall` +
             `?node_id=${node.id}` +
             `&widget=${widget.name}` +
             `&merged_id=${node.id}` +
@@ -308,8 +310,9 @@ app.registerExtension({
       };
       try {
         node.addWidget("button", WALL_BUTTON_LABEL, null, () => {
+          // v1.04.0: 改用插件直达路由 /bsai_templates_wall
           const url =
-            `/extensions/BSAI_Qwen_Prompt_Enhancer/templates_wall.html` +
+            `/bsai_templates_wall` +
             `?tnode_id=${node.id}` +
             `&widget=template_name`;
           window.open(url, "_blank", "width=1400,height=900,noopener=0");

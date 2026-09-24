@@ -77,8 +77,30 @@ def _register_template_api():
 
 _register_template_api()
 
+# 【v1.04.0】海报墙直达路由：GET /bsai_templates_wall
+# 部分 ComfyUI 版本/网络环境下，前端 /extensions/ 静态路由会返回无效响应
+# （浏览器报 ERR_INVALID_RESPONSE，海报墙打不开）。本路由由插件直接
+# FileResponse 返回 templates_wall.html，绕开前端静态服务，任何版本都能打开。
+def _register_wall_route():
+    try:
+        from server import PromptServer
+        from aiohttp import web
+        wall_html = os.path.join(os.path.dirname(os.path.abspath(__file__)), "web", "templates_wall.html")
+
+        server = PromptServer.instance
+
+        @server.routes.get("/bsai_templates_wall")
+        async def _bsai_wall(request):
+            return web.FileResponse(wall_html)
+
+        print("[BSAI_Qwen_Prompt_Enhancer] 海报墙直达路由已注册: GET /bsai_templates_wall")
+    except Exception as e:
+        print(f"[BSAI_Qwen_Prompt_Enhancer] 海报墙直达路由注册失败(不影响节点): {e}")
+
+_register_wall_route()
+
 # 【v1.03.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
-_PLUGIN_VERSION = "v1.03.0 (2026-09-24)"
+_PLUGIN_VERSION = "v1.04.0 (2026-09-24)"
 print(f"[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 {_PLUGIN_VERSION} | "
-      f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / MarkdownNote兼容 / 潜空间放大示例 / 动态模板API")
+      f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / MarkdownNote兼容 / 潜空间放大示例 / 动态模板API / 海报墙直达路由")
 

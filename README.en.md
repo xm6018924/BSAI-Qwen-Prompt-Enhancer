@@ -8,6 +8,30 @@
 
 ## 🚀 Latest Updates
 
+### v1.04.0 (2026-09-24) — One-click fix for template wall ERR_INVALID_RESPONSE
+
+> **Getting `ERR_INVALID_RESPONSE` when clicking "🖼 Open Template Wall" on another PC?**
+> This happens because the `/extensions/` frontend static route returns an invalid response on some ComfyUI builds or when a system proxy hijacks loopback addresses. v1.04.0 fixes it for good:
+
+**What's fixed:**
+
+1. **Direct wall route**: the plugin now serves the wall at `GET /bsai_templates_wall` directly from the plugin — fully bypassing the `/extensions/` static route. Works on **any ComfyUI version, any network environment**.
+2. **Button auto-upgrade**: after updating the plugin, the "🖼 Open Template Wall" button uses the direct route automatically — **zero manual steps**.
+3. **One-click repair `fix_wall.bat`**: double-click to detect the ComfyUI port → test the direct route → if a system proxy is hijacking 127.0.0.1/localhost, add them to the bypass list automatically (original value backed up as `fix_wall_proxy_backup.reg`) → open the wall in your browser.
+4. **Manual URL** (use your actual port): `http://127.0.0.1:8188/bsai_templates_wall`
+
+**One-click resolution on another PC:**
+```bash
+# Option 1 (recommended): update the plugin and restart ComfyUI — the button just works
+cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
+# Option 2: double-click fix_wall.bat in the plugin folder — it diagnoses, self-heals and opens the wall
+fix_wall.bat
+```
+
+---
+
+
+
 ### v1.03.0 (2026-09-24) — Template Library Upgrades: 16 Typography + 16 Art Styles + User Template Area
 
 > **Built-in template library grows from 102 to 134 (11 categories), plus a new User Template Area — drop your custom template JSON into `user_templates/`, and it merges automatically as a shared template for every workflow and the template wall.**
