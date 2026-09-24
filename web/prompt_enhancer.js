@@ -90,6 +90,45 @@ function autoFixComboValues(node) {
   return fixed;
 }
 
+/**
+ * 【v1.06.0】数值 widget 类型自愈：threads / timeout / seed / max_tokens 等 INT/FLOAT 参数，
+ * 旧工作流存档里若为字符串/布尔/null（典型报错："无效输入 / 输入值类型错误"），
+ * 自动重置为默认 number，并同步 widgets_values —— 开图不红框、不阻塞整图。
+ */
+function autoFixNumericValues(node) {
+  if (!node || !Array.isArray(node.widgets)) return 0;
+  let fixed = 0;
+  for (const w of node.widgets) {
+    if (!w) continue;
+    const t = w.type;
+    const isNum = t === "number" || t === "slider" || t === "INT" || t === "FLOAT";
+    if (!isNum) continue;
+    const v = w.value;
+    if (typeof v === "number" && Number.isFinite(v)) continue;
+    let def = 0;
+    if (w.options && typeof w.options.default !== "undefined" && typeof w.options.default === "number") {
+      def = w.options.default;
+    }
+    const old = v;
+    w.value = def;
+    if (typeof w.callback === "function") { try { w.callback(w.value); } catch (_) {} }
+    if (Array.isArray(node.widgets_values)) {
+      const i = node.widgets.indexOf(w);
+      if (i >= 0) node.widgets_values[i] = w.value;
+    }
+    try { node.setDirtyCanvas?.(true, true); } catch (_) {}
+    console.log(
+      `[BSAI.PromptEnhancer] 自愈数值 widget '${w.name}': ${JSON.stringify(old)} -> ${w.value}`
+    );
+    fixed++;
+  }
+  if (fixed > 0) {
+    node.tooltip = `⚠ ${fixed} 个数值参数已自动重置为默认值（旧存档类型异常）。`;
+    try { node.setDirtyCanvas?.(true, true); } catch (_) {}
+  }
+  return fixed;
+}
+
 function syncWidgetVisibility(node) {
   if (!isMergedNode(node)) return;
   const backendWidget = (node.widgets || []).find((w) => w.name === "backend");
@@ -267,6 +306,7 @@ app.registerExtension({
       node.onConfigure = function (...args) {
         const r = origConfigure ? origConfigure.apply(this, args) : undefined;
         autoFixComboValues(node);
+        autoFixNumericValues(node);
         syncWidgetVisibility(node);
         syncPreviewWarning(node);
         return r;
@@ -370,6 +410,7 @@ app.registerExtension({
       node.onConfigure = function (...args) {
         const r = tplOrigConfigure ? tplOrigConfigure.apply(this, args) : undefined;
         autoFixComboValues(node);
+        autoFixNumericValues(node);
         return r;
       };
       try {
