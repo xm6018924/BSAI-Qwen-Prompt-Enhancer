@@ -127,6 +127,19 @@
     display: flex; align-items: center; justify-content: center; color: #fff;
     font-weight: 800; font-size: 16px; box-shadow: 0 6px 20px rgba(124,58,237,0.4);
   }
+
+.btn-refresh {
+  margin-left: 8px;
+  background: linear-gradient(135deg, #16a34a, #059669);
+  border: none;
+  color: #fff;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.btn-refresh:hover { filter: brightness(1.15); }
+.btn-refresh:disabled { cursor: wait; }
 </style>
 </head>
 <body>
@@ -193,6 +206,7 @@
   <button data-cat="inspiration">灵感精选</button>
   <button data-cat="typography">排版设计</button>
   <button data-cat="user">用户模板</button>
+  <button id="btn-refresh" class="btn-refresh" title="重新加载模板库：新保存/上传的模板立即出现">🔄 刷新</button>
 </div>
 
 <div class="wall" id="wall"></div>
@@ -205,6 +219,7 @@
 <script>
 // 模板数据从 templates.json 动态加载（保证 name 与 ComfyUI 下拉完全一致）
 let TEMPLATES = [];
+let currentCat = "all";  // 当前激活分类（刷新按钮重渲染用）
 
 // v1.04.2: 静态资源统一走插件绝对路径 —— 从直达路由 /bsai_templates_wall 打开时，
 // 相对路径 thumbnails/x.png 会解析到服务器根目录(404)导致缩略图看不见。
@@ -689,10 +704,53 @@ function render(cat) {
 }
 document.getElementById("filters").addEventListener("click", e => {
   if (e.target.tagName !== "BUTTON") return;
+  // 【v1.06.0】刷新按钮：一键重新拉取模板库（后端实时合并 user_templates/），新保存/上传的模板立即出现
+  if (e.target.id === "btn-refresh") { refreshTemplates(); return; }
   document.querySelectorAll(".filters button").forEach(b=>b.classList.remove("active"));
   e.target.classList.add("active");
-  render(e.target.dataset.cat);
+  currentCat = e.target.dataset.cat;
+  render(currentCat);
 });
+
+// 【v1.06.0】一键刷新：重拉 /api/bsai/templates（no-store，后端实时合并用户模板区）并重渲染当前分类
+function refreshTemplates() {
+  const btn = document.getElementById("btn-refresh");
+  const label = btn ? btn.textContent : "";
+  const busy = (on, msg) => {
+    if (!btn) return;
+    btn.textContent = on ? msg : label;
+    btn.disabled = on;
+    btn.style.opacity = on ? "0.7" : "1";
+  };
+  busy(true, "⏳ 刷新中…");
+  fetch("/api/bsai/templates", { cache: "no-store" })
+    .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
+    .then(data => {
+      TEMPLATES = (data.templates || []).map(t => ({
+        id: t.id, name: t.name, type: t.type,
+        desc: t.desc || "", desc_en: t.desc_en || "", vars: t.vars || [],
+        ratio: ratioFor(t.id),
+      }));
+      (data.templates || []).forEach(t => { if (t.text) TEMPLATE_TEXTS[t.id] = t.text; });
+      updateStats(TEMPLATES);
+      render(currentCat);
+      busy(false);
+      const ok = document.createElement("div");
+      ok.textContent = "✅ 已刷新：模板库共 " + TEMPLATES.length + " 个模板";
+      ok.style.cssText = "position:fixed;top:16px;right:24px;z-index:99;background:#16a34a;color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);";
+      document.body.appendChild(ok);
+      setTimeout(() => ok.remove(), 2500);
+    })
+    .catch(err => {
+      console.warn("[BSAI.QwenPromptEnhancer] 刷新模板失败:", err);
+      busy(false);
+      const fail = document.createElement("div");
+      fail.textContent = "⚠ 刷新失败：" + err.message + "（请确认 ComfyUI 正在运行）";
+      fail.style.cssText = "position:fixed;top:16px;right:24px;z-index:99;background:#dc2626;color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);";
+      document.body.appendChild(fail);
+      setTimeout(() => fail.remove(), 4000);
+    });
+}
 
 // 使用说明语言切换
 function toggleUsageLang() {
