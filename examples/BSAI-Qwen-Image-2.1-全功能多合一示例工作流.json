@@ -1,0 +1,1733 @@
+{
+  "id": "8dffacfd-85a8-464d-86bf-4aa99fdda7a2",
+  "revision": 0,
+  "last_node_id": 55,
+  "last_link_id": 101,
+  "nodes": [
+    {
+      "id": 1,
+      "type": "UNETLoader",
+      "pos": [
+        -28.42835732031359,
+        44.578107644740015
+      ],
+      "size": [
+        437.91026313886414,
+        82
+      ],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            59
+          ]
+        }
+      ],
+      "title": "加载 Qwen-Image-2.1 扩散模型",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "UNETLoader"
+      },
+      "widgets_values": [
+        "qwen_image_2.1_int8_convrot.safetensors",
+        "default"
+      ],
+      "widgets_values_named": {
+        "unet_name": "qwen_image_2.1_int8_convrot.safetensors",
+        "weight_dtype": "default"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 2,
+      "type": "CLIPLoader",
+      "pos": [
+        -17.360767155561174,
+        521.6581758254272
+      ],
+      "size": [
+        422.73191213744803,
+        106
+      ],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "slot_index": 0,
+          "links": [
+            2,
+            62
+          ]
+        }
+      ],
+      "title": "加载文本编码器 (Qwen3-VL-8B)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "qwen3vl_8b_fp8_scaled.safetensors",
+        "qwen_image",
+        "default"
+      ],
+      "widgets_values_named": {
+        "clip_name": "qwen3vl_8b_fp8_scaled.safetensors",
+        "type": "qwen_image",
+        "device": "default"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 3,
+      "type": "VAELoader",
+      "pos": [
+        -18.28090119194668,
+        699.2367543382933
+      ],
+      "size": [
+        423.49637551785736,
+        58
+      ],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "slot_index": 0,
+          "links": [
+            3,
+            11
+          ]
+        }
+      ],
+      "title": "加载 VAE",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": [
+        "BSAI-Qwen-Image-2.1-VAE.safetensors"
+      ],
+      "widgets_values_named": {
+        "vae_name": "BSAI-Qwen-Image-2.1-VAE.safetensors"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 4,
+      "type": "QwenImage21Cache",
+      "pos": [
+        -20.345729794814503,
+        366.6618033171303
+      ],
+      "size": [
+        420.67505743620495,
+        82
+      ],
+      "flags": {},
+      "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 58
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "slot_index": 0,
+          "links": [
+            57
+          ]
+        }
+      ],
+      "title": "KV 缓存优化 (Qwen Image 2.1 Cache)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "QwenImage21Cache"
+      },
+      "widgets_values": [
+        "auto",
+        "int8"
+      ],
+      "widgets_values_named": {
+        "device": "auto",
+        "dtype": "int8"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 5,
+      "type": "TextEncodeQwenImage21",
+      "pos": [
+        467.33497035934147,
+        47.80953475235242
+      ],
+      "size": [
+        681.5783898517794,
+        514.8940700257324
+      ],
+      "flags": {},
+      "order": 16,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 2
+        },
+        {
+          "name": "images.image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 5
+        },
+        {
+          "name": "images.image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 6
+        },
+        {
+          "name": "images.image_3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 7
+        },
+        {
+          "name": "images.image_4",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 8
+        },
+        {
+          "name": "images.image_5",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "images.image_6",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "images.image_7",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "vae",
+          "shape": 7,
+          "type": "VAE",
+          "link": 3
+        },
+        {
+          "name": "prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt"
+          },
+          "link": 98
+        }
+      ],
+      "outputs": [
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "slot_index": 0,
+          "links": [
+            9
+          ]
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "slot_index": 1,
+          "links": [
+            10
+          ]
+        },
+        {
+          "name": "latent",
+          "type": "LATENT",
+          "slot_index": 2,
+          "links": []
+        }
+      ],
+      "title": "Qwen Image 2.1 提示词与参考图 (多合一)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "TextEncodeQwenImage21"
+      },
+      "widgets_values": [
+        "",
+        "低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，文字模糊扭曲，构图混乱",
+        1024
+      ],
+      "widgets_values_named": {
+        "prompt": "",
+        "negative_prompt": "低分辨率，低画质，肢体畸形，手指畸形，画面过饱和，文字模糊扭曲，构图混乱",
+        "resolution": 1024
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 6,
+      "type": "LoadImage",
+      "pos": [
+        -462.45407529760297,
+        48.89062358764
+      ],
+      "size": [
+        320,
+        380
+      ],
+      "flags": {},
+      "order": 3,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            5,
+            63
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "slot_index": 1,
+          "links": null
+        }
+      ],
+      "title": "参考图 1 (可选)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "ComfyUI_00008_.png",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "ComfyUI_00008_.png",
+        "upload": "image"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 7,
+      "type": "LoadImage",
+      "pos": [
+        -465.59561739700183,
+        512.4194795550279
+      ],
+      "size": [
+        320,
+        380
+      ],
+      "flags": {},
+      "order": 4,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            6,
+            64
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "slot_index": 1,
+          "links": null
+        }
+      ],
+      "title": "参考图 2 (可选)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "百声AI-logo-003.jpg",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "百声AI-logo-003.jpg",
+        "upload": "image"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 8,
+      "type": "LoadImage",
+      "pos": [
+        -457.8221903626898,
+        975.1981975432994
+      ],
+      "size": [
+        320,
+        380
+      ],
+      "flags": {},
+      "order": 5,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            7,
+            65
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "slot_index": 1,
+          "links": null
+        }
+      ],
+      "title": "参考图 3 (可选)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "百声AI-logo-003.jpg",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "百声AI-logo-003.jpg",
+        "upload": "image"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 9,
+      "type": "LoadImage",
+      "pos": [
+        -457.485485071202,
+        1438.9424558667365
+      ],
+      "size": [
+        320,
+        380
+      ],
+      "flags": {},
+      "order": 6,
+      "mode": 4,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            8,
+            66
+          ]
+        },
+        {
+          "name": "MASK",
+          "type": "MASK",
+          "slot_index": 1,
+          "links": null
+        }
+      ],
+      "title": "参考图 4 (可选)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "LoadImage"
+      },
+      "widgets_values": [
+        "百声AI-logo-003.jpg",
+        "image"
+      ],
+      "widgets_values_named": {
+        "image": "百声AI-logo-003.jpg",
+        "upload": "image"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 10,
+      "type": "KSampler",
+      "pos": [
+        1446.08313754909,
+        50.967171898649696
+      ],
+      "size": [
+        320,
+        474
+      ],
+      "flags": {},
+      "order": 20,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 4
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 9
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 10
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 16
+        },
+        {
+          "name": "steps",
+          "type": "INT",
+          "widget": {
+            "name": "steps"
+          },
+          "link": 76
+        },
+        {
+          "name": "cfg",
+          "type": "FLOAT",
+          "widget": {
+            "name": "cfg"
+          },
+          "link": 78
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            13
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [
+        980888139771966,
+        "randomize",
+        25,
+        1,
+        "euler",
+        "simple",
+        1
+      ],
+      "widgets_values_named": {
+        "seed": 980888139771966,
+        "control_after_generate": "randomize",
+        "steps": 25,
+        "cfg": 1,
+        "sampler_name": "euler",
+        "scheduler": "simple",
+        "denoise": 1
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 11,
+      "type": "VAEDecode",
+      "pos": [
+        1788.7611935299221,
+        52.888331535406216
+      ],
+      "size": [
+        210,
+        60
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 21,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 13
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 11
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "slot_index": 0,
+          "links": [
+            14
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "VAEDecode"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 12,
+      "type": "SaveImage",
+      "pos": [
+        2033.3240069294293,
+        54.98054336314677
+      ],
+      "size": [
+        972.0683937777508,
+        710.5469885708611
+      ],
+      "flags": {},
+      "order": 22,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 14
+        }
+      ],
+      "outputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "links": null
+        }
+      ],
+      "title": "保存图片",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "SaveImage"
+      },
+      "widgets_values": [
+        "Qwen-Image-2.1"
+      ],
+      "widgets_values_named": {
+        "filename_prefix": "Qwen-Image-2.1"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 14,
+      "type": "EmptySD3LatentImage",
+      "pos": [
+        845.769957379786,
+        618.675946287202
+      ],
+      "size": [
+        295.02314372884655,
+        113.86672487848341
+      ],
+      "flags": {},
+      "order": 13,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "widget": {
+            "name": "width"
+          },
+          "link": 33
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "widget": {
+            "name": "height"
+          },
+          "link": 34
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "slot_index": 0,
+          "links": [
+            16
+          ]
+        }
+      ],
+      "title": "手动尺寸 (可选，替代自动 latent)",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.36.0",
+        "Node name for S&R": "EmptySD3LatentImage"
+      },
+      "widgets_values": [
+        1920,
+        1680,
+        1
+      ],
+      "widgets_values_named": {
+        "width": 1920,
+        "height": 1680,
+        "batch_size": 1
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 15,
+      "type": "MarkdownNote",
+      "pos": [
+        -1019.0430722350791,
+        6.502984869320626
+      ],
+      "size": [
+        439.5024706980987,
+        921.9675904997007
+      ],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [],
+      "title": "使用说明",
+      "properties": {
+        "Node name for S&R": "MarkdownNote"
+      },
+      "widgets_values": [
+        "# Qwen-Image-2.1 全功能多合一工作流 v2.1（官方 day-0 最优加速版）\n\n> 依据 2026-09-20 官方开源与 ComfyUI v0.37.0 原生支持整理（2026-09-22 更新）。\n> 出图链路：int8 模型 → QwenImage21Cache(int8) → TE-Speed → KSampler(25/CFG1/euler/simple)\n\n## 模型文件（均已就位）\n- `models/diffusion_models/` → `qwen_image_2.1_int8_convrot.safetensors`（官方 int8，显存减半更快）\n- `models/text_encoders/` → `qwen3vl_8b_fp8_scaled.safetensors`（CLIP 类型 **qwen_image**；fp8 约 9.9GB，比 bf16 省 6.4GB，质量几乎无损）\n- `models/vae/` → BSAI-Qwen-Image-2.1-VAE.safetensors\n- 需 ComfyUI **v0.37.0+**（本环境已更新至最新）\n\n## 三种用法（同一工作流）\n1. **文生图**：不接参考图，填提示词即可\n2. **图生图 / 编辑**：参考图 1 上传，提示词写编辑指令（可用 `<image1>` 引用）\n3. **多图参考**：最多 10 张（TextEncodeQwenImage21 动态槽位，本工作流预置 4 个，可继续添加 image_5~image_10）\n\n## v2.1 落地（官方最新资料）\n- **显存修复（重要）**：本地LLaMA 改为 `keep_loaded=false`——提示词生成完立即释放显存，\n  不再与扩散模型争抢 24GB 显存（此前 Qwen3.8-27B 常驻 16-18GB + bf16 TE 16.7GB 导致每步换模型、一张图 1 小时）\n- **KV 缓存 dtype=int8**：官方推荐平衡点，缓存占用减半、精度≈bf16（device=auto）\n- **本地LLaMA 增强已启用**：BSAI 节点 preview_only 已关闭，Qwen3.8-27B 真正参与提示词增强/反推\n- **RGBA 透明图**：提示词用官方格式：\n  `This is an RGBA image with transparency. <描述>. The image has alpha channel and the background is transparent.`\n  保存为 PNG 即保留 alpha 通道，免抠图\n- **官方专用提示词模型**：PE-T2I / PE-I2I（Qwen3.5-VL 9B 微调）即官方\"提示词增强 LLM\"，\n  对应本插件「官方PE」后端（text_encoders 放入 PE 权重、backend 切换即可）\n\n## 采样（官方推荐，已联动）\n- **25 步 / cfg 1.0 / euler / simple**（CFG-distilled；cfg=1 时负面提示词不生效）\n- KSampler 的 steps/cfg 已接 BSAI 节点 RECOMMENDED_STEPS/CFG，切 speed_preset 档位自动联动\n- 更快：快速 15步 / 极速 10步；叠加加速：`--fast`、`--use-sage-attention`（SageAttention 已装）、TE-Speed（已接）\n\n## 注意\n- ⚠️ 旧版 Qwen-Image Lightning LoRA（20B）与 2.1 架构**不兼容**，已旁路禁用；待 2.1 专用 LoRA 发布\n- ⚠️ 2.1 权重为 **Qwen Research License（非商用）**，商用需另购许可\n- 手动控制尺寸：断开 KSampler 的 latent_image 与核心节点 latent 的连接，改接「手动尺寸」节点"
+      ],
+      "widgets_values_named": {
+        "text": "# Qwen-Image-2.1 全功能多合一工作流 v2.1（官方 day-0 最优加速版）\n\n> 依据 2026-09-20 官方开源与 ComfyUI v0.37.0 原生支持整理（2026-09-22 更新）。\n> 出图链路：int8 模型 → QwenImage21Cache(int8) → TE-Speed → KSampler(25/CFG1/euler/simple)\n\n## 模型文件（均已就位）\n- `models/diffusion_models/` → `qwen_image_2.1_int8_convrot.safetensors`（官方 int8，显存减半更快）\n- `models/text_encoders/` → `qwen3vl_8b_fp8_scaled.safetensors`（CLIP 类型 **qwen_image**；fp8 约 9.9GB，比 bf16 省 6.4GB，质量几乎无损）\n- `models/vae/` → BSAI-Qwen-Image-2.1-VAE.safetensors\n- 需 ComfyUI **v0.37.0+**（本环境已更新至最新）\n\n## 三种用法（同一工作流）\n1. **文生图**：不接参考图，填提示词即可\n2. **图生图 / 编辑**：参考图 1 上传，提示词写编辑指令（可用 `<image1>` 引用）\n3. **多图参考**：最多 10 张（TextEncodeQwenImage21 动态槽位，本工作流预置 4 个，可继续添加 image_5~image_10）\n\n## v2.1 落地（官方最新资料）\n- **显存修复（重要）**：本地LLaMA 改为 `keep_loaded=false`——提示词生成完立即释放显存，\n  不再与扩散模型争抢 24GB 显存（此前 Qwen3.8-27B 常驻 16-18GB + bf16 TE 16.7GB 导致每步换模型、一张图 1 小时）\n- **KV 缓存 dtype=int8**：官方推荐平衡点，缓存占用减半、精度≈bf16（device=auto）\n- **本地LLaMA 增强已启用**：BSAI 节点 preview_only 已关闭，Qwen3.8-27B 真正参与提示词增强/反推\n- **RGBA 透明图**：提示词用官方格式：\n  `This is an RGBA image with transparency. <描述>. The image has alpha channel and the background is transparent.`\n  保存为 PNG 即保留 alpha 通道，免抠图\n- **官方专用提示词模型**：PE-T2I / PE-I2I（Qwen3.5-VL 9B 微调）即官方\"提示词增强 LLM\"，\n  对应本插件「官方PE」后端（text_encoders 放入 PE 权重、backend 切换即可）\n\n## 采样（官方推荐，已联动）\n- **25 步 / cfg 1.0 / euler / simple**（CFG-distilled；cfg=1 时负面提示词不生效）\n- KSampler 的 steps/cfg 已接 BSAI 节点 RECOMMENDED_STEPS/CFG，切 speed_preset 档位自动联动\n- 更快：快速 15步 / 极速 10步；叠加加速：`--fast`、`--use-sage-attention`（SageAttention 已装）、TE-Speed（已接）\n\n## 注意\n- ⚠️ 旧版 Qwen-Image Lightning LoRA（20B）与 2.1 架构**不兼容**，已旁路禁用；待 2.1 专用 LoRA 发布\n- ⚠️ 2.1 权重为 **Qwen Research License（非商用）**，商用需另购许可\n- 手动控制尺寸：断开 KSampler 的 latent_image 与核心节点 latent 的连接，改接「手动尺寸」节点"
+      },
+      "color": "#432",
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 19,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -29.542111581606928,
+        875.8483361380224
+      ],
+      "size": [
+        411.2707919468022,
+        352.69102087105523
+      ],
+      "flags": {
+        "collapsed": false
+      },
+      "order": 8,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            67
+          ]
+        }
+      ],
+      "title": "输入大白话提示词，多渠道增强提示词。",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "value": ""
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 21,
+      "type": "ResolutionSelector",
+      "pos": [
+        476.8670708988407,
+        606.2388643544521
+      ],
+      "size": [
+        341.64944890309914,
+        150
+      ],
+      "flags": {},
+      "order": 9,
+      "mode": 0,
+      "showAdvanced": true,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "width",
+          "type": "INT",
+          "links": [
+            33
+          ]
+        },
+        {
+          "name": "height",
+          "type": "INT",
+          "links": [
+            34
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "Node name for S&R": "ResolutionSelector"
+      },
+      "widgets_values": [
+        "4:3 (Standard)",
+        2,
+        32
+      ],
+      "widgets_values_named": {
+        "aspect_ratio": "4:3 (Standard)",
+        "megapixels": 2,
+        "multiple": 32
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 22,
+      "type": "LoraLoaderModelOnly",
+      "pos": [
+        -19.23707071291937,
+        191.305789197928
+      ],
+      "size": [
+        424.7122559435062,
+        82
+      ],
+      "flags": {},
+      "order": 12,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 59
+        }
+      ],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [
+            58
+          ]
+        }
+      ],
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "Node name for S&R": "LoraLoaderModelOnly"
+      },
+      "widgets_values": [
+        "Qwen-Image-2.1-viggle-turbo-4step-lora-r64.safetensors",
+        1
+      ],
+      "widgets_values_named": {
+        "lora_name": "Qwen-Image-2.1-viggle-turbo-4step-lora-r64.safetensors",
+        "strength_model": 1
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 27,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -25.379709091183354,
+        1271.9213871513334
+      ],
+      "size": [
+        400.91342342008215,
+        218.59093366727825
+      ],
+      "flags": {},
+      "order": 10,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            68
+          ]
+        }
+      ],
+      "title": "自定义输入覆盖模板作为 system prompt直出",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "value": ""
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 28,
+      "type": "PrimitiveStringMultiline",
+      "pos": [
+        -25.995981108990616,
+        1537.0803317305317
+      ],
+      "size": [
+        401.4447612265351,
+        317.10616554524313
+      ],
+      "flags": {},
+      "order": 11,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "STRING",
+          "type": "STRING",
+          "links": [
+            69
+          ]
+        }
+      ],
+      "title": "修改提示词模板内容，优化模板输出",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.37.0",
+        "Node name for S&R": "PrimitiveStringMultiline"
+      },
+      "widgets_values": [
+        ""
+      ],
+      "widgets_values_named": {
+        "value": ""
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 40,
+      "type": "TESpeedQwenImage21",
+      "pos": [
+        1201.1292700576,
+        52.31806872251429
+      ],
+      "size": [
+        220,
+        222
+      ],
+      "flags": {},
+      "order": 19,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 57
+        }
+      ],
+      "outputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "links": [
+            4
+          ]
+        },
+        {
+          "name": "status",
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "TESpeedQwenImage21"
+      },
+      "widgets_values": [
+        "kitchen_int8",
+        "te_predictor",
+        0.06,
+        0,
+        0,
+        0.08,
+        true
+      ],
+      "widgets_values_named": {
+        "attention": "kitchen_int8",
+        "step_cache": "te_predictor",
+        "reuse_threshold": 0.06,
+        "start_percent": 0,
+        "end_percent": 0,
+        "predictor_error_limit": 0.08,
+        "verbose": true
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 44,
+      "type": "BSAI_Qwen_Prompt_Enhancer",
+      "pos": [
+        434.55943612203504,
+        883.5199777787386
+      ],
+      "size": [
+        590.4647294351994,
+        972.0000000000002
+      ],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "shape": 7,
+          "type": "CLIP",
+          "link": 62
+        },
+        {
+          "name": "image_1",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 63
+        },
+        {
+          "name": "image_2",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 64
+        },
+        {
+          "name": "image_3",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 65
+        },
+        {
+          "name": "image_4",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": 66
+        },
+        {
+          "name": "image_5",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_6",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_7",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_8",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_9",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_10",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_11",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_12",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_13",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_14",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_15",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "image_16",
+          "shape": 7,
+          "type": "IMAGE",
+          "link": null
+        },
+        {
+          "name": "prompt_text",
+          "type": "STRING",
+          "widget": {
+            "name": "prompt_text"
+          },
+          "link": 67
+        },
+        {
+          "name": "custom_system_prompt",
+          "type": "STRING",
+          "widget": {
+            "name": "custom_system_prompt"
+          },
+          "link": 68
+        },
+        {
+          "name": "user_requirement",
+          "type": "STRING",
+          "widget": {
+            "name": "user_requirement"
+          },
+          "link": 69
+        }
+      ],
+      "outputs": [
+        {
+          "name": "ENHANCED_PROMPT",
+          "type": "STRING",
+          "links": [
+            98,
+            100
+          ]
+        },
+        {
+          "name": "WH_RATIO",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "RATIO_FOLLOW",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "RAW_OUTPUT",
+          "type": "STRING",
+          "links": []
+        },
+        {
+          "name": "THINKING",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "RECOMMENDED_STEPS",
+          "type": "INT",
+          "links": [
+            76
+          ]
+        },
+        {
+          "name": "RECOMMENDED_CFG",
+          "type": "FLOAT",
+          "links": [
+            78
+          ]
+        },
+        {
+          "name": "RECOMMENDED_SAMPLER",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "RECOMMENDED_SCHEDULER",
+          "type": "STRING",
+          "links": null
+        },
+        {
+          "name": "MERGED_TEXT",
+          "type": "STRING",
+          "links": [
+            101
+          ]
+        }
+      ],
+      "properties": {
+        "aux_id": "xm6018924/BSAI-Qwen-Prompt-Enhancer",
+        "ver": "9dab08413af7f6d9cb68c7f28c5c5bff6c5b5078",
+        "Node name for S&R": "BSAI_Qwen_Prompt_Enhancer"
+      },
+      "widgets_values": [
+        "官方PE (本地 Qwen3.5-9B)",
+        "一个穿红裙的女孩站在樱花树下，手里拿着奶茶，傍晚阳光",
+        "角色卡 · 服装与配饰细节拆解 [character_outfit_breakdown]",
+        "",
+        "",
+        0.7,
+        0.95,
+        40,
+        1.1,
+        141314202400684,
+        "randomize",
+        1024,
+        "高质量 35步/CFG1 (精细出图)",
+        "auto",
+        0,
+        false,
+        "auto",
+        "Qwen3.8\\Qwen3.8-27B-CRACK-Q6_K_L-noMTP.gguf",
+        "Qwen3.8\\Qwen3.8-27B-CRACK-f16_mmproj.gguf",
+        "auto（按模型名自动识别 Qwen3.8/Gemma4/GLM4.6 等全部支持模型）",
+        4096,
+        -1,
+        false,
+        false,
+        "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "",
+        "qwen3.5-vl-9b",
+        120,
+        "Florence-2-base [Florence2ForConditionalGeneration]",
+        "<MORE_DETAILED_CAPTION>",
+        "auto",
+        true,
+        true,
+        null,
+        ""
+      ],
+      "widgets_values_named": {
+        "backend": "官方PE (本地 Qwen3.5-9B)",
+        "prompt_text": "一个穿红裙的女孩站在樱花树下，手里拿着奶茶，傍晚阳光",
+        "system_template": "角色卡 · 服装与配饰细节拆解 [character_outfit_breakdown]",
+        "custom_system_prompt": "",
+        "user_requirement": "",
+        "temperature": 0.7,
+        "top_p": 0.95,
+        "top_k": 40,
+        "repeat_penalty": 1.1,
+        "seed": 141314202400684,
+        "control_after_generate": "randomize",
+        "max_tokens": 1024,
+        "speed_preset": "高质量 35步/CFG1 (精细出图)",
+        "pe_mode": "auto",
+        "min_p": 0,
+        "thinking": false,
+        "mtp": "auto",
+        "llm_model_name": "Qwen3.8\\Qwen3.8-27B-CRACK-Q6_K_L-noMTP.gguf",
+        "mmproj_name": "Qwen3.8\\Qwen3.8-27B-CRACK-f16_mmproj.gguf",
+        "chat_handler": "auto（按模型名自动识别 Qwen3.8/Gemma4/GLM4.6 等全部支持模型）",
+        "n_ctx": 4096,
+        "n_gpu_layers": -1,
+        "load_mtp": false,
+        "keep_loaded": false,
+        "api_base": "https://dashscope.aliyuncs.com/compatible-mode/v1",
+        "api_key": "",
+        "api_model_name": "qwen3.5-vl-9b",
+        "timeout": 120,
+        "hf_model_name": "Florence-2-base [Florence2ForConditionalGeneration]",
+        "hf_task": "<MORE_DETAILED_CAPTION>",
+        "hf_device": "auto",
+        "hf_keep_loaded": true,
+        "preview_only": true,
+        "🖼 打开模板海报墙": null,
+        "🧹 清除模板（清空输出）": ""
+      },
+      "color": "#c04848",
+      "bgcolor": "#3a2626"
+    },
+    {
+      "id": 54,
+      "type": "ShowText|pysssss",
+      "pos": [
+        1062.501038102323,
+        885.2873382968531
+      ],
+      "size": [
+        766.4514985929156,
+        453.00143314639365
+      ],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 100
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "title": "LLM扩写、优化、反推输出提示词",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "609f3afaa74b2f88ef9ce8d939626065e3247469",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "你是资深服装/道具设计师。请把用户的角色描述扩写为一张服装细节拆解图（outfit breakdown）的高质量英文提示词。\n\n画面：纯白背景，左侧为该角色的全身正面立绘（缩小），右侧/下方为 6-10 个细节特写圆形或方形框，分别放大展示：领口/衣襟、袖口、腰带/腰封、裙/裤下摆、鞋靴、标志性配饰（发饰/耳饰/项链）、武器/道具、面料纹理。\n每个特写框下方用英文小字标注部位名（如 collar / cuffs / sash / boots / hairpin / sword / fabric texture）。\n角色描述必须写清：服装整体风格、主配色、面料材质（丝绸/皮革/金属/棉麻等）、装饰纹样、配饰位置。\n所有细节与主立绘严格一致，专业服饰设定表风格。输出一段完整英文提示词。"
+      ],
+      "widgets_values_named": {
+        "text_0": "你是资深服装/道具设计师。请把用户的角色描述扩写为一张服装细节拆解图（outfit breakdown）的高质量英文提示词。\n\n画面：纯白背景，左侧为该角色的全身正面立绘（缩小），右侧/下方为 6-10 个细节特写圆形或方形框，分别放大展示：领口/衣襟、袖口、腰带/腰封、裙/裤下摆、鞋靴、标志性配饰（发饰/耳饰/项链）、武器/道具、面料纹理。\n每个特写框下方用英文小字标注部位名（如 collar / cuffs / sash / boots / hairpin / sword / fabric texture）。\n角色描述必须写清：服装整体风格、主配色、面料材质（丝绸/皮革/金属/棉麻等）、装饰纹样、配饰位置。\n所有细节与主立绘严格一致，专业服饰设定表风格。输出一段完整英文提示词。"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    },
+    {
+      "id": 55,
+      "type": "ShowText|pysssss",
+      "pos": [
+        1065.2437515594745,
+        1395.46880126799
+      ],
+      "size": [
+        759.5594421847347,
+        466.78588249716324
+      ],
+      "flags": {},
+      "order": 18,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "text",
+          "type": "STRING",
+          "link": 101
+        }
+      ],
+      "outputs": [
+        {
+          "name": "STRING",
+          "shape": 6,
+          "type": "STRING",
+          "links": []
+        }
+      ],
+      "title": "合并输出提示词-预览",
+      "properties": {
+        "cnr_id": "comfyui-custom-scripts",
+        "ver": "609f3afaa74b2f88ef9ce8d939626065e3247469",
+        "Node name for S&R": "ShowText|pysssss"
+      },
+      "widgets_values": [
+        "你是资深服装/道具设计师。请把用户的角色描述扩写为一张服装细节拆解图（outfit breakdown）的高质量英文提示词。\n\n画面：纯白背景，左侧为该角色的全身正面立绘（缩小），右侧/下方为 6-10 个细节特写圆形或方形框，分别放大展示：领口/衣襟、袖口、腰带/腰封、裙/裤下摆、鞋靴、标志性配饰（发饰/耳饰/项链）、武器/道具、面料纹理。\n每个特写框下方用英文小字标注部位名（如 collar / cuffs / sash / boots / hairpin / sword / fabric texture）。\n角色描述必须写清：服装整体风格、主配色、面料材质（丝绸/皮革/金属/棉麻等）、装饰纹样、配饰位置。\n所有细节与主立绘严格一致，专业服饰设定表风格。输出一段完整英文提示词。"
+      ],
+      "widgets_values_named": {
+        "text_0": "你是资深服装/道具设计师。请把用户的角色描述扩写为一张服装细节拆解图（outfit breakdown）的高质量英文提示词。\n\n画面：纯白背景，左侧为该角色的全身正面立绘（缩小），右侧/下方为 6-10 个细节特写圆形或方形框，分别放大展示：领口/衣襟、袖口、腰带/腰封、裙/裤下摆、鞋靴、标志性配饰（发饰/耳饰/项链）、武器/道具、面料纹理。\n每个特写框下方用英文小字标注部位名（如 collar / cuffs / sash / boots / hairpin / sword / fabric texture）。\n角色描述必须写清：服装整体风格、主配色、面料材质（丝绸/皮革/金属/棉麻等）、装饰纹样、配饰位置。\n所有细节与主立绘严格一致，专业服饰设定表风格。输出一段完整英文提示词。"
+      },
+      "bgcolor": "rgba(0,0,0,0)"
+    }
+  ],
+  "links": [
+    [
+      4,
+      40,
+      0,
+      10,
+      0,
+      "MODEL"
+    ],
+    [
+      9,
+      5,
+      0,
+      10,
+      1,
+      "CONDITIONING"
+    ],
+    [
+      10,
+      5,
+      1,
+      10,
+      2,
+      "CONDITIONING"
+    ],
+    [
+      11,
+      3,
+      0,
+      11,
+      1,
+      "VAE"
+    ],
+    [
+      13,
+      10,
+      0,
+      11,
+      0,
+      "LATENT"
+    ],
+    [
+      14,
+      11,
+      0,
+      12,
+      0,
+      "IMAGE"
+    ],
+    [
+      16,
+      14,
+      0,
+      10,
+      3,
+      "LATENT"
+    ],
+    [
+      33,
+      21,
+      0,
+      14,
+      0,
+      "INT"
+    ],
+    [
+      34,
+      21,
+      1,
+      14,
+      1,
+      "INT"
+    ],
+    [
+      57,
+      4,
+      0,
+      40,
+      0,
+      "MODEL"
+    ],
+    [
+      58,
+      22,
+      0,
+      4,
+      0,
+      "MODEL"
+    ],
+    [
+      59,
+      1,
+      0,
+      22,
+      0,
+      "MODEL"
+    ],
+    [
+      62,
+      2,
+      0,
+      44,
+      0,
+      "CLIP"
+    ],
+    [
+      63,
+      6,
+      0,
+      44,
+      1,
+      "IMAGE"
+    ],
+    [
+      64,
+      7,
+      0,
+      44,
+      2,
+      "IMAGE"
+    ],
+    [
+      65,
+      8,
+      0,
+      44,
+      3,
+      "IMAGE"
+    ],
+    [
+      66,
+      9,
+      0,
+      44,
+      4,
+      "IMAGE"
+    ],
+    [
+      100,
+      44,
+      0,
+      54,
+      0,
+      "STRING"
+    ],
+    [
+      101,
+      44,
+      9,
+      55,
+      0,
+      "STRING"
+    ],
+    [
+      76,
+      44,
+      5,
+      10,
+      4,
+      "INT"
+    ],
+    [
+      78,
+      44,
+      6,
+      10,
+      5,
+      "FLOAT"
+    ],
+    [
+      67,
+      19,
+      0,
+      44,
+      17,
+      "STRING"
+    ],
+    [
+      68,
+      27,
+      0,
+      44,
+      18,
+      "STRING"
+    ],
+    [
+      69,
+      28,
+      0,
+      44,
+      19,
+      "STRING"
+    ],
+    [
+      2,
+      2,
+      0,
+      5,
+      0,
+      "CLIP"
+    ],
+    [
+      5,
+      6,
+      0,
+      5,
+      1,
+      "IMAGE"
+    ],
+    [
+      6,
+      7,
+      0,
+      5,
+      2,
+      "IMAGE"
+    ],
+    [
+      7,
+      8,
+      0,
+      5,
+      3,
+      "IMAGE"
+    ],
+    [
+      8,
+      9,
+      0,
+      5,
+      4,
+      "IMAGE"
+    ],
+    [
+      3,
+      3,
+      0,
+      5,
+      8,
+      "VAE"
+    ],
+    [
+      98,
+      44,
+      0,
+      5,
+      9,
+      "STRING"
+    ]
+  ],
+  "groups": [
+    {
+      "id": 1,
+      "title": "① 模型加载与缓存优化",
+      "bounding": [
+        -45.3483357195579,
+        -29.12589278312505,
+        480.09511166181505,
+        809.8040720884102
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 2,
+      "title": "② 提示词与参考图（0~16 张，多合一）",
+      "bounding": [
+        450,
+        -30,
+        721.08009313125,
+        812.2381165321518
+      ],
+      "color": "#7a9e3f",
+      "flags": {}
+    },
+    {
+      "id": 3,
+      "title": "③ 采样与输出",
+      "bounding": [
+        1185.1250102378267,
+        -25.716876041378363,
+        1851.2387978738166,
+        808.7688608821484
+      ],
+      "color": "#9e3f7a",
+      "flags": {}
+    },
+    {
+      "id": 4,
+      "title": "Group",
+      "bounding": [
+        -530.3778338444012,
+        -32.14647460391509,
+        469.0179939702298,
+        1896.0858243555867
+      ],
+      "color": "#3f789e",
+      "flags": {}
+    },
+    {
+      "id": 5,
+      "title": "BSAI Qwen Prompt Enhancer (本地LLaMA)",
+      "bounding": [
+        -42.432049328665656,
+        804.1907475620966,
+        1910.1920101141618,
+        1111.036343039615
+      ],
+      "color": "#b58b2a",
+      "flags": {}
+    }
+  ],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 1.7985878990921818,
+      "offset": [
+        357.1481200305201,
+        9.443779929717564
+      ]
+    },
+    "qgn_navigation_groups": [],
+    "qgn_locked": false,
+    "frontendVersion": "1.53.6",
+    "VHS_latentpreview": false,
+    "VHS_latentpreviewrate": 0,
+    "VHS_MetadataImage": true,
+    "VHS_KeepIntermediate": true
+  },
+  "extensions": {
+    "seed_widgets": {
+      "10": 0,
+      "44": 9
+    }
+  },
+  "version": 0.4,
+  "seed_widgets": {
+    "10": 0,
+    "44": 9
+  }
+}

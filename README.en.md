@@ -8,6 +8,33 @@
 
 ## 🚀 Latest Updates
 
+### v1.02.0 (2026-09-24) — One-click install of all missing nodes for example workflows
+
+> **Another PC shows red frames `node type not found / undefined` when opening BSAI example workflows (e.g. `SetNode`, `GetNode`, `Image Comparer (rgthree)`, `QwenImage21_T2IPromptRewrite`, `DLSS5Settings`, `DLSS5EnhanceImages`)?**
+> Those are NOT missing parts of the BSAI plugin — they come from **5 third-party node packages** that the example workflows depend on. v1.02.0 **bundles the latent-upscale example workflow** into the plugin and ships a **one-click dependency installer**:
+>
+> ```bash
+> # double-click (or run) inside the plugin folder:
+> ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer/install_example_deps.bat
+> ```
+>
+> The script auto-`git clone`s the 5 dependency plugins (skips existing ones); after a **full ComfyUI restart** every node lights up:
+>
+> | Node in the workflow | Provided by |
+> |---|---|
+> | `SetNode` / `GetNode` (wireless tunnels) | [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) (frontend virtual connections) |
+> | `Image Comparer (rgthree)` | [rgthree-comfy](https://github.com/rgthree/rgthree-comfy) |
+> | `QwenImage21_T2IPromptRewrite` | [ComfyUI-Qwen-Image-2.1-Prompt-Enhancer](https://github.com/benjiyaya/ComfyUI-Qwen-Image-2.1-Prompt-Enhancer) (download the official PE-T2I weights into `models/text_encoders/`) |
+> | `DLSS5Settings` / `DLSS5EnhanceImages` (latent upscale) | [ComfyUI-DLSS5-Enhancer](https://github.com/Blueforcer/ComfyUI-DLSS5-Enhancer) (NVIDIA DLSS5 neural rendering; optionally run `install_runtime.py` to fetch the runtime) |
+> | `easy cleanGpuUsed` / `easy clearCacheAll` | [ComfyUI-Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) |
+> | `PathchSageAttentionKJ` / `GetImageSizeAndCount` | [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) |
+>
+> Everything else you commonly see (`ResolutionSelector`, `ComfyMathExpression`, `SaveImageAdvanced`, `QwenImage21Cache`, `TextEncodeQwenImage21`) is **built into ComfyUI** — no install needed.
+>
+> v1.02.0 also bundles a **`MarkdownNote`-compatible node** (removed from new rgthree builds), so BSAI example workflows load cleanly on any machine.
+
+---
+
 ### v1.01.2 (2026-09-24) — Compatible with old & new ComfyUI validation semantics
 
 > **Newer ComfyUI shows `Custom validation failed for node: backend - None` (for every input)?** New builds call `VALIDATE_INPUTS(**all_inputs)` and **require `True`** (None/False both count as failure); legacy builds call `VALIDATE_INPUTS(input_name, input_value)` and treat None as pass.

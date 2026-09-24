@@ -8,6 +8,52 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.02.0 (2026-09-24) — 新增 Jev 结构化并行决策 / New: Jev structured parallel decision nodes
+
+**新增 2 个节点：`BSAI_Jev_Schema`（Schema 构建器）+ `BSAI_Jev_Decision`（Jev 并行决策）。**
+
+Jev（llama.cpp 新技术的 ComfyUI 落地）不再让模型逐 token 手写 JSON，而是为每个字段构造 `字段名: ` 前缀、只读取候选选项 token 的 logits，**一次前向同时得到全部字段的值与置信度**——类型安全、不可能产生 Schema 外的输出，毫秒级完成结构化决策。
+
+- **如何用**：`BSAI_Jev_Schema` 里每行写一个字段（`字段名: 选项1|选项2|选项3`）→ 接入 `BSAI_Jev_Decision`，选本地 GGUF 模型（与主节点"本地LLaMA"后端同一套加载通道）→ 填 context → 输出 `result_json` / `confidence_json` / `text`。
+- **batch_mode**：勾选后按行拆分 context，每条记录一次遍历完成全部字段（工单路由、邮件分类、评论打标等批量场景）。
+- **模型选择**：`llm_model_name / mmproj_name / chat_handler / n_ctx / n_gpu_layers / load_mtp` 与主节点完全一致（含 MTP 自动剥离、handler 自动识别、模型缓存）。
+- **说明**：Jev 使用独立会话，决策前后自动 reset+memory_clear，不会污染后续对话；`force_offload` 可一键卸载全部缓存的本地模型。
+- **局限**：字段间互依赖的规则型任务（需要回看已写内容）不适合 Jev；记录间按顺序处理（同一条记录内字段并行）。
+
+---
+
+### v1.02.0 (2026-09-24) — 示例工作流缺失节点一键装齐 / One-click install of all missing nodes for example workflows
+
+> **其他电脑打开示例工作流报红框 `node type not found / undefined`（如 `SetNode`、`GetNode`、`Image Comparer (rgthree)`、`QwenImage21_T2IPromptRewrite`、`DLSS5Settings`、`DLSS5EnhanceImages`）？**
+> 这些都不是 BSAI 插件缺失，而是**示例工作流依赖了 5 个第三方节点插件**。v1.02.0 已把**潜空间放大示例**收进插件，并提供**一键安装脚本**，双击即可装齐全部依赖：
+>
+> **v1.02.0 bundles the latent-upscale example workflow and ships a one-click dependency installer.** If another PC reports missing/undefined nodes (SetNode / GetNode / Image Comparer (rgthree) / QwenImage21_T2IPromptRewrite / DLSS5Settings / DLSS5EnhanceImages), just double-click the installer:
+>
+> ```bash
+> # 在插件目录下双击（或运行）：
+> ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer/install_example_deps.bat
+> ```
+>
+> 该脚本自动 `git clone` 5 个依赖插件（已存在的跳过），装完**完全重启 ComfyUI** 即全部亮灯：
+> The script auto-clones the 5 dependency plugins (skips existing ones); after a **full ComfyUI restart** every node lights up:
+>
+> | 工作流里的节点 | 提供插件 |
+> |---|---|
+> | `SetNode` / `GetNode`（无线隧道） | [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes)（前端虚拟连接） |
+> | `Image Comparer (rgthree)` | [rgthree-comfy](https://github.com/rgthree/rgthree-comfy) |
+> | `QwenImage21_T2IPromptRewrite` | [ComfyUI-Qwen-Image-2.1-Prompt-Enhancer](https://github.com/benjiyaya/ComfyUI-Qwen-Image-2.1-Prompt-Enhancer)（需下载官方 PE-T2I 模型放 `models/text_encoders/`） |
+> | `DLSS5Settings` / `DLSS5EnhanceImages`（潜空间放大） | [ComfyUI-DLSS5-Enhancer](https://github.com/Blueforcer/ComfyUI-DLSS5-Enhancer)（NVIDIA DLSS5 神经渲染；需按需运行 `install_runtime.py` 下载运行时） |
+> | `easy cleanGpuUsed` / `easy clearCacheAll` | [ComfyUI-Easy-Use](https://github.com/yolain/ComfyUI-Easy-Use) |
+> | `PathchSageAttentionKJ` / `GetImageSizeAndCount` | [ComfyUI-KJNodes](https://github.com/kijai/ComfyUI-KJNodes) |
+>
+> 其它常见节点（`ResolutionSelector`、`ComfyMathExpression`、`SaveImageAdvanced`、`QwenImage21Cache`、`TextEncodeQwenImage21`）均为 **ComfyUI 官方内置**，无需安装。
+> The rest (ResolutionSelector / ComfyMathExpression / SaveImageAdvanced / QwenImage21Cache / TextEncodeQwenImage21) are **built into ComfyUI** — no install needed.
+>
+> 另外 v1.02.0 内置 **`MarkdownNote` 兼容节点**：新版 rgthree 已移除该注释节点，BSAI 插件自带同名节点，示例工作流开箱即用。
+> v1.02.0 also bundles a **`MarkdownNote`-compatible node** (removed from new rgthree builds), so BSAI example workflows load cleanly on any machine.
+
+---
+
 ### v1.01.2 (2026-09-24) — 兼容新旧两代 ComfyUI 的校验语义 / Compatible with old & new ComfyUI validation semantics
 
 > **新版 ComfyUI 上报 `Custom validation failed for node: backend - None`（每个输入都报）？**
@@ -301,6 +347,30 @@ STYLE: 商业摄影
 3. 支持 OpenAI 兼容接口（阿里云百炼、本地 vLLM/Ollama 等）
 4. 同样支持多图输入
 
+### 方式四：Jev 结构化并行决策（新增，v1.02.0）
+
+用于工单路由、邮件分类、评论打标、内容审核等**结构化决策**场景——不是生成文字，而是从你定义的合法选项中选值，并给出置信度。
+
+1. 添加 `BSAI_Jev_Schema` 节点，每行定义一个字段：
+   ```
+   department: tech|billing|shipping
+   priority: low|medium|high
+   sentiment: positive|negative|neutral
+   ```
+   `instruction`（可选）填字段判断规则，如 `You are a support ticket router. Classify each field strictly based on the context.`
+
+2. 添加 `BSAI_Jev_Decision` 节点并连接 `jev_schema`：
+   - `context`：待决策的文本（客户信息 / 邮件 / 工单内容）
+   - `batch_mode`：勾选后每行一条记录，逐条完成全部字段决策
+   - `llm_model_name / mmproj_name / chat_handler / n_ctx / n_gpu_layers / load_mtp`：与"本地LLaMA"后端完全一致（MTP 自动剥离 / handler 自动识别 / 模型缓存）
+
+3. 输出：
+   - `result_json`：`{"department": "billing", ...}`（可直接接下游）
+   - `confidence_json`：每个字段的值 + 置信度 + 全选项得分
+   - `text`：人类可读摘要
+
+> 💡 **与逐 token 生成的区别**：Jev 一次前向同时得到全部字段（同记录内并行），模型只能从选项里选，**不可能产生 Schema 外的输出**；配合 KV 前缀缓存，毫秒级返回。字段间互依赖的规则型任务（需要回看已写内容）不适合 Jev。
+
 ## 📁 目录结构
 
 ```
@@ -308,6 +378,8 @@ BSAI_Qwen_Prompt_Enhancer/
 ├── __init__.py                  # 节点注册
 ├── common.py                    # 公共工具：规则加载/消息构造/输出解析/图片转换
 ├── nodes_enhancer.py            # 三合一增强节点（官方PE / 本地LLaMA / API）
+├── nodes_jev.py                 # Jev 结构化并行决策节点（Schema + Decision）
+├── jev_mode.py                  # Jev 引擎（与 ComfyUI-llama-cpp_vlm 同步的独立副本）
 ├── nodes_template.py            # 模板库节点
 ├── system_prompts/              # 官方 PE-T2I/I2I system_prompt 原文
 ├── templates/                   # 模板库（cinema / design / 官方公式）
@@ -433,9 +505,9 @@ hf download microsoft/Florence-2-base --local-dir ComfyUI/models/LLM/Florence-2-
 ## 🔄 更新与自查（其他电脑务必看这里）/ Update & self-check (for other PCs)
 
 > **症状**：其他电脑打开工作流仍报 `Custom validation failed for node: X - None` 或 `Value not in list`。
-> **99% 是因为插件没更新到 v1.01.2（或更新后没重启）。** 请按下面两步确认：
+> **99% 是因为插件没更新到 v1.02.0（或更新后没重启）。** 请按下面两步确认：
 
-**第 1 步 — 更新插件到 v1.01.2**（在插件目录 `ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer` 执行）：
+**第 1 步 — 更新插件到 v1.02.0**（在插件目录 `ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer` 执行）：
 
 ```bash
 git pull origin main
@@ -447,15 +519,15 @@ git pull origin main
 **自查是否已生效**：重启后看 ComfyUI 控制台第一屏，应有横幅：
 
 ```
-[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 v1.01.2 (2026-09-24) | ...
+[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 v1.02.0 (2026-09-24) | ...
 ```
 
-- 看到 `v1.01.2` → 已更新，重新打开工作流即正常。
-- 没有这行 / 版本号是 v1.01.1 或更早 → 插件没更新成功：检查插件目录里 `git pull` 是否成功、ComfyUI 是否完全重启、或从 G 盘/旧 zip 拷的是不是旧文件。
+- 看到 `v1.02.0` → 已更新，重新打开工作流即正常。
+- 没有这行 / 版本号是 v1.01.2 或更早 → 插件没更新成功：检查插件目录里 `git pull` 是否成功、ComfyUI 是否完全重启、或从 G 盘/旧 zip 拷的是不是旧文件。
 
 **命令行确认版本**：
 
 ```bash
 git -C ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer log --oneline -1
-# 应显示 5ea6300 或更新的提交
+# 应显示本次 v1.02.0 提交或更新的提交
 ```
