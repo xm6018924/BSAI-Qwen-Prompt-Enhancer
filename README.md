@@ -24,7 +24,15 @@ cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
 # 重启 ComfyUI，合并节点底部即出现「💾 保存为模板」与「⬆ 上传模板」两个按钮
 ```
 
+**v1.06.0 补丁1 — 海报墙缩略图缓存问题根治（Thumbnail cache root-fix）：**
+> 模板缩略图已换成真实风格示例图，但旧浏览器缓存会一直显示旧图（截图里卡片仍是"文字风格卡"）。本补丁给缩略图/logo URL 加了版本参数（`?v=WALL_VER`，URL 变化即强制重新下载），并为海报墙直达路由、模板 API 响应加 `Cache-Control: no-store`，每次打开海报墙都是最新版本。**其他电脑 `git pull` 后重启 ComfyUI、重新打开海报墙即可，无需手动清缓存**；以后每次换图只需把 `templates_wall.html` 里的 `WALL_VER` 改成新值。
+
+**v1.06.0 补丁2 — 旧工作流报「无效输入 / 输入值类型错误」（threads / timeout）一键自愈（Numeric self-heal）：**
+> 旧工作流存档里 `threads`、`timeout` 等数值参数若存成字符串/错误类型，选中模板预览时会红框报"无效输入"。本补丁在前端新增 `autoFixNumericValues`：加载工作流时自动把所有 INT/FLOAT 数值参数重置为正确的 number 并同步存档（后端另有 `int()` 强转双保险）。**其他电脑 `git pull` 后重启 ComfyUI 即可，旧工作流打开即自动修复，无需手动改参数。**
+
 ---
+
+
 
 ### v1.05.0 (2026-09-24) — 32 个新增模板缩略图升级为 AI 真实风格示例图 / Thumbnails of the 32 new templates upgraded to real AI style sample images
 

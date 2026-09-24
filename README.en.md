@@ -24,7 +24,16 @@ cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
 # Restart ComfyUI — the two buttons appear at the bottom of the merged node.
 ```
 
+
+**v1.06.0 Patch 1 — Template wall thumbnail cache root-fix:**
+> Thumbnails were upgraded to real style sample images, but browser cache keeps showing the old text-card images. This patch adds a version parameter to thumbnail/logo URLs (`?v=WALL_VER` — URL change forces browsers to re-download), and adds `Cache-Control: no-store` to the wall route and templates API so every open loads the latest version. **On other PCs: `git pull`, restart ComfyUI, reopen the wall — no manual cache clearing needed**; for future image swaps just bump `WALL_VER` in `templates_wall.html`.
+
+**v1.06.0 Patch 2 — One-click self-heal for "invalid input / wrong input value type" (threads / timeout):**
+> Old workflow saves may store numeric params (`threads`, `timeout`, etc.) as strings/wrong types, causing red-box "invalid input" errors when previewing templates. This patch adds frontend `autoFixNumericValues`: on workflow load it auto-resets all INT/FLOAT numeric widgets to proper numbers and syncs the saved values (backend `int()` casts remain as a second line of defense). **On other PCs: `git pull` and restart ComfyUI — old workflows auto-repair on open, no manual edits needed.**
+
 ---
+
+
 
 ### v1.05.0 (2026-09-24) — Thumbnails of the 32 new templates upgraded to real AI style sample images
 
