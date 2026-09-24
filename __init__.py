@@ -99,8 +99,102 @@ def _register_wall_route():
 
 _register_wall_route()
 
+# 【v1.06.0】用户模板写入 API：
+#   POST /bsai_save_user_template   {name, desc, text}           -> 存为 user_templates/{name}.json
+#   POST /bsai_upload_user_template multipart file(.json)         -> 校验后写入 user_templates/（多条目自动拆分）
+# load_user_templates() 每次实时扫描 user_templates/，保存/上传后无需重启，下拉与海报墙即时可见。
+def _register_user_template_api():
+    try:
+        import json as _json
+        import re as _re
+        from server import PromptServer
+        from aiohttp import web
+        from .common import USER_TEMPLATES_DIR
+
+        os.makedirs(USER_TEMPLATES_DIR, exist_ok=True)
+
+        def _safe_name(name):
+            s = _re.sub(r'[\\/:*?"<>|\r\n\t]+', "_", str(name or "").strip())
+            return s or "untitled"
+
+        def _unique_path(base_stem, ext=".json"):
+            p = os.path.join(USER_TEMPLATES_DIR, base_stem + ext)
+            n = 2
+            while os.path.exists(p):
+                p = os.path.join(USER_TEMPLATES_DIR, "%s (%d)%s" % (base_stem, n, ext))
+                n += 1
+            return p
+
+        server = PromptServer.instance
+
+        @server.routes.post("/bsai_save_user_template")
+        async def _bsai_save_template(request):
+            try:
+                data = await request.json()
+            except Exception:
+                return web.json_response({"ok": False, "message": "请求体不是有效 JSON"})
+            name = _safe_name(str(data.get("name") or ""))
+            text = str(data.get("text") or "").strip()
+            desc = str(data.get("desc") or "用户自定义共享模板").strip()
+            if not text:
+                return web.json_response({"ok": False, "message": "模板内容为空，无法保存"})
+            tid = "user_" + name.lower().replace(" ", "_")
+            path = _unique_path(name)
+            payload = {"id": tid, "name": name, "type": "user", "desc": desc, "text": text}
+            with open(path, "w", encoding="utf-8") as f:
+                _json.dump(payload, f, ensure_ascii=False, indent=2)
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 已保存用户模板: {os.path.basename(path)}")
+            return web.json_response({"ok": True, "name": name, "file": os.path.basename(path), "id": tid})
+
+        @server.routes.post("/bsai_upload_user_template")
+        async def _bsai_upload_template(request):
+            try:
+                reader = await request.multipart()
+                fld = await reader.next()
+                if not fld or fld.name != "file":
+                    return web.json_response({"ok": False, "message": "未找到上传文件字段 'file'"})
+                fn = fld.filename or "template.json"
+                if not str(fn).lower().endswith(".json"):
+                    return web.json_response({"ok": False, "message": "仅支持 .json 模板文件"})
+                raw = await fld.read()
+                try:
+                    parsed = _json.loads(raw.decode("utf-8"))
+                except Exception:
+                    return web.json_response({"ok": False, "message": "文件不是有效 JSON"})
+                items = parsed if isinstance(parsed, list) else parsed.get("templates", [parsed] if isinstance(parsed, dict) else [])
+                if not isinstance(items, list) or not items:
+                    return web.json_response({"ok": False, "message": "JSON 中没有模板条目（需含 name 字段）"})
+                saved = []
+                for it in items:
+                    if not isinstance(it, dict) or not it.get("name"):
+                        continue
+                    nm = _safe_name(str(it["name"]))
+                    path = _unique_path(nm)
+                    payload = dict(it)
+                    payload.setdefault("id", "user_" + nm.lower().replace(" ", "_"))
+                    payload.setdefault("type", "user")
+                    payload.setdefault("desc", "用户自定义共享模板")
+                    # file 引用字段在共享模板场景不可靠（相对路径可能不存在），一律内联 text
+                    payload.pop("file", None)
+                    with open(path, "w", encoding="utf-8") as f:
+                        _json.dump(payload, f, ensure_ascii=False, indent=2)
+                    saved.append(os.path.basename(path))
+                if not saved:
+                    return web.json_response({"ok": False, "message": "JSON 中无有效模板条目（缺少 name 字段）"})
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 已上传用户模板: {', '.join(saved)}")
+                return web.json_response({"ok": True, "files": saved})
+            except Exception as e:
+                return web.json_response({"ok": False, "message": "上传失败: %s" % e})
+
+        print("[BSAI_Qwen_Prompt_Enhancer] 用户模板写入 API 已注册: POST /bsai_save_user_template / POST /bsai_upload_user_template")
+    except Exception as e:
+        print(f"[BSAI_Qwen_Prompt_Enhancer] 用户模板写入 API 注册失败(不影响节点): {e}")
+
+_register_user_template_api()
+
+
 # 【v1.03.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
-_PLUGIN_VERSION = "v1.04.0 (2026-09-24)"
+_PLUGIN_VERSION = "v1.06.0 (2026-09-24)"
 print(f"[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 {_PLUGIN_VERSION} | "
       f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / MarkdownNote兼容 / 潜空间放大示例 / 动态模板API / 海报墙直达路由")
 

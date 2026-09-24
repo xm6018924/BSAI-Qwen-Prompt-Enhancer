@@ -274,6 +274,70 @@ app.registerExtension({
       syncWidgetVisibility(node);
       syncPreviewWarning(node);
 
+      // 【v1.06.0】合并节点底部左侧「💾 保存为模板」：把当前提示词直接存为用户模板（user_templates/）
+      function refreshTemplateCombo(savedName, savedId) {
+        try {
+          const sysW = (node.widgets || []).find((w) => w.name === "system_template");
+          if (!sysW) return;
+          fetch("/api/bsai/templates").then((r) => r.json()).then((j) => {
+            const vals = ["无模板（清空输出，不使用系统规则）[none]"];
+            for (const t of j.templates || []) vals.push(`${t.name} [${t.id}]`);
+            sysW.options.values = vals;
+            if (savedName && savedId) {
+              const target = `${savedName} [${savedId}]`;
+              if (vals.includes(target)) {
+                sysW.value = target;
+                if (typeof sysW.callback === "function") { try { sysW.callback(target); } catch (_) {} }
+                if (Array.isArray(node.widgets_values)) {
+                  const i = node.widgets.indexOf(sysW);
+                  if (i >= 0) node.widgets_values[i] = target;
+                }
+              }
+            }
+            try { app.graph?.setDirtyCanvas?.(true, true); } catch (_) {}
+          }).catch((e) => console.warn("[BSAI.PromptEnhancer] 刷新模板下拉失败:", e));
+        } catch (e) {
+          console.warn("[BSAI.PromptEnhancer] 刷新模板下拉异常:", e);
+        }
+      }
+      try {
+        node.addWidget("button", "💾 保存为模板", "", async () => {
+          try {
+            const gw = (n) => (node.widgets || []).find((x) => x.name === n);
+            const sysW = gw("custom_system_prompt");
+            const usrW = gw("user_requirement");
+            const pvW = gw("prompt_text");
+            let text = "";
+            if (sysW && typeof sysW.value === "string" && sysW.value.trim()) text = sysW.value;
+            else if (pvW && typeof pvW.value === "string" && pvW.value.trim()) text = pvW.value;
+            if (!text.trim()) {
+              alert("[BSAI] 请先在「自定义系统提示词」或「用户提示词」输入内容，再保存为模板。");
+              return;
+            }
+            const name = prompt("模板名称（将保存到用户模板区 user_templates/）：", "");
+            if (!name || !name.trim()) return;
+            const desc = prompt("模板描述（可空，将显示在海报墙卡片）：", "用户自定义共享模板");
+            const resp = await fetch("/bsai_save_user_template", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ name: name.trim(), desc: (desc || "").trim(), text: text.trim() }),
+            });
+            const j = await resp.json();
+            if (j && j.ok) {
+              alert(`已保存为模板「${j.name}」→ user_templates/${j.file}\n下拉已自动选中，海报墙刷新后可见。`);
+              refreshTemplateCombo(j.name, j.id);
+            } else {
+              alert("保存失败: " + ((j && j.message) || "未知错误"));
+            }
+          } catch (e) {
+            console.warn("[BSAI.PromptEnhancer] 保存模板失败:", e);
+            alert("保存失败: " + e.message);
+          }
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] 注入保存模板按钮失败:", e);
+      }
+
       // 2) 模板海报墙按钮
       const widget = (node.widgets || []).find(
         (w) => w.name === "system_template" || w.name === "template"
@@ -378,9 +442,48 @@ app.registerExtension({
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] 注入清除模板按钮失败:", e);
       }
+      // 【v1.06.0】合并节点底部右侧「⬆ 上传模板」：选择本地 .json 模板，直接写入 user_templates/
+      try {
+        node.addWidget("button", "⬆ 上传模板", "", () => {
+          try {
+            const input = document.createElement("input");
+            input.type = "file";
+            input.accept = ".json,application/json";
+            input.style.display = "none";
+            document.body.appendChild(input);
+            input.onchange = async () => {
+              try {
+                const file = input.files && input.files[0];
+                if (!file) return;
+                const fd = new FormData();
+                fd.append("file", file);
+                const resp = await fetch("/bsai_upload_user_template", { method: "POST", body: fd });
+                const j = await resp.json();
+                if (j && j.ok) {
+                  alert(`已上传模板 → user_templates/${(j.files || []).join(", ")}\n下拉已刷新，海报墙刷新后可见。`);
+                  refreshTemplateCombo();
+                } else {
+                  alert("上传失败: " + ((j && j.message) || "未知错误"));
+                }
+              } catch (e) {
+                console.warn("[BSAI.PromptEnhancer] 上传模板失败:", e);
+                alert("上传失败: " + e.message);
+              } finally {
+                try { document.body.removeChild(input); } catch (_) {}
+              }
+            };
+            input.click();
+          } catch (e) {
+            console.warn("[BSAI.PromptEnhancer] 触发上传模板失败:", e);
+          }
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] 注入上传模板按钮失败:", e);
+      }
     }
   },
 });
+
 
 /**
  * 找当前工作流里第一个 QwenImage21_Prompt_Template 节点 id，

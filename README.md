@@ -8,6 +8,24 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.06.0 (2026-09-24) — 节点底部新增「保存为模板」「上传模板」按钮 / Two new buttons at node bottom: Save as Template + Upload Template
+
+> **合并节点（BSAI_Qwen_Prompt_Enhancer）底部新增两个按钮，一键把自定义提示词 / 模板 JSON 直接写入「用户模板区 user_templates/」——保存后立即出现在 system_template 下拉与海报墙「用户模板」分类，无需重启、无需手动放文件。**
+
+**新增内容：**
+
+1. **💾 保存为模板（左侧按钮）**：自动读取当前节点「自定义系统提示词」（无则取「用户提示词」）→ 弹窗输入模板名称/描述 → 一键保存为 `user_templates/{名称}.json`，保存后下拉自动选中新模板。
+2. **⬆ 上传模板（右侧按钮）**：点击选择本地 `.json` 模板文件（支持单模板对象 / `{"templates":[...]}` 多条目自动拆分）→ 校验后直接写入 `user_templates/` → 下拉自动刷新。
+3. 配套新增后端 API：`POST /bsai_save_user_template`（JSON 保存）、`POST /bsai_upload_user_template`（multipart 文件上传）；`load_user_templates()` 每次实时扫描目录，保存/上传后**即时生效**，海报墙与下拉同步可见。
+
+**其他电脑更新：**
+```bash
+cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
+# 重启 ComfyUI，合并节点底部即出现「💾 保存为模板」与「⬆ 上传模板」两个按钮
+```
+
+---
+
 ### v1.05.0 (2026-09-24) — 32 个新增模板缩略图升级为 AI 真实风格示例图 / Thumbnails of the 32 new templates upgraded to real AI style sample images
 
 > **新增的 16 个排版设计 + 16 个艺术风格模板，缩略图已从程序合成的"文字风格卡"全部替换为 AI 生成的真实风格示例图** —— 与老模板（102 张）一致，每张缩略图都是一幅该风格的典型代表作品（瑞士国际主义海报、包豪斯几何构成、印象派睡莲、梵高星月夜、波普玛丽莲、蒸汽波雕塑、酸性设计金属星体……），海报墙观感统一、一眼识别风格。

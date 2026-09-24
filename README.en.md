@@ -8,6 +8,24 @@
 
 ## 🚀 Latest Updates
 
+### v1.06.0 (2026-09-24) — Two new buttons at node bottom: Save as Template + Upload Template
+
+> **The merged node (BSAI_Qwen_Prompt_Enhancer) now has two new buttons at its bottom that write your custom prompts / template JSON directly into the User Template Area (`user_templates/`) — the template appears in the `system_template` dropdown and the "User Templates" category on the template wall immediately, no restart, no manual file placement.**
+
+**What's new:**
+
+1. **💾 Save as Template (left button)**: automatically reads the node's "Custom System Prompt" (falls back to "User Prompt") → prompts for a template name/description → saves as `user_templates/{name}.json` in one click, and the dropdown auto-selects the new template.
+2. **⬆ Upload Template (right button)**: pick a local `.json` template file (supports a single template object or `{"templates":[...]}` multi-entry auto-split) → validated and written directly into `user_templates/` → dropdown refreshes automatically.
+3. New backend APIs: `POST /bsai_save_user_template` (JSON save) and `POST /bsai_upload_user_template` (multipart file upload); `load_user_templates()` rescans the directory on every call, so the save/upload takes effect **immediately** — visible in both the dropdown and the template wall.
+
+**Update on another PC:**
+```bash
+cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
+# Restart ComfyUI — the two buttons appear at the bottom of the merged node.
+```
+
+---
+
 ### v1.05.0 (2026-09-24) — Thumbnails of the 32 new templates upgraded to real AI style sample images
 
 > **The thumbnails of the 16 new typography + 16 new art-style templates have been replaced from program-generated "text style cards" with real AI-generated style sample images** — consistent with the 102 older templates, each thumbnail is now a representative artwork of that style (Swiss International Typography poster, Bauhaus geometric composition, Impressionist water lilies, Van Gogh's Starry Night, Pop-art Marilyn, Vaporwave sculpture, Acid-design metal star...). The template wall now looks uniform and each style is recognizable at a glance.
