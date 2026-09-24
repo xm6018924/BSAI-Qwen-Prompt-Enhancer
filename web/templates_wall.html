@@ -244,11 +244,10 @@ function ratioFor(id) {
 
 // 模板数据：优先调用插件动态 API（内置 + 用户模板区 user_templates/ 实时合并，含模板全文），
 // API 不可用时回退静态 templates.json + template_texts.json。
-let TEMPLATES = [];
 let TEMPLATE_TEXTS = {};
 
 function _loadStaticTemplates() {
-  return fetch("templates.json")
+  return fetch("/extensions/BSAI_Qwen_Prompt_Enhancer/templates.json")
     .then(r => r.json())
     .then(data => {
       TEMPLATES = (data.templates || []).map(t => ({
@@ -281,7 +280,7 @@ fetch("/api/bsai/templates")
   .catch(err => {
     console.warn("[BSAI.QwenPromptEnhancer] 动态模板 API 不可用，回退静态文件:", err);
     _loadStaticTemplates();
-    fetch("template_texts.json")
+    fetch("/extensions/BSAI_Qwen_Prompt_Enhancer/template_texts.json")
       .then(r => r.json())
       .then(data => {
         (data.templates || []).forEach(t => { TEMPLATE_TEXTS[t.id] = t.text || ""; });
