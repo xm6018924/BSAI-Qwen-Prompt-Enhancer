@@ -98,6 +98,19 @@ class BSAI_Jev_Decision:
                 "n_ctx": ("INT", {"default": 8192, "min": 512, "max": 65536}),
                 "n_gpu_layers": ("INT", {"default": -1, "min": -1, "max": 200}),
                 "load_mtp": ("BOOLEAN", {"default": False}),
+                # ---- 极限提速参数（视频同款 llama.cpp：显存+内存混合模式）----
+                "n_cmoe": ("INT", {
+                    "default": 0, "min": 0, "max": 256, "step": 1,
+                    "tooltip": "MoE专家拆分到CPU/内存层数(-ncmoe)。仅MoE有效，稠密无效。\\nQwen-35B-A3B实测约24最稳；0=关闭。当前0.3.36暂未支持，升级后自动生效。",
+                }),
+                "kv_cache_quant": (["auto(f16不量化)", "q8_0", "q4_0"], {
+                    "default": "auto(f16不量化)",
+                    "tooltip": "KV缓存量化(-ctk/-ctv)。Jev读logits精度敏感，默认不量化；确需提速再选q8_0/q4_0。",
+                }),
+                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap；内存不足/换页可关闭(--no-mmap)。"}),
+                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock(--mlock)锁内存防换出。"}),
+                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa。auto=模型支持即启用。"}),
+                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t 线程数(视频示例14)；0=自动。"}),
                 "system_prompt": ("STRING", {"multiline": True, "default": ""}),
                 "force_offload": ("BOOLEAN", {
                     "default": False,
@@ -113,6 +126,8 @@ class BSAI_Jev_Decision:
 
     def process(self, jev_schema, context, batch_mode, llm_model_name, mmproj_name,
                 chat_handler, n_ctx, n_gpu_layers, load_mtp,
+                n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                flash_attn="auto", threads=0,
                 system_prompt="", force_offload=False):
         if llm_model_name == NO_MODEL:
             raise RuntimeError(
@@ -122,6 +137,12 @@ class BSAI_Jev_Decision:
         llm, _ = _load_llm(
             llm_model_name, mmproj_name or None, chat_handler,
             n_ctx, n_gpu_layers, load_mtp,
+            n_cmoe=int(n_cmoe or 0),
+            kv_cache_quant=str(kv_cache_quant).split("(")[0].strip(),
+            use_mmap=bool(use_mmap),
+            use_mlock=bool(use_mlock),
+            flash_attn=str(flash_attn).strip(),
+            threads=int(threads or 0),
         )
 
         # Jev 是独立会话: 从干净 KV 缓存开始
