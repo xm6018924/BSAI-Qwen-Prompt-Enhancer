@@ -8,6 +8,24 @@
 
 ## 🚀 Latest Updates
 
+### v1.05.0 (2026-09-24) — Thumbnails of the 32 new templates upgraded to real AI style sample images
+
+> **The thumbnails of the 16 new typography + 16 new art-style templates have been replaced from program-generated "text style cards" with real AI-generated style sample images** — consistent with the 102 older templates, each thumbnail is now a representative artwork of that style (Swiss International Typography poster, Bauhaus geometric composition, Impressionist water lilies, Van Gogh's Starry Night, Pop-art Marilyn, Vaporwave sculpture, Acid-design metal star...). The template wall now looks uniform and each style is recognizable at a glance.
+
+**What's new:**
+
+1. **16 typography thumbnails**: Swiss International / Bauhaus / Constructivist / New Ugly / Memphis / Vintage Victorian / Minimal Bold / Editorial / Newspaper / Japanese vertical / Chinese Calligraphy / Glitch / Neon / 3D Letter / Pixel / Hand-drawn — each now shows an AI sample artwork of that typography style.
+2. **16 art-style thumbnails**: Impressionism / Post-Impressionism (Van Gogh) / Cubism / Surrealism / Pop Art / Expressionism / Abstract Expressionism / Art Deco / Art Nouveau / Baroque / Rococo / Pointillism / Fauvism / Futurism / Vaporwave / Acid — each now shows an AI sample artwork of that painting style.
+3. All resized to 448×448 PNG, matching the existing 134-thumbnail spec; no wall code changes needed, just refresh.
+
+**Update on another PC:**
+```bash
+cd ComfyUI/custom_nodes/BSAI_Qwen_Prompt_Enhancer && git pull
+# Then hard-refresh the template wall (Ctrl+F5) to see the new thumbnails
+```
+
+---
+
 ### v1.04.0 (2026-09-24) — One-click fix for template wall ERR_INVALID_RESPONSE
 
 > **Getting `ERR_INVALID_RESPONSE` when clicking "🖼 Open Template Wall" on another PC?**
