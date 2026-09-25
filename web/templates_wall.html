@@ -206,6 +206,7 @@
   <button data-cat="pose">人物姿势</button>
   <button data-cat="inspiration">灵感精选</button>
   <button data-cat="typography">排版设计</button>
+  <button data-cat="card">节日贺卡</button>
   <button data-cat="user">用户模板</button>
   <button id="btn-refresh" class="btn-refresh" title="重新加载模板库：新保存/上传的模板立即出现">🔄 刷新</button>
 </div>
@@ -214,7 +215,7 @@
 
 <div class="footer">
   <div class="big-logo"><div class="circle">百声</div><div style="text-align:left"><div style="font-weight:700;color:#cbd5e1">百声AI · BSAI</div><div style="font-size:11px;color:#64748b">Qwen Image 2.1 Prompt Enhancer</div></div></div>
-  <div>ComfyUI custom node · <b id="footer-total">134</b> templates · <b id="footer-cat">12</b> categories · 3 backends</div>
+  <div>ComfyUI custom node · <b id="footer-total">134</b> templates · <b id="footer-cat">13</b> categories · 3 backends</div>
 </div>
 
 <script>
@@ -692,7 +693,7 @@ function render(cat) {
       </div>
       <div class="info">
         <span class="type-tag t-${t.type}">${
-          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产",character:"角色卡",poster:"电影海报",style:"艺术风格",pose:"人物姿势",inspiration:"灵感精选",typography:"排版设计",user:"用户模板"}[t.type] || t.type
+          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产",character:"角色卡",poster:"电影海报",style:"艺术风格",pose:"人物姿势",inspiration:"灵感精选",typography:"排版设计",card:"节日贺卡",user:"用户模板"}[t.type] || t.type
         }</span>
         <h3>${t.name}${t.ratio!=="—" ? ` <span style="color:#64748b;font-weight:400;font-size:12px">· ${t.ratio}</span>` : ""}</h3>
         <div class="desc">${t.desc}</div>
