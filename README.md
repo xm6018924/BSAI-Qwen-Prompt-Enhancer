@@ -8,6 +8,19 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.07.0 (2026-09-25) — 新增「节日祝福贺卡」模板 16 个（全球全网精选，缩略图含百声AI圆形logo）/ New: 16 Festival Greeting Card templates (globally curated, thumbnails with BSAI round logo)
+
+> **全球全网搜索精选 16 个节日贺卡平面设计模板（type=card，新增第 13 大类「节日祝福贺卡」）：新年极简大字报 / 春节国潮剪纸 / 情人节水彩爱心 / 妇女节扁平花束 / 母亲节复古花艺 / 父亲节复古沉稳 / 儿童节3D卡通 / 端午新中式 / 七夕中式浪漫 / 教师节手绘插画 / 中秋水墨月圆 / 国庆红色喜庆 / 万圣节怪趣复古 / 感恩节暖调乡村 / 圣诞3D立体纸雕 / 生日派对气球。每个模板均为完整贺卡设计提示词（版式结构+风格锚点+文字规则），可直接用于 Qwen-Image 文生图生成贺卡。16 张缩略图全部带百声AI圆形logo，海报墙数量说明同步更新为 150 模板 / 13 分类。**
+
+**新增内容：**
+
+1. **16 个贺卡模板**：`templates/templates.json` + `web/templates.json` 双份同步（134 → **150**），覆盖全年主流节日（元旦/春节/情人节/妇女节/母亲节/父亲节/儿童节/端午/七夕/教师节/中秋/国庆/万圣节/感恩节/圣诞/生日），每个模板含节日专属版式结构、配色/技法/元素/字体风格锚点与祝福语文字规则。
+2. **缩略图全部带百声AI圆形logo**：16 张 `web/thumbnails/card_*.png`（448×448），贺卡主题配色渐变+节日元素+中英标题+右下角百声AI圆形logo。
+3. **海报墙同步**：`templates_wall.html` 新增「节日贺卡」统计（stat-card），分类说明 12 → **13 大类**，`WALL_VER` 升级 `20260925-v107`（新缩略图强制刷新缓存），数量说明同步修改。
+4. 前端下拉 / 海报墙 / 三种后端（官方PE / 本地LLaMA / API）全部自动兼容，**无需重启**（动态加载）。
+
+> EN: **v1.07.0** — 16 globally-curated **Festival Greeting Card** templates (type=card, new 13th category): Minimal New Year / Guochao Spring Festival paper-cut / Watercolor Valentine / Flat Floral Women's Day / Vintage Mother's Day / Retro Father's Day / 3D Children's Day / Neo-Chinese Dragon Boat / Romantic Qixi / Hand-drawn Teachers' Day / Ink Mid-Autumn / Red National Day / Playful Halloween / Warm Thanksgiving / 3D Paper-cut Christmas / Birthday Party. Each is a complete greeting-card design prompt (layout + style anchors + text rules) ready for Qwen-Image T2I. All 16 thumbnails carry the **BSAI round logo**; wall stats synced to **150 templates / 13 categories**; `WALL_VER=20260925-v107`. Front-end dropdown / wall / all three backends auto-compatible, **no restart needed**.
+
 ### v1.06.0 (2026-09-24) — 节点底部新增「保存为模板」「上传模板」按钮 / Two new buttons at node bottom: Save as Template + Upload Template
 
 > **合并节点（BSAI_Qwen_Prompt_Enhancer）底部新增两个按钮，一键把自定义提示词 / 模板 JSON 直接写入「用户模板区 user_templates/」——保存后立即出现在 system_template 下拉与海报墙「用户模板」分类，无需重启、无需手动放文件。**

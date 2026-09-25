@@ -146,7 +146,7 @@
 
 <div class="hero">
   <h1>BSAI · Qwen Image 2.1 提示词模板库</h1>
-  <p>内置 <b id="stat-total">134</b> 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、<b id="stat-design">9</b> 种设计版式、<b id="stat-cinema">13</b> 种电影资产、<b id="stat-character">16</b> 种角色卡、<b id="stat-poster">12</b> 种电影海报、<b id="stat-style">31</b> 种艺术风格、<b id="stat-pose">16</b> 种人物动作姿势、<b id="stat-typography">16</b> 种文字排版设计、<b id="stat-inspiration">12</b> 种灵感精选 + <b id="stat-user">动态</b> 用户共享模板。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
+  <p>内置 <b id="stat-total">150</b> 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、<b id="stat-design">9</b> 种设计版式、<b id="stat-cinema">13</b> 种电影资产、<b id="stat-character">16</b> 种角色卡、<b id="stat-poster">12</b> 种电影海报、<b id="stat-style">31</b> 种艺术风格、<b id="stat-pose">16</b> 种人物动作姿势、<b id="stat-typography">16</b> 种文字排版设计、<b id="stat-card">16</b> 种节日祝福贺卡、<b id="stat-inspiration">12</b> 种灵感精选 + <b id="stat-user">动态</b> 用户共享模板。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
   <div class="stats">
     <span><b id="stat-total-b">102</b> 模板总数</span>
     <span><b id="stat-cat-b">10</b> 分类</span>
@@ -156,6 +156,7 @@
     <span><b id="stat-style-b">31</b> 艺术风格</span>
     <span><b id="stat-pose-b">16</b> 人物姿势</span>
     <span><b id="stat-typography-b">16</b> 排版设计</span>
+    <span><b id="stat-card-b">16</b> 节日贺卡</span>
     <span><b id="stat-user-b">0</b> 用户模板</span>
     <span><b id="stat-inspiration-b">12</b> 灵感精选</span>
   </div>
@@ -171,7 +172,7 @@
       <li>点击上方分类按钮筛选不同类型的模板</li>
       <li>点击任意模板卡片即可选用该模板，自动回填到节点并关闭页面</li>
       <li>支持 {{TITLE}}、{{MAIN_SUBJECT}}、{{COLOR}} 等变量自定义替换</li>
-      <li>模板分为 12 大类：官方规则、官方文档、社区实践、设计版式、电影资产、角色卡、电影海报、艺术风格、人物动作姿势、文字排版设计、灵感精选 + 用户模板区</li>
+      <li>模板分为 13 大类：官方规则、官方文档、社区实践、设计版式、电影资产、角色卡、电影海报、艺术风格、人物动作姿势、文字排版设计、节日祝福贺卡、灵感精选 + 用户模板区</li>
       <li>用户模板区（user_templates/ 目录）：把自定义模板 JSON 放进去即自动汇聚为共享模板</li>
       <li>缩略图为预览效果，实际输出以模型生成为准</li>
       <li>所有模板均可用于官方 PE / 本地 LLaMA / API 三种后端</li>
@@ -184,7 +185,7 @@
       <li>Click category buttons above to filter templates by type</li>
       <li>Click any template card to select it — auto-fills the node and closes the page</li>
       <li>Supports custom variable replacement: {{TITLE}}, {{MAIN_SUBJECT}}, {{COLOR}}, etc.</li>
-      <li>12 categories: Official Rules, Official Docs, Community, Design, Cinema Assets, Character Sheets, Movie Posters, Art Styles, Character Poses, Typography, Web Inspiration + User Templates</li>
+      <li>13 categories: Official Rules, Official Docs, Community, Design, Cinema Assets, Character Sheets, Movie Posters, Art Styles, Character Poses, Typography, Festival Greeting Cards, Web Inspiration + User Templates</li>
       <li>User Templates: drop your custom template JSON files into user_templates/ — they merge automatically as shared templates</li>
       <li>Thumbnails are for preview only; actual output depends on model generation</li>
       <li>All templates work with all three backends: Official PE / Local LLaMA / API</li>
@@ -226,11 +227,11 @@ let currentCat = "all";  // 当前激活分类（刷新按钮重渲染用）
 const WALL_BASE = "/extensions/BSAI_Qwen_Prompt_Enhancer";
 // v1.06.0: 缩略图 URL 加版本参数(cache-buster)，强制浏览器绕过旧图缓存加载新缩略图；
 // 以后每次替换缩略图/logo 时把 WALL_VER 改成新值即可（如 20260924-v106）。
-const WALL_VER = "20260924-v106";
+const WALL_VER = "20260925-v107";
 
 // v0.10: 顶部说明/统计数字从模板数据自动统计（新增模板后无需手动改数量）
 function updateStats(list) {
-  const cnt = { official: 0, "official-doc": 0, community: 0, design: 0, cinema: 0, character: 0, poster: 0, style: 0, pose: 0, inspiration: 0, typography: 0, user: 0 };
+  const cnt = { official: 0, "official-doc": 0, community: 0, design: 0, cinema: 0, character: 0, poster: 0, style: 0, pose: 0, inspiration: 0, typography: 0, card: 0, user: 0 };
   list.forEach(t => { if (t.type in cnt) cnt[t.type]++; });
   const total = list.length;
   const cats = Object.keys(cnt).filter(k => cnt[k] > 0).length;
@@ -239,11 +240,11 @@ function updateStats(list) {
   set("stat-cinema", cnt.cinema); set("stat-character", cnt.character);
   set("stat-poster", cnt.poster); set("stat-style", cnt.style);
   set("stat-pose", cnt.pose);    set("stat-inspiration", cnt.inspiration);
-  set("stat-typography", cnt.typography); set("stat-user", cnt.user);
+  set("stat-typography", cnt.typography); set("stat-card", cnt.card); set("stat-user", cnt.user);
   set("stat-total-b", total);    set("stat-cat-b", cats);
   set("stat-design-b", cnt.design); set("stat-character-b", cnt.character);
   set("stat-poster-b", cnt.poster); set("stat-style-b", cnt.style);
-  set("stat-pose-b", cnt.pose);  set("stat-typography-b", cnt.typography);
+  set("stat-pose", cnt.pose);  set("stat-typography-b", cnt.typography); set("stat-card-b", cnt.card);
   set("stat-user-b", cnt.user);  set("stat-inspiration-b", cnt.inspiration);
   set("footer-total", total);    set("footer-cat", cats);
 }
