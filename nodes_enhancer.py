@@ -1760,14 +1760,14 @@ class BSAI_Qwen_Image21_Sampler:
                 "positive": ("CONDITIONING",),
                 "negative": ("CONDITIONING",),
                 "latent_image": ("LATENT",),
+            },
+            "optional": {
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
                 "steps": ("INT", {"default": 20, "min": 1, "max": 10000}),
                 "cfg": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 100.0, "step": 0.1}),
                 "sampler_name": (_BSAI_SAMPLER_NAMES, {"default": "euler"}),
                 "scheduler": (_BSAI_SCHEDULER_NAMES, {"default": "simple"}),
                 "denoise": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
-            },
-            "optional": {
                 "guider": ("GUIDER",),
                 "sigmas": ("SIGMAS",),
             },
@@ -1779,14 +1779,15 @@ class BSAI_Qwen_Image21_Sampler:
     CATEGORY = "sampling/custom_sampling"
 
     DESCRIPTION = (
-        "BSAI Qwen image 2.1 采样器：KSampler 全部参数（种子/步数/CFG/采样器/调度器/降噪）不变，"
+        "BSAI Qwen image 2.1 采样器：KSampler 全部参数（种子/步数/CFG/采样器/调度器/降噪）均保留为 widget，"
+        "且每个参数都可右键「Convert widget to input」转为输入端口接入上游（如增强器 RECOMMENDED_STEPS/CFG 智能联动）；"
         "新增可选 guider / sigmas 输入端口，直连 BasicGuider / ViggleTurboSigmas 等蒸馏采样上游。"
         "接 sigmas 时以 sigmas 为准，未接时行为与 KSampler 一致。"
     )
 
     def sample(self, model, positive, negative, latent_image,
-               seed, steps, cfg, sampler_name, scheduler, denoise,
-               guider=None, sigmas=None):
+               seed=0, steps=20, cfg=1.0, sampler_name="euler", scheduler="simple",
+               denoise=1.0, guider=None, sigmas=None):
         if _comfy_samplers is None:
             raise RuntimeError("[BSAI_Qwen_Image21_Sampler] ComfyUI 采样模块不可用")
         # 1) guider：优先外部 guider（BasicGuider / CFGGuider），否则内置 CFGGuider
