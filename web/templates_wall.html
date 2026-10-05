@@ -225,10 +225,10 @@ let currentCat = "all";  // 当前激活分类（刷新按钮重渲染用）
 
 // v1.04.2: 静态资源统一走插件绝对路径 —— 从直达路由 /bsai_templates_wall 打开时，
 // 相对路径 thumbnails/x.png 会解析到服务器根目录(404)导致缩略图看不见。
-const WALL_BASE = "/extensions/BSAI_Qwen_Prompt_Enhancer";
+const WALL_BASE = "/extensions/BSAI-Qwen-Prompt-Enhancer";
 // v1.06.0: 缩略图 URL 加版本参数(cache-buster)，强制浏览器绕过旧图缓存加载新缩略图；
 // 以后每次替换缩略图/logo 时把 WALL_VER 改成新值即可（如 20260924-v106）。
-const WALL_VER = "20260925-v107";
+const WALL_VER = "20261006-v108";
 
 // v0.10: 顶部说明/统计数字从模板数据自动统计（新增模板后无需手动改数量）
 function updateStats(list) {

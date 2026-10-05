@@ -16,7 +16,13 @@
       "flags": {},
       "order": 0,
       "mode": 0,
-      "inputs": [],
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 18
+        }
+      ],
       "outputs": [
         {
           "name": "ENHANCED_PROMPT",
@@ -895,6 +901,66 @@
       },
       "widgets_values": [],
       "title": "NPU LLM 决策输出"
+    },
+    {
+      "id": 200,
+      "type": "CLIPLoader",
+      "mode": 0,
+      "order": 1,
+      "pos": [
+        -260,
+        820
+      ],
+      "size": [
+        320,
+        98
+      ],
+      "flags": {},
+      "properties": {
+        "Node name for S&R": "CLIPLoader",
+        "cnr_id": "comfy-core"
+      },
+      "widgets_values": [
+        "Qwen image 2.1 PE\\qwen3.5_9b_qwen_image_2.1_pe_t2i.int8_convrot.safetensors",
+        "qwen_image",
+        "default"
+      ],
+      "inputs": [
+        {
+          "name": "clip_name",
+          "type": "COMBO",
+          "widget": {
+            "name": "clip_name"
+          },
+          "link": null
+        },
+        {
+          "name": "type",
+          "type": "COMBO",
+          "widget": {
+            "name": "type"
+          },
+          "link": null
+        },
+        {
+          "name": "device",
+          "shape": 7,
+          "type": "COMBO",
+          "widget": {
+            "name": "device"
+          },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [
+            18
+          ]
+        }
+      ]
     }
   ],
   "links": [
@@ -1033,6 +1099,14 @@
       107,
       0,
       "STRING"
+    ],
+    [
+      18,
+      200,
+      0,
+      100,
+      0,
+      "CLIP"
     ]
   ],
   "groups": [],

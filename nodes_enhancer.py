@@ -42,6 +42,26 @@ try:
 except Exception:
     mm = None
 
+# BSAI Qwen image 2.1 采样器依赖（老式节点，参照官方 SamplerCustomAdvanced / KSampler 语义）
+try:
+    import comfy.samplers as _comfy_samplers
+    import comfy.sample as _comfy_sample
+    import comfy.utils as _comfy_utils
+    import comfy.nested_tensor as _comfy_nested_tensor
+    import latent_preview as _latent_preview
+    _BSAI_SAMPLER_NAMES = list(_comfy_samplers.KSampler.SAMPLERS)
+    _BSAI_SCHEDULER_NAMES = list(_comfy_samplers.KSampler.SCHEDULERS)
+except Exception:
+    _comfy_samplers = None
+    _comfy_sample = None
+    _comfy_utils = None
+    _comfy_nested_tensor = None
+    _latent_preview = None
+    _BSAI_SAMPLER_NAMES = ["euler", "euler_ancestral", "heun", "dpmpp_2m", "dpmpp_2m_sde",
+                            "dpmpp_sde", "ddim", "uni_pc", "lcm", "tcd"]
+    _BSAI_SCHEDULER_NAMES = ["normal", "karras", "exponential", "sgm_uniform",
+                             "simple", "ddim_uniform", "beta"]
+
 # llama-cpp-python（本地 GGUF 模型推理），未安装时不影响其他后端
 try:
     from llama_cpp import Llama
@@ -1182,22 +1202,54 @@ class BSAI_Qwen_Prompt_Enhancer:
         "公共参数四后端共用；输出统一 10 路。speed_preset 选档后 RECOMMENDED_* 端口输出对应 KSampler 参数，"
         "在 KSampler 上右键 steps/cfg → Convert to input 接上即可一键套用。"
         "Qwen Image 2.1 为 CFG-distilled 架构，官方推荐 cfg=1.0；加速档基于官方 day-0 参数（25步/cfg1/euler/simple）。"
+        "v1.08.0 新增蒸馏LoRA档：Viggle Turbo 6步(官方节点) / Pruna 5-8步(社区转换) / 阿里PAI Fun-Acc 4步(实验)，"
+        "蒸馏档必须搭配对应 LoRA 与固定 sigma（Viggle Turbo Sigmas / ManualSigmas / PDD），详见 ACCELERATION_GUIDE.md。"
     )
 
-    # 加速档位 → (steps, cfg, sampler, scheduler)
+    # 加速档位 → (steps, cfg, sampler, scheduler[, hint])
     # Qwen Image 2.1 是 CFG-distilled 架构，cfg=1.0 为官方推荐值（非旧版的 3~4）
     # 官方 day-0 联调：25步/cfg1/euler/simple（ComfyUI v0.37.0+ 原生模板）
+    # v1.08.0 新增：2026-09~10 已发布的 2.1 专用蒸馏 LoRA 档（Viggle / Pruna / 阿里PAI Fun-Acc）。
+    # 蒸馏档必须搭配对应 LoRA + 固定 sigma（Viggle Turbo Sigmas / ManualSigmas / PDD），
+    # 不能直接用普通 KSampler 的 scheduler 生成 sigma，否则出噪图；详见 ACCELERATION_GUIDE.md。
     _SPEED_PRESETS = {
         # ===== 2.1 原生正确参数（基于官方 day-0 联调）=====
         _DEFAULT_SPEED: (25, 1.0, "euler", "simple"),
         "快速 15步/CFG1 (迭代预览)": (15, 1.0, "euler", "simple"),
         "极速 10步/CFG1 (快速草稿)": (10, 1.0, "euler", "simple"),
         "高质量 35步/CFG1 (精细出图)": (35, 1.0, "euler", "simple"),
-        # ===== 配合外部加速节点 =====
+        # ===== 配合外部加速节点（无LoRA）=====
         "缓存加速 20步/CFG1 (配合EasyCache节点)": (20, 1.0, "euler", "simple"),
-        # ===== 蒸馏/Lightning 档位（需对应 LoRA，2.1专用版尚未发布）=====
-        "Lightning 8步/CFG1 (需lightx2v 2.1专用LoRA)": (8, 1.0, "euler", "simple"),
-        "Lightning 4步/CFG1 (需lightx2v 2.1专用LoRA)": (4, 1.0, "euler", "simple"),
+        # ===== 蒸馏 LoRA 加速档（2.1 专用蒸馏适配器，2026-09~10 已发布）=====
+        "Viggle Turbo 6步/CFG1 (官方节点,推荐)": (
+            6, 1.0, "euler", "simple",
+            "Viggle v0.3：模型仓库 comfyui/viggle_turbo.py 提供 Viggle Turbo Sigmas + Viggle Turbo LoRA(unmerged) 两节点，"
+            "接 BasicGuider + SamplerCustomAdvanced，CFG=1.0、负向留空；勿用 KSampler 自带 scheduler。"
+            "原始6步sigma=1.0,0.9375,0.875,0.75,0.5,0.25（节点按分辨率shift）。"
+            "ComfyUI工作流用 r128 版（已下载至 models/loras）；本机另有 v0.1 4步 r64 旧版。",
+        ),
+        "Viggle Turbo 9步/CFG1 (仅diffusers)": (
+            9, 1.0, "euler", "simple",
+            "v0.3 的9步模式=前7步turbo+后2步切回base模型，细节/小字更好（约3.5x于40步）；"
+            "目前仅 diffusers 与演示Space 可用，ComfyUI 暂未提供。",
+        ),
+        "Pruna 8步/CFG1 (质量优先,推荐)": (
+            8, 1.0, "euler", "simple",
+            "Pruna 8步（官方推荐默认）：sigma=1.0,0.933333333,0.857142857,0.769230769,0.666666667,"
+            "0.545454545,0.4,0.222222222（末尾0由调度器补）。需用社区转换版LoRA（NidAll/pruna-image-2.1-comfyui-loras，"
+            "自带alpha标量）+ ManualSigmas + SamplerCustom；CFG=1.0、负向留空。",
+        ),
+        "Pruna 5步/CFG1 (极速)": (
+            5, 1.0, "euler", "simple",
+            "Pruna 5步：sigma=1.0,0.94,0.857142857,0.666666667,0.4；H100@1024 约1.06s（提速5.7x），"
+            "画质明显低于8步版；用法同上（转换版LoRA + ManualSigmas + SamplerCustom）。",
+        ),
+        "官方Fun-Acc 4步/CFG1 (PAI,实验)": (
+            4, 1.0, "euler", "simple",
+            "阿里PAI官方4步蒸馏（PDD）：sigma=1.0,0.9169867,0.7861579,0.549491,0.0；默认2048采样。"
+            "ComfyUI无官方支持：需Kijai的 Qwen-Image-2.1-PDD 分支 + LoRA转换（norm_q/norm_k/text_norm为全参），"
+            "属社区实验路径。",
+        ),
         # ===== 旧版兼容（保留key防旧工作流失效，值已修正为2.1正确参数）=====
         "标准质量 20步/CFG3 (推荐, 7B原生)": (25, 1.0, "euler", "simple"),
         "极速 8步/CFG2": (8, 1.0, "euler", "simple"),
@@ -1230,17 +1282,19 @@ class BSAI_Qwen_Prompt_Enhancer:
                 custom_system_prompt=custom_system_prompt,
                 user_requirement=user_requirement,
             )
-            steps, cfg, sampler, scheduler = self._SPEED_PRESETS.get(
+            steps, cfg, sampler, scheduler, *extra = self._SPEED_PRESETS.get(
                 speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
             print(f"[BSAI_Qwen_Prompt_Enhancer] 纯预览模式 → 仅输出 MERGED_TEXT，不调用任何模型")
             # 【修复 2026-09-23】纯预览同样释放常驻 LLM（此前 keep_loaded=true 遗留的 27B 占 ~20GB 显存），
             # 否则预览/后续出图仍会被常驻 LLM 拖死。_clear_cache 只清本地 LLaMA 缓存，不影响 clip。
             _clear_cache()
+            hint_line = f"\n⚠ {extra[0]}" if extra else ""
             ui_text = [
                 merged_text,
                 f"\n── 纯预览模式 ──\n未调用任何模型。MERGED_TEXT 已生成，下游 Show Text / KSampler 可直接使用。\n"
                 f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。\n"
-                f"\n── 当前加速档: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──",
+                f"\n── 当前加速档: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──"
+                f"{hint_line}",
             ]
             # 【修复 2026-09-23 v2】海报墙选模板后，ENHANCED_PROMPT(第1路) 输出模板拼接 merged_text：
             # 无论后端模式，选模板后提示词统一走 ENHANCED_PROMPT 展示模板效果（用户需求）。
@@ -1594,7 +1648,7 @@ class BSAI_Qwen_Prompt_Enhancer:
     def _finalize(self, raw, speed_preset, tag,
                   system_template=None, custom_system_prompt="", user_requirement=""):
         enhanced, wh_ratio, ratio_follow, raw, thinking_text = get_enhanced_result(raw)
-        steps, cfg, sampler, scheduler = self._SPEED_PRESETS.get(speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
+        steps, cfg, sampler, scheduler, *extra = self._SPEED_PRESETS.get(speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
 
         # 【v2】MERGED_TEXT = (解析后的 system prompt) + user_requirement 拼接
         # 仅用作「下游 Show Text / 提前预览 / 直接接 KSampler」的合并版文本，
@@ -1611,19 +1665,23 @@ class BSAI_Qwen_Prompt_Enhancer:
 
         print(f"[BSAI_Qwen_Prompt_Enhancer] {tag} wh_ratio={wh_ratio} "
               f"| 加速档={speed_preset} → steps={steps} cfg={cfg} sampler={sampler} scheduler={scheduler}")
+        hint_line = f"\n⚠ 该档为蒸馏LoRA档：{extra[0]}" if extra else ""
         ui_text = [
             enhanced,
             f"\n── 加速采样建议 ──\n档位: {speed_preset}\n"
             f"KSampler → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler}\n"
             f"接线: KSampler 右键 steps/cfg → Convert to input，接入 RECOMMENDED_* 端口\n"
+            f"{hint_line}"
             f"\n── Qwen Image 2.1 加速要点 ──\n"
-            f"1. cfg=1.0 是正确值（2.1 为 CFG-distilled 架构，无需高CFG）\n"
+            f"1. cfg=1.0 是正确值（2.1 为 CFG-distilled 架构，无需高CFG；负向提示词在cfg=1时无效）\n"
             f"2. 官方默认 int8 模型: qwen_image_2.1_int8_convrot.safetensors（显存减半）\n"
             f"3. 编辑工作流: 添加「Qwen Image 2.1 Cache」节点(device=auto,dtype=int8)复用前缀KV\n"
-            f"4. 通用提速: model→EasyCache节点→KSampler (ComfyUI v0.3.52+核心内置,约1.2-1.5x)\n"
+            f"4. 通用提速: model→EasyCache节点→KSampler (ComfyUI核心内置,约1.2-1.5x)\n"
             f"5. 注意力加速: 启动参数加 --use-sage-attention (采样阶段快20-40%)\n"
-            f"6. Lightning 4/8步档需 lightx2v 发布 2.1 专用 LoRA（当前尚未发布，预计2-6周）\n"
-            f"7. 勿用 TeaCache（已冻结不兼容2.1）；勿用旧版20B Lightning LoRA（架构不同）",
+            f"6. 蒸馏LoRA（2026-09~10已发布）: Viggle Turbo 6步官方节点 / Pruna 5-8步(社区转换) / 阿里PAI Fun-Acc 4步(实验)，"
+            f"均需固定sigma，详见 ACCELERATION_GUIDE.md\n"
+            f"7. lightx2v 的 2.1 专用 Lightning LoRA 尚未发布（勿选 Lightning 档）；勿用 TeaCache（已冻结不兼容2.1）；"
+            f"勿用旧版20B Lightning LoRA（架构不同）",
             f"\n── 合并文本预览（MERGED_TEXT 输出）──\n{merged_text}",
         ]
         return {"ui": {"text": ui_text, "merged_text": [merged_text]},
@@ -1680,10 +1738,132 @@ def _api_request(url, payload, headers, timeout):
         return json.loads(resp.read().decode("utf-8"))
 
 
+class BSAI_Qwen_Image21_Sampler:
+    """
+    BSAI Qwen image 2.1 采样器 — KSampler 参数 + 可选 guider / sigmas 输入端口。
+
+    · 保留 KSampler 全部参数：seed / steps / cfg / sampler_name / scheduler / denoise
+    · 新增可选输入端口：
+        guider (GUIDER)  — 直连 BasicGuider / CFGGuider 等上游节点；不接时内置 CFGGuider(model, positive, negative, cfg)
+        sigmas (SIGMAS)  — 直连 ViggleTurboSigmas / ManualSigmas 等上游节点；不接时按 scheduler+steps+denoise 生成
+    · 语义对齐：
+        - 接 sigmas 时以 sigmas 为准（如 Viggle Turbo 固定 6 步 sigma），steps 参数仅作 UI 显示
+        - 接 guider 时 cfg 参数被 guider 内部配置覆盖（BasicGuider 无 CFG）
+        - 未接 guider/sigmas 时行为与 KSampler 完全一致（含 denoise 截断）
+    """
+
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "model": ("MODEL",),
+                "positive": ("CONDITIONING",),
+                "negative": ("CONDITIONING",),
+                "latent_image": ("LATENT",),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
+                "steps": ("INT", {"default": 20, "min": 1, "max": 10000}),
+                "cfg": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 100.0, "step": 0.1}),
+                "sampler_name": (_BSAI_SAMPLER_NAMES, {"default": "euler"}),
+                "scheduler": (_BSAI_SCHEDULER_NAMES, {"default": "simple"}),
+                "denoise": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 1.0, "step": 0.01}),
+            },
+            "optional": {
+                "guider": ("GUIDER",),
+                "sigmas": ("SIGMAS",),
+            },
+        }
+
+    RETURN_TYPES = ("LATENT", "LATENT")
+    RETURN_NAMES = ("output", "denoised_output")
+    FUNCTION = "sample"
+    CATEGORY = "sampling/custom_sampling"
+
+    DESCRIPTION = (
+        "BSAI Qwen image 2.1 采样器：KSampler 全部参数（种子/步数/CFG/采样器/调度器/降噪）不变，"
+        "新增可选 guider / sigmas 输入端口，直连 BasicGuider / ViggleTurboSigmas 等蒸馏采样上游。"
+        "接 sigmas 时以 sigmas 为准，未接时行为与 KSampler 一致。"
+    )
+
+    def sample(self, model, positive, negative, latent_image,
+               seed, steps, cfg, sampler_name, scheduler, denoise,
+               guider=None, sigmas=None):
+        if _comfy_samplers is None:
+            raise RuntimeError("[BSAI_Qwen_Image21_Sampler] ComfyUI 采样模块不可用")
+        # 1) guider：优先外部 guider（BasicGuider / CFGGuider），否则内置 CFGGuider
+        if guider is None:
+            guider = _comfy_samplers.CFGGuider(model)
+            guider.set_conds(positive, negative)
+            guider.set_cfg(cfg)
+        # 2) sigmas：优先外部 sigmas（ViggleTurboSigmas / ManualSigmas），否则按 scheduler+denoise 生成
+        if sigmas is None:
+            if denoise is None or denoise > 0.9999:
+                sigmas = _comfy_samplers.calculate_sigmas(
+                    model.get_model_object("model_sampling"), scheduler, steps).cpu()
+            else:
+                new_steps = int(steps // denoise) if denoise > 0.0 else steps
+                sigmas = _comfy_samplers.calculate_sigmas(
+                    model.get_model_object("model_sampling"), scheduler, new_steps).cpu()
+                sigmas = sigmas[-(steps + 1):]
+        # 3) 采样器
+        sampler = _comfy_samplers.sampler_object(sampler_name)
+
+        # 4) 采样主循环（与官方 SamplerCustomAdvanced 一致）
+        latent = latent_image
+        latent_image_t = latent["samples"]
+        latent = latent.copy()
+        latent_image_t = _comfy_sample.fix_empty_latent_channels(
+            guider.model_patcher, latent_image_t,
+            latent.get("downscale_ratio_spacial", None),
+            latent.get("downscale_ratio_temporal", None))
+        latent["samples"] = latent_image_t
+
+        noise_mask = latent.get("noise_mask")
+        x0_output = {}
+        callback = _latent_preview.prepare_callback(
+            guider.model_patcher, sigmas.shape[-1] - 1, x0_output)
+        disable_pbar = not _comfy_utils.PROGRESS_BAR_ENABLED
+        samples = guider.sample(
+            _BSAI_RandomNoise(seed).generate_noise(latent),
+            latent_image_t, sampler, sigmas,
+            denoise_mask=noise_mask, callback=callback,
+            disable_pbar=disable_pbar, seed=seed)
+        samples = samples.to(mm.intermediate_device())
+
+        out = latent.copy()
+        out.pop("downscale_ratio_spacial", None)
+        out.pop("downscale_ratio_temporal", None)
+        out["samples"] = samples
+        if "x0" in x0_output:
+            x0 = x0_output["x0"]
+            if samples.is_nested and not x0.is_nested:
+                latent_shapes = [x.shape for x in samples.unbind()]
+                x0 = _comfy_nested_tensor.NestedTensor(_comfy_utils.unpack_latents(x0, latent_shapes))
+            x0_out = guider.model_patcher.model.process_latent_out(x0.cpu())
+            out_denoised = latent.copy()
+            out_denoised["samples"] = x0_out
+        else:
+            out_denoised = out
+        return out, out_denoised
+
+
+class _BSAI_RandomNoise:
+    """与官方 Noise_RandomNoise 等价的最小噪声实现（避免跨模块导入）"""
+
+    def __init__(self, seed):
+        self.seed = seed
+
+    def generate_noise(self, input_latent):
+        latent_image = input_latent["samples"]
+        batch_inds = input_latent.get("batch_index")
+        return _comfy_sample.prepare_noise(latent_image, self.seed, batch_inds)
+
+
 # 供 __init__.py 注册
 NODE_CLASS_MAPPINGS = {
     "BSAI_Qwen_Prompt_Enhancer": BSAI_Qwen_Prompt_Enhancer,
+    "BSAI_Qwen_Image21_Sampler": BSAI_Qwen_Image21_Sampler,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "BSAI_Qwen_Prompt_Enhancer": "BSAI Qwen Prompt Enhancer",
+    "BSAI_Qwen_Image21_Sampler": "BSAI Qwen image 2.1 采样器",
 }

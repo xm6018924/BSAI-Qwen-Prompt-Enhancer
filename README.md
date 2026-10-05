@@ -8,6 +8,18 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.08.0 (2026-10-05) — 全球全网检索同步：新增 2.1 专用蒸馏 LoRA 加速档，加速/质量指南全面更新 / Global research sync: new 2.1-specific distilled-LoRA speed presets + fully refreshed Acceleration & Quality Guide
+
+> **全网检索 2026-09-23 ~ 09-29 发布的三大 2.1 蒸馏 LoRA 生态（Viggle Turbo v0.3 / Pruna 5·8步 / 阿里PAI Fun-Acc 4步），把插件加速档与指南从「Lightning 尚未发布」时代升级到「蒸馏加速已就绪」时代。**
+
+**新增内容：**
+
+1. **`speed_preset` 新增 5 个蒸馏 LoRA 加速档**：`Viggle Turbo 6步/CFG1 (官方节点,推荐)`、`Viggle Turbo 9步/CFG1 (仅diffusers)`、`Pruna 8步/CFG1 (质量优先,推荐)`、`Pruna 5步/CFG1 (极速)`、`官方Fun-Acc 4步/CFG1 (PAI,实验)`——每档内置接线提示（对应 LoRA 仓库、固定 sigma 列表、Viggle Turbo Sigmas / ManualSigmas / PDD 用法），节点 UI 与纯预览模式对蒸馏档自动追加 `⚠ 蒸馏LoRA档` 提示，防止误接到普通 KSampler 出噪图。
+2. **`ACCELERATION_GUIDE.md` 重写为 v1.08.0**：新增「2.1 专用蒸馏 LoRA 详情」（精确 sigma、HF 仓库、ComfyUI 接线、质量/VRAM 实测）、「质量提升方案」（官方 cfg/steps 行为、Qwen-Image 2.1 Fix LoRA 20步工作流参数、社区细节增强 LoRA、官方 PE 双模型、Alpha/2K、编辑技巧）、「暂不可用」清单（lightx2v 2.1 仍未发布 / TeaCache 冻结 / Fun-Acc 仅实验 / Nunchaku INT4 暂无）、硬件实测数据表（Pruna H100、Viggle demo Space、消费级估算）。
+3. **兼容性**：旧档位 key（含 Lightning 占位档、旧 8/50 步档）全部保留，历史工作流不受影响；新档位仅新增、无破坏性变更。
+
+> EN: **v1.08.0** — Globally researched the Qwen-Image-2.1 acceleration ecosystem released 2026-09-23~29 (Viggle Turbo v0.3 / Pruna 5·8-step / Alibaba PAI Fun-Acc 4-step) and upgraded the plugin from the "Lightning not yet released" era to the "distillation acceleration ready" era. **New:** 5 distilled-LoRA `speed_preset` options (Viggle 6/9-step, Pruna 5/8-step, PAI Fun-Acc 4-step) with built-in wiring hints (fixed sigmas, HF repos, node requirements) and automatic ⚠ warnings in UI/preview text; fully rewritten **ACCELERATION_GUIDE.md v1.08.0** (distilled-LoRA details with exact sigmas, quality-playbook incl. Qwen-Image 2.1 Fix LoRA 20-step workflow, hardware benchmarks); all legacy preset keys preserved — no breaking changes.
+
 ### v1.07.0 (2026-09-25) — 新增「节日祝福贺卡」模板 16 个（全球全网精选，缩略图含百声AI圆形logo）/ New: 16 Festival Greeting Card templates (globally curated, thumbnails with BSAI round logo)
 
 > **全球全网搜索精选 16 个节日贺卡平面设计模板（type=card，新增第 13 大类「节日祝福贺卡」）：新年极简大字报 / 春节国潮剪纸 / 情人节水彩爱心 / 妇女节扁平花束 / 母亲节复古花艺 / 父亲节复古沉稳 / 儿童节3D卡通 / 端午新中式 / 七夕中式浪漫 / 教师节手绘插画 / 中秋水墨月圆 / 国庆红色喜庆 / 万圣节怪趣复古 / 感恩节暖调乡村 / 圣诞3D立体纸雕 / 生日派对气球。每个模板均为完整贺卡设计提示词（版式结构+风格锚点+文字规则），可直接用于 Qwen-Image 文生图生成贺卡。16 张缩略图全部带百声AI圆形logo，海报墙数量说明同步更新为 150 模板 / 13 分类。**
