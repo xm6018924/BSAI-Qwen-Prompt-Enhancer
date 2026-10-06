@@ -1774,15 +1774,16 @@ class BSAI_Qwen_Image21_Sampler:
         }
 
     RETURN_TYPES = ("LATENT", "LATENT")
-    RETURN_NAMES = ("output", "denoised_output")
+    RETURN_NAMES = ("LATENT", "denoised_output")
     FUNCTION = "sample"
     CATEGORY = "sampling/custom_sampling"
 
     DESCRIPTION = (
         "BSAI Qwen image 2.1 采样器：KSampler 全部参数（种子/步数/CFG/采样器/调度器/降噪）均保留为 widget，"
         "且每个参数都可右键「Convert widget to input」转为输入端口接入上游（如增强器 RECOMMENDED_STEPS/CFG 智能联动）；"
-        "新增可选 guider / sigmas 输入端口，直连 BasicGuider / ViggleTurboSigmas 等蒸馏采样上游。"
-        "接 sigmas 时以 sigmas 为准，未接时行为与 KSampler 一致。"
+        "新增可选 guider / sigmas 输入端口，直连 BasicGuider / ViggleTurboSigmas 等蒸馏采样上游。\n"
+        "步数规则：steps 始终为主控——外部 sigmas 仅在步数与 steps 一致时生效；"
+        "不一致时忽略外部 sigmas、按 steps 重新生成并提示（蒸馏 LoRA 请保持 steps 与 LoRA/σ 序列步数一致）。"
     )
 
     def sample(self, model, positive, negative, latent_image,
@@ -1795,7 +1796,18 @@ class BSAI_Qwen_Image21_Sampler:
             guider = _comfy_samplers.CFGGuider(model)
             guider.set_conds(positive, negative)
             guider.set_cfg(cfg)
-        # 2) sigmas：优先外部 sigmas（ViggleTurboSigmas / ManualSigmas），否则按 scheduler+denoise 生成
+        # 2) sigmas：steps 为主控。外部 sigmas（ViggleTurboSigmas / ManualSigmas）仅在
+        #    其步数与 steps 一致时生效；不一致时视为用户主动改步数，按 scheduler+steps+denoise
+        #    重新生成并提示（保证「改 steps 必生效」）。
+        if sigmas is not None:
+            sigma_steps = int(sigmas.shape[-1]) - 1
+            if sigma_steps != int(steps):
+                print(
+                    f"[BSAI_Qwen_Image21_Sampler] 警告: steps={int(steps)} 与外部 sigmas 步数 "
+                    f"({sigma_steps}) 不一致，已忽略外部 sigmas 按 steps 重新生成。"
+                    f"蒸馏 LoRA 请保持 steps 与 LoRA/σ 序列步数一致，否则效果无保证。"
+                )
+                sigmas = None
         if sigmas is None:
             if denoise is None or denoise > 0.9999:
                 sigmas = _comfy_samplers.calculate_sigmas(
