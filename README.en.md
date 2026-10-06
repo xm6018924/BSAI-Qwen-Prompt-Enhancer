@@ -8,6 +8,16 @@
 
 ## 🚀 Latest Updates
 
+### v1.10.0 (2026-10-06) — Vendored official Viggle Turbo nodes: workflows open without "missing ViggleTurboSigmas"
+
+> **Vendored Viggle's official `viggle_turbo.py` (the single-file ComfyUI implementation of the Qwen-Image-2.1 distillation nodes) into `official_viggle_vendor/`. On load the plugin auto-registers `ViggleTurboSigmas` and `ViggleTurboLora`; if an official standalone `viggle_turbo` is already installed it is skipped (no duplicates, no conflict). After `git pull`, any machine can open workflows (v5, viggle-turbo-t2i) that reference these two nodes without installing an extra plugin.**
+
+**What's new:**
+
+1. **`official_viggle_vendor/viggle_turbo.py`** — the untouched official file (original name & content, MD5-identical to the `comfyui/` copy in HF `Viggle/Qwen-Image-2.1-viggle-turbo`), providing `ViggleTurboSigmas` (fixed 6-step schedule with resolution-dependent dynamic shift) and `ViggleTurboLora` (unmerged runtime side-branch LoRA to avoid bf16/int8 merge loss).
+2. **Auto-registration in `__init__.py`** — on load, if an official standalone `viggle_turbo` module with the nodes is already present → skip; otherwise load from the vendor file under the dedicated module name `bsai_vendored_viggle_turbo` and merge into `NODE_CLASS_MAPPINGS` / `NODE_DISPLAY_NAME_MAPPINGS`.
+3. **Compatibility** — no breaking changes; the v5 workflow (`BSAI_Qwen_Image21_Sampler.sigmas` → `ViggleTurboSigmas`) and the `BSAI-Qwen-Image-2.1-viggle-turbo-t2i` workflow open directly.
+
 ### v1.06.0 (2026-09-24) — Two new buttons at node bottom: Save as Template + Upload Template
 
 > **The merged node (BSAI_Qwen_Prompt_Enhancer) now has two new buttons at its bottom that write your custom prompts / template JSON directly into the User Template Area (`user_templates/`) — the template appears in the `system_template` dropdown and the "User Templates" category on the template wall immediately, no restart, no manual file placement.**

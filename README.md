@@ -8,6 +8,18 @@
 
 ## 🚀 最新更新 / Latest Updates
 
+### v1.10.0 (2026-10-06) — 内置官方 Viggle Turbo 节点（Vendored）：工作流打开不再报缺 ViggleTurboSigmas / Vendored official Viggle Turbo nodes: workflows open without "missing ViggleTurboSigmas"
+
+> **把 Viggle 官方 `viggle_turbo.py`（Qwen-Image-2.1 蒸馏节点的单文件 ComfyUI 实现）vendored 进本插件 `official_viggle_vendor/`，插件加载时自动注册 `ViggleTurboSigmas` 与 `ViggleTurboLora`。本机已独立安装官方节点时自动跳过，不重复注册、不互斥。任何电脑 `git pull` 本仓库后，含这两节点的 v5/viggle-turbo 工作流即可直接打开运行，无需再单独安装外部插件。**
+
+**新增内容：**
+
+1. **`official_viggle_vendor/viggle_turbo.py`**：官方原版文件（保留原名与内容，MD5 与 HF `Viggle/Qwen-Image-2.1-viggle-turbo` `comfyui/` 目录一致），提供 `ViggleTurboSigmas`（6 步固定调度，随 latent 分辨率动态 shift）与 `ViggleTurboLora`（unmerged 运行时侧支路挂载，避免 bf16/int8 下融合损失）。
+2. **`__init__.py` 自动注册**：插件加载时检测——若本机已存在官方独立 `viggle_turbo` 模块且含节点 → 跳过（不冲突）；否则从 vendor 文件以独立模块名 `bsai_vendored_viggle_turbo` 加载并合并进 `NODE_CLASS_MAPPINGS` / `NODE_DISPLAY_NAME_MAPPINGS`。
+3. **兼容性**：无破坏性变更；`BSAI_Qwen_Image21_Sampler` 的 `sigmas` 输入直连 `ViggleTurboSigmas` 的 v5 工作流与 `BSAI-Qwen-Image-2.1-viggle-turbo-t2i` 工作流均可直接打开。
+
+> EN: **v1.10.0** — Vendored Viggle's official `viggle_turbo.py` (the single-file ComfyUI implementation of the Qwen-Image-2.1 distillation nodes) into `official_viggle_vendor/`. On load the plugin auto-registers **ViggleTurboSigmas** and **ViggleTurboLora**; if an official standalone `viggle_turbo` is already installed it is skipped (no duplicates, no conflict). After `git pull`, any machine can open the v5 / viggle-turbo-t2i workflows that reference these two nodes without installing an extra plugin. The vendored file is the untouched official original (MD5-identical to the HF repo `comfyui/` copy).
+
 ### v1.08.0 (2026-10-05) — 全球全网检索同步：新增 2.1 专用蒸馏 LoRA 加速档，加速/质量指南全面更新 / Global research sync: new 2.1-specific distilled-LoRA speed presets + fully refreshed Acceleration & Quality Guide
 
 > **全网检索 2026-09-23 ~ 09-29 发布的三大 2.1 蒸馏 LoRA 生态（Viggle Turbo v0.3 / Pruna 5·8步 / 阿里PAI Fun-Acc 4步），把插件加速档与指南从「Lightning 尚未发布」时代升级到「蒸馏加速已就绪」时代。**

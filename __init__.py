@@ -31,6 +31,50 @@ for m in (_ENH_D, _TPL_D, _JEV_D, _MD_D):
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
 
+# ─────────────────────────────────────────────────────────────────────────────
+# 【v1.10.0】Vendored 官方 Viggle Turbo 节点（ViggleTurboSigmas / ViggleTurboLora）
+# 背景：Qwen-Image-2.1 Viggle Turbo 蒸馏的官方 ComfyUI 节点是独立单文件
+#   viggle_turbo.py（HF: Viggle/Qwen-Image-2.1-viggle-turbo，comfyui/ 目录）。
+#   本插件工作流（BSAI_Qwen_Image21_Sampler 的 sigmas 直连 ViggleTurboSigmas）
+#   依赖这两个节点。为避免"别的电脑 pull 后还要另装插件"，此处把官方文件
+#   vendored 进 official_viggle_vendor/，插件加载时自动注册：
+#     - 若本机已独立安装官方 viggle_turbo（custom_nodes 下）→ 跳过，避免重复注册；
+#     - 未安装 → 从 vendor 文件以独立模块名加载并合并进 NODE_CLASS_MAPPINGS。
+#   vendor 文件为官方原版（保留原名），本函数仅负责注册路由。
+# ─────────────────────────────────────────────────────────────────────────────
+def _maybe_vendor_viggle_turbo():
+    try:
+        import importlib.util as _ilu
+        _vd = os.path.join(os.path.dirname(os.path.abspath(__file__)), "official_viggle_vendor")
+        _py = os.path.join(_vd, "viggle_turbo.py")
+        if not os.path.isfile(_py):
+            print("[BSAI_Qwen_Prompt_Enhancer] vendored viggle_turbo.py 缺失，跳过")
+            return False
+        # 官方独立安装已加载（模块名 viggle_turbo 且含本节点）→ 跳过
+        _off = sys.modules.get("viggle_turbo")
+        if _off is not None and hasattr(_off, "NODE_CLASS_MAPPINGS") and "ViggleTurboSigmas" in getattr(_off, "NODE_CLASS_MAPPINGS", {}):
+            print("[BSAI_Qwen_Prompt_Enhancer] 已检测到官方独立 viggle_turbo，跳过 vendored 注册")
+            return False
+        _name = "bsai_vendored_viggle_turbo"
+        if _name in sys.modules:
+            _mod = sys.modules[_name]
+        else:
+            _spec = _ilu.spec_from_file_location(_name, _py)
+            _mod = _ilu.module_from_spec(_spec)
+            sys.modules[_name] = _mod
+            _spec.loader.exec_module(_mod)
+        for _k, _v in getattr(_mod, "NODE_CLASS_MAPPINGS", {}).items():
+            NODE_CLASS_MAPPINGS[_k] = _v
+        for _k, _v in getattr(_mod, "NODE_DISPLAY_NAME_MAPPINGS", {}).items():
+            NODE_DISPLAY_NAME_MAPPINGS[_k] = _v
+        print("[BSAI_Qwen_Prompt_Enhancer] vendored viggle_turbo 注册: %s" % ", ".join(getattr(_mod, "NODE_CLASS_MAPPINGS", {}).keys()))
+        return True
+    except Exception as e:
+        print("[BSAI_Qwen_Prompt_Enhancer] vendored viggle_turbo 注册失败(不影响其余节点): %s" % e)
+        return False
+
+_maybe_vendor_viggle_turbo()
+
 # ComfyUI 前端 JS 扩展目录（注入"打开海报墙"按钮 + backend 动态显隐参数）
 WEB_DIRECTORY = "./web"
 
@@ -353,8 +397,8 @@ def _register_user_template_api():
 _register_user_template_api()
 
 
-# 【v1.03.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
-_PLUGIN_VERSION = "v1.06.0 (2026-09-24)"
+# 【v1.10.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
+_PLUGIN_VERSION = "v1.10.0 (2026-10-06)"
 print(f"[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 {_PLUGIN_VERSION} | "
       f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / MarkdownNote兼容 / 潜空间放大示例 / 动态模板API / 海报墙直达路由")
 
