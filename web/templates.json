@@ -3,7 +3,8 @@
     "name": "Qwen Image 2.1 官方增强提示词模板库",
     "version": "1.0",
     "updated": "2026-09-25",
-    "note": "official 模板为 Qwen 官方 PE 模型 system_prompt 原文（逐字保留）；其余为官方文档/社区最佳实践整理。file 字段指向插件内置文件（相对路径），text 字段为内联模板文本。本文件与 templates/templates.json 同步维护（海报墙数据源）。 2026-09-25 新增「节日祝福贺卡」16 个（平面设计贺卡，type=card，缩略图含百声AI圆形logo）。"
+    "note": "official 模板为 Qwen 官方 PE 模型 system_prompt 原文（逐字保留）；其余为官方文档/社区最佳实践整理。file 字段指向插件内置文件（相对路径），text 字段为内联模板文本。本文件与 templates/templates.json 同步维护（海报墙数据源）。 2026-09-25 新增「节日祝福贺卡」16 个（平面设计贺卡，type=card，缩略图含百声AI圆形logo）。",
+    "total_templates": 250
   },
   "templates": [
     {
@@ -1314,6 +1315,1606 @@
       "desc_en": "Birthday card: colorful balloons, ribbons & cupcakes, festive celebration",
       "text": "你是资深庆典贺卡设计师。请把用户的节日祝福要求转写为一张「生日派对贺卡」的高质量英文提示词。\n\n【版式结构】竖版 2:3 贺卡正面：中央一束五彩气球（可含 \"Happy Birthday\" 铝膜气球），彩带飘落，底部纸杯蛋糕与蜡烛，顶部或中央留标题区。\n\n【风格锚点】\n- 配色：多巴胺彩色（红黄蓝绿粉）但和谐统一，可加金箔点缀\n- 技法：3D 渲染或矢量插画（3D render / flat vector），明快光影\n- 元素：气球、彩带、纸杯蛋糕、蜡烛、星星亮片\n- 字体：欢乐圆体（festive rounded font）\n\n【文字规则】祝福语（如 \"Happy Birthday\" / \"生日快乐\"）与年龄/姓名按用户指定或默认；画面不出现水印。",
       "type": "card"
+    },
+    {
+      "id": "shaolin_001",
+      "name": "1. 马步冲拳",
+      "name_en": "1. Horse Stance Punch",
+      "description": "少林武术招式 马步冲拳 — 双腿半蹲成马步，一手收于腰间，另一手向前冲拳，力达拳面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步冲拳 (Horse Stance Punch) martial arts pose.\n双腿半蹲成马步，一手收于腰间，另一手向前冲拳，力达拳面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_001.png"
+    },
+    {
+      "id": "shaolin_002",
+      "name": "2. 马步架打",
+      "name_en": "2. Horse Stance Block & Strike",
+      "description": "少林武术招式 马步架打 — 马步站立，一手屈肘上架于头顶，另一手向前冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步架打 (Horse Stance Block & Strike) martial arts pose.\n马步站立，一手屈肘上架于头顶，另一手向前冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_002.png"
+    },
+    {
+      "id": "shaolin_003",
+      "name": "3. 马步双劈拳",
+      "name_en": "3. Horse Stance Double Chop",
+      "description": "少林武术招式 马步双劈拳 — 马步，双臂由上向下同时劈打，力达拳轮",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步双劈拳 (Horse Stance Double Chop) martial arts pose.\n马步，双臂由上向下同时劈打，力达拳轮. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_003.png"
+    },
+    {
+      "id": "shaolin_004",
+      "name": "4. 马步勾拳",
+      "name_en": "4. Horse Stance Hook Punch",
+      "description": "少林武术招式 马步勾拳 — 马步，由下向上勾拳击打，拳心向内",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步勾拳 (Horse Stance Hook Punch) martial arts pose.\n马步，由下向上勾拳击打，拳心向内. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_004.png"
+    },
+    {
+      "id": "shaolin_005",
+      "name": "5. 马步贯耳",
+      "name_en": "5. Horse Stance Ear Strike",
+      "description": "少林武术招式 马步贯耳 — 马步，双臂弯曲由两侧向前弧形摆动，拳面相对击打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步贯耳 (Horse Stance Ear Strike) martial arts pose.\n马步，双臂弯曲由两侧向前弧形摆动，拳面相对击打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_005.png"
+    },
+    {
+      "id": "shaolin_006",
+      "name": "6. 马步推掌",
+      "name_en": "6. Horse Stance Push Palm",
+      "description": "少林武术招式 马步推掌 — 马步，双掌向前平推，掌心向前，力达掌根",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步推掌 (Horse Stance Push Palm) martial arts pose.\n马步，双掌向前平推，掌心向前，力达掌根. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_006.png"
+    },
+    {
+      "id": "shaolin_007",
+      "name": "7. 马步双亮掌",
+      "name_en": "7. Horse Stance Double Palm Raise",
+      "description": "少林武术招式 马步双亮掌 — 马步，双掌向两侧上方弧形托起，掌心斜向上",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步双亮掌 (Horse Stance Double Palm Raise) martial arts pose.\n马步，双掌向两侧上方弧形托起，掌心斜向上. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_007.png"
+    },
+    {
+      "id": "shaolin_008",
+      "name": "8. 马步架掌",
+      "name_en": "8. Horse Stance Palm Block",
+      "description": "少林武术招式 马步架掌 — 马步，一手上架掌，另一手收于腰间",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步架掌 (Horse Stance Palm Block) martial arts pose.\n马步，一手上架掌，另一手收于腰间. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_008.png"
+    },
+    {
+      "id": "shaolin_009",
+      "name": "9. 马步砸拳",
+      "name_en": "9. Horse Stance Smash Punch",
+      "description": "少林武术招式 马步砸拳 — 马步，一臂由上向下砸拳，力达拳背",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步砸拳 (Horse Stance Smash Punch) martial arts pose.\n马步，一臂由上向下砸拳，力达拳背. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_009.png"
+    },
+    {
+      "id": "shaolin_010",
+      "name": "10. 马步分掌",
+      "name_en": "10. Horse Stance Split Palm",
+      "description": "少林武术招式 马步分掌 — 马步，双掌由胸前向两侧分开推出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 马步分掌 (Horse Stance Split Palm) martial arts pose.\n马步，双掌由胸前向两侧分开推出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_010.png"
+    },
+    {
+      "id": "shaolin_011",
+      "name": "11. 弓步冲拳",
+      "name_en": "11. Bow Stance Punch",
+      "description": "少林武术招式 弓步冲拳 — 前腿屈膝半蹲，后腿蹬直成弓步，一手向前冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步冲拳 (Bow Stance Punch) martial arts pose.\n前腿屈膝半蹲，后腿蹬直成弓步，一手向前冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_011.png"
+    },
+    {
+      "id": "shaolin_012",
+      "name": "12. 弓步推掌",
+      "name_en": "12. Bow Stance Push Palm",
+      "description": "少林武术招式 弓步推掌 — 弓步，掌根向前推出，指尖向上",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步推掌 (Bow Stance Push Palm) martial arts pose.\n弓步，掌根向前推出，指尖向上. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_012.png"
+    },
+    {
+      "id": "shaolin_013",
+      "name": "13. 弓步劈拳",
+      "name_en": "13. Bow Stance Chop Punch",
+      "description": "少林武术招式 弓步劈拳 — 弓步，臂由上向下劈打，力达拳轮",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步劈拳 (Bow Stance Chop Punch) martial arts pose.\n弓步，臂由上向下劈打，力达拳轮. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_013.png"
+    },
+    {
+      "id": "shaolin_014",
+      "name": "14. 弓步架打",
+      "name_en": "14. Bow Stance Block & Punch",
+      "description": "少林武术招式 弓步架打 — 弓步，一手屈肘上架，另一手向前冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步架打 (Bow Stance Block & Punch) martial arts pose.\n弓步，一手屈肘上架，另一手向前冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_014.png"
+    },
+    {
+      "id": "shaolin_015",
+      "name": "15. 弓步双冲拳",
+      "name_en": "15. Bow Stance Double Punch",
+      "description": "少林武术招式 弓步双冲拳 — 弓步，双拳同时向前冲击",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步双冲拳 (Bow Stance Double Punch) martial arts pose.\n弓步，双拳同时向前冲击. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_015.png"
+    },
+    {
+      "id": "shaolin_016",
+      "name": "16. 弓步顶肘",
+      "name_en": "16. Bow Stance Elbow Strike",
+      "description": "少林武术招式 弓步顶肘 — 弓步，屈肘由后向前横顶，力达肘尖",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步顶肘 (Bow Stance Elbow Strike) martial arts pose.\n弓步，屈肘由后向前横顶，力达肘尖. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_016.png"
+    },
+    {
+      "id": "shaolin_017",
+      "name": "17. 弓步插掌",
+      "name_en": "17. Bow Stance Thrust Palm",
+      "description": "少林武术招式 弓步插掌 — 弓步，直臂向前插掌，指尖向前",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步插掌 (Bow Stance Thrust Palm) martial arts pose.\n弓步，直臂向前插掌，指尖向前. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_017.png"
+    },
+    {
+      "id": "shaolin_018",
+      "name": "18. 弓步搂手冲拳",
+      "name_en": "18. Bow Stance Hook & Punch",
+      "description": "少林武术招式 弓步搂手冲拳 — 弓步，一手由外向内搂手，另一手冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步搂手冲拳 (Bow Stance Hook & Punch) martial arts pose.\n弓步，一手由外向内搂手，另一手冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_018.png"
+    },
+    {
+      "id": "shaolin_019",
+      "name": "19. 弓步砸拳",
+      "name_en": "19. Bow Stance Smash Punch",
+      "description": "少林武术招式 弓步砸拳 — 弓步，一臂由上向下砸拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步砸拳 (Bow Stance Smash Punch) martial arts pose.\n弓步，一臂由上向下砸拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_019.png"
+    },
+    {
+      "id": "shaolin_020",
+      "name": "20. 弓步勾踢",
+      "name_en": "20. Bow Stance Hook Kick",
+      "description": "少林武术招式 弓步勾踢 — 前腿屈膝支撑，另一腿勾脚向前踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步勾踢 (Bow Stance Hook Kick) martial arts pose.\n前腿屈膝支撑，另一腿勾脚向前踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_020.png"
+    },
+    {
+      "id": "shaolin_021",
+      "name": "21. 弓步单鞭",
+      "name_en": "21. Bow Stance Single Whip",
+      "description": "少林武术招式 弓步单鞭 — 弓步，一臂立掌前推，另一臂斜下方伸掌",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步单鞭 (Bow Stance Single Whip) martial arts pose.\n弓步，一臂立掌前推，另一臂斜下方伸掌. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_021.png"
+    },
+    {
+      "id": "shaolin_022",
+      "name": "22. 弓步推窗",
+      "name_en": "22. Bow Stance Window Push",
+      "description": "少林武术招式 弓步推窗 — 弓步，双掌向前推窗式推出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步推窗 (Bow Stance Window Push) martial arts pose.\n弓步，双掌向前推窗式推出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_022.png"
+    },
+    {
+      "id": "shaolin_023",
+      "name": "23. 弓步压肘",
+      "name_en": "23. Bow Stance Elbow Press",
+      "description": "少林武术招式 弓步压肘 — 弓步，屈肘向下压击",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步压肘 (Bow Stance Elbow Press) martial arts pose.\n弓步，屈肘向下压击. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_023.png"
+    },
+    {
+      "id": "shaolin_024",
+      "name": "24. 弓步栽拳",
+      "name_en": "24. Bow Stance Plant Punch",
+      "description": "少林武术招式 弓步栽拳 — 弓步，拳由上向下栽打，力达拳面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步栽拳 (Bow Stance Plant Punch) martial arts pose.\n弓步，拳由上向下栽打，力达拳面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_024.png"
+    },
+    {
+      "id": "shaolin_025",
+      "name": "25. 弓步撑掌",
+      "name_en": "25. Bow Stance Support Palm",
+      "description": "少林武术招式 弓步撑掌 — 弓步，双掌向两侧撑开展臂",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弓步撑掌 (Bow Stance Support Palm) martial arts pose.\n弓步，双掌向两侧撑开展臂. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_025.png"
+    },
+    {
+      "id": "shaolin_026",
+      "name": "26. 仆步穿掌",
+      "name_en": "26. Crouch Stance Palm Threading",
+      "description": "少林武术招式 仆步穿掌 — 一腿全蹲，另一腿伸直铺平，掌沿腿内侧穿出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步穿掌 (Crouch Stance Palm Threading) martial arts pose.\n一腿全蹲，另一腿伸直铺平，掌沿腿内侧穿出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_026.png"
+    },
+    {
+      "id": "shaolin_027",
+      "name": "27. 仆步亮掌",
+      "name_en": "27. Crouch Stance Palm Display",
+      "description": "少林武术招式 仆步亮掌 — 仆步，一手在头侧亮掌，另一手按于腿侧",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步亮掌 (Crouch Stance Palm Display) martial arts pose.\n仆步，一手在头侧亮掌，另一手按于腿侧. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_027.png"
+    },
+    {
+      "id": "shaolin_028",
+      "name": "28. 仆步拍脚",
+      "name_en": "28. Crouch Stance Slap Kick",
+      "description": "少林武术招式 仆步拍脚 — 仆步支撑，另一腿伸直抬起，手拍脚面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步拍脚 (Crouch Stance Slap Kick) martial arts pose.\n仆步支撑，另一腿伸直抬起，手拍脚面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_028.png"
+    },
+    {
+      "id": "shaolin_029",
+      "name": "29. 仆步抡拍",
+      "name_en": "29. Crouch Stance Wheel & Slap",
+      "description": "少林武术招式 仆步抡拍 — 仆步，臂轮臂一周后拍击地面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步抡拍 (Crouch Stance Wheel & Slap) martial arts pose.\n仆步，臂轮臂一周后拍击地面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_029.png"
+    },
+    {
+      "id": "shaolin_030",
+      "name": "30. 仆步压腿",
+      "name_en": "30. Crouch Stance Leg Press",
+      "description": "少林武术招式 仆步压腿 — 仆步，上身前倾下压前腿",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步压腿 (Crouch Stance Leg Press) martial arts pose.\n仆步，上身前倾下压前腿. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_030.png"
+    },
+    {
+      "id": "shaolin_031",
+      "name": "31. 仆步穿掌反撩",
+      "name_en": "31. Crouch Palm Thread & Backslash",
+      "description": "少林武术招式 仆步穿掌反撩 — 仆步穿掌后，臂由下向上反撩",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步穿掌反撩 (Crouch Palm Thread & Backslash) martial arts pose.\n仆步穿掌后，臂由下向上反撩. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_031.png"
+    },
+    {
+      "id": "shaolin_032",
+      "name": "32. 仆步劈拳",
+      "name_en": "32. Crouch Stance Chop Punch",
+      "description": "少林武术招式 仆步劈拳 — 仆步，一臂由上向下劈拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步劈拳 (Crouch Stance Chop Punch) martial arts pose.\n仆步，一臂由上向下劈拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_032.png"
+    },
+    {
+      "id": "shaolin_033",
+      "name": "33. 仆步架打",
+      "name_en": "33. Crouch Stance Block & Strike",
+      "description": "少林武术招式 仆步架打 — 仆步，一手上架，另一手向下冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 仆步架打 (Crouch Stance Block & Strike) martial arts pose.\n仆步，一手上架，另一手向下冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_033.png"
+    },
+    {
+      "id": "shaolin_034",
+      "name": "34. 虚步栽拳",
+      "name_en": "34. Empty Stance Plant Punch",
+      "description": "少林武术招式 虚步栽拳 — 后腿半蹲支撑，前腿虚点地，拳向下栽打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步栽拳 (Empty Stance Plant Punch) martial arts pose.\n后腿半蹲支撑，前腿虚点地，拳向下栽打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_034.png"
+    },
+    {
+      "id": "shaolin_035",
+      "name": "35. 虚步架打",
+      "name_en": "35. Empty Stance Block & Strike",
+      "description": "少林武术招式 虚步架打 — 虚步，一手上架，另一手向前冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步架打 (Empty Stance Block & Strike) martial arts pose.\n虚步，一手上架，另一手向前冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_035.png"
+    },
+    {
+      "id": "shaolin_036",
+      "name": "36. 虚步推掌",
+      "name_en": "36. Empty Stance Push Palm",
+      "description": "少林武术招式 虚步推掌 — 虚步，掌向前轻推",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步推掌 (Empty Stance Push Palm) martial arts pose.\n虚步，掌向前轻推. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_036.png"
+    },
+    {
+      "id": "shaolin_037",
+      "name": "37. 虚步亮掌",
+      "name_en": "37. Empty Stance Palm Display",
+      "description": "少林武术招式 虚步亮掌 — 虚步，一手在头侧亮掌，另一手叉腰",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步亮掌 (Empty Stance Palm Display) martial arts pose.\n虚步，一手在头侧亮掌，另一手叉腰. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_037.png"
+    },
+    {
+      "id": "shaolin_038",
+      "name": "38. 虚步勾手",
+      "name_en": "38. Empty Stance Hook Hand",
+      "description": "少林武术招式 虚步勾手 — 虚步，手成勾手向后下方伸出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步勾手 (Empty Stance Hook Hand) martial arts pose.\n虚步，手成勾手向后下方伸出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_038.png"
+    },
+    {
+      "id": "shaolin_039",
+      "name": "39. 虚步栽拳反臂",
+      "name_en": "39. Empty Punch Reverse Arm",
+      "description": "少林武术招式 虚步栽拳反臂 — 虚步栽拳后反臂撩打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步栽拳反臂 (Empty Punch Reverse Arm) martial arts pose.\n虚步栽拳后反臂撩打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_039.png"
+    },
+    {
+      "id": "shaolin_040",
+      "name": "40. 虚步穿心掌",
+      "name_en": "40. Empty Stance Heart-Piercing Palm",
+      "description": "少林武术招式 虚步穿心掌 — 虚步，掌向前直刺如穿心",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步穿心掌 (Empty Stance Heart-Piercing Palm) martial arts pose.\n虚步，掌向前直刺如穿心. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_040.png"
+    },
+    {
+      "id": "shaolin_041",
+      "name": "41. 虚步挑掌",
+      "name_en": "41. Empty Stance Palm Lift",
+      "description": "少林武术招式 虚步挑掌 — 虚步，掌由下向上挑起",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 虚步挑掌 (Empty Stance Palm Lift) martial arts pose.\n虚步，掌由下向上挑起. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_041.png"
+    },
+    {
+      "id": "shaolin_042",
+      "name": "42. 歇步压腿",
+      "name_en": "42. Rest Stance Leg Press",
+      "description": "少林武术招式 歇步压腿 — 两腿交叉全蹲，臀部坐于小腿上",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 歇步压腿 (Rest Stance Leg Press) martial arts pose.\n两腿交叉全蹲，臀部坐于小腿上. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_042.png"
+    },
+    {
+      "id": "shaolin_043",
+      "name": "43. 歇步冲拳",
+      "name_en": "43. Rest Stance Punch",
+      "description": "少林武术招式 歇步冲拳 — 歇步，一臂向前冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 歇步冲拳 (Rest Stance Punch) martial arts pose.\n歇步，一臂向前冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_043.png"
+    },
+    {
+      "id": "shaolin_044",
+      "name": "44. 歇步盖打",
+      "name_en": "44. Rest Stance Cover & Strike",
+      "description": "少林武术招式 歇步盖打 — 歇步，一手由上向下盖打，另一手冲拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 歇步盖打 (Rest Stance Cover & Strike) martial arts pose.\n歇步，一手由上向下盖打，另一手冲拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_044.png"
+    },
+    {
+      "id": "shaolin_045",
+      "name": "45. 歇步抡砸",
+      "name_en": "45. Rest Stance Wheel Smash",
+      "description": "少林武术招式 歇步抡砸 — 歇步，臂轮一周后向下砸拳",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 歇步抡砸 (Rest Stance Wheel Smash) martial arts pose.\n歇步，臂轮一周后向下砸拳. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_045.png"
+    },
+    {
+      "id": "shaolin_046",
+      "name": "46. 歇步挑拳",
+      "name_en": "46. Rest Stance Hook Punch",
+      "description": "少林武术招式 歇步挑拳 — 歇步，拳由下向上挑起",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 歇步挑拳 (Rest Stance Hook Punch) martial arts pose.\n歇步，拳由下向上挑起. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_046.png"
+    },
+    {
+      "id": "shaolin_047",
+      "name": "47. 腾空飞脚",
+      "name_en": "47. Flying Kick",
+      "description": "少林武术招式 腾空飞脚 — 起跳后，右腿向前踢出，右手拍击右脚面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 腾空飞脚 (Flying Kick) martial arts pose.\n起跳后，右腿向前踢出，右手拍击右脚面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_047.png"
+    },
+    {
+      "id": "shaolin_048",
+      "name": "48. 旋风脚",
+      "name_en": "48. Whirlwind Kick",
+      "description": "少林武术招式 旋风脚 — 起跳后空中转体180度，里合腿击响",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 旋风脚 (Whirlwind Kick) martial arts pose.\n起跳后空中转体180度，里合腿击响. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_048.png"
+    },
+    {
+      "id": "shaolin_049",
+      "name": "49. 腾空摆莲",
+      "name_en": "49. Flying Lotus Kick",
+      "description": "少林武术招式 腾空摆莲 — 起跳后右腿外摆，两手依次拍击脚面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 腾空摆莲 (Flying Lotus Kick) martial arts pose.\n起跳后右腿外摆，两手依次拍击脚面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_049.png"
+    },
+    {
+      "id": "shaolin_050",
+      "name": "50. 腾空蹬踢",
+      "name_en": "50. Flying Push Kick",
+      "description": "少林武术招式 腾空蹬踢 — 起跳后双脚向前蹬踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 腾空蹬踢 (Flying Push Kick) martial arts pose.\n起跳后双脚向前蹬踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_050.png"
+    },
+    {
+      "id": "shaolin_051",
+      "name": "51. 大跃步前穿",
+      "name_en": "51. Long Leap Forward Thread",
+      "description": "少林武术招式 大跃步前穿 — 大跨步跳跃落地成仆步穿掌",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 大跃步前穿 (Long Leap Forward Thread) martial arts pose.\n大跨步跳跃落地成仆步穿掌. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_051.png"
+    },
+    {
+      "id": "shaolin_052",
+      "name": "52. 二起脚",
+      "name_en": "52. Double Jump Kick",
+      "description": "少林武术招式 二起脚 — 左脚起跳，右脚先踢，左脚再踢，右手拍右脚",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 二起脚 (Double Jump Kick) martial arts pose.\n左脚起跳，右脚先踢，左脚再踢，右手拍右脚. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_052.png"
+    },
+    {
+      "id": "shaolin_053",
+      "name": "53. 跺子脚",
+      "name_en": "53. Stamping Kick",
+      "description": "少林武术招式 跺子脚 — 起跳后一脚在空中跺击",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 跺子脚 (Stamping Kick) martial arts pose.\n起跳后一脚在空中跺击. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_053.png"
+    },
+    {
+      "id": "shaolin_054",
+      "name": "54. 旋风脚接跌叉",
+      "name_en": "54. Whirlwind to Split Fall",
+      "description": "少林武术招式 旋风脚接跌叉 — 旋风脚后落地成劈叉",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 旋风脚接跌叉 (Whirlwind to Split Fall) martial arts pose.\n旋风脚后落地成劈叉. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_054.png"
+    },
+    {
+      "id": "shaolin_055",
+      "name": "55. 腾空双飞脚",
+      "name_en": "55. Flying Double Kick",
+      "description": "少林武术招式 腾空双飞脚 — 起跳后双脚同时向前踢出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 腾空双飞脚 (Flying Double Kick) martial arts pose.\n起跳后双脚同时向前踢出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_055.png"
+    },
+    {
+      "id": "shaolin_056",
+      "name": "56. 踩脚",
+      "name_en": "56. Step Kick",
+      "description": "少林武术招式 踩脚 — 一脚支撑，另一脚屈膝抬起前踩",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 踩脚 (Step Kick) martial arts pose.\n一脚支撑，另一脚屈膝抬起前踩. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_056.png"
+    },
+    {
+      "id": "shaolin_057",
+      "name": "57. 燕式平衡",
+      "name_en": "57. Swallow Balance",
+      "description": "少林武术招式 燕式平衡 — 一腿后抬水平，上身前倾，两臂侧平举如燕展翅",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 燕式平衡 (Swallow Balance) martial arts pose.\n一腿后抬水平，上身前倾，两臂侧平举如燕展翅. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_057.png"
+    },
+    {
+      "id": "shaolin_058",
+      "name": "58. 提膝平衡",
+      "name_en": "58. Knee Raise Balance",
+      "description": "少林武术招式 提膝平衡 — 一腿直立支撑，另一腿屈膝提起，掌前推",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 提膝平衡 (Knee Raise Balance) martial arts pose.\n一腿直立支撑，另一腿屈膝提起，掌前推. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_058.png"
+    },
+    {
+      "id": "shaolin_059",
+      "name": "59. 望月平衡",
+      "name_en": "59. Moon-Gazing Balance",
+      "description": "少林武术招式 望月平衡 — 一腿后抬，上身侧倾转头后视如望月",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 望月平衡 (Moon-Gazing Balance) martial arts pose.\n一腿后抬，上身侧倾转头后视如望月. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_059.png"
+    },
+    {
+      "id": "shaolin_060",
+      "name": "60. 扣腿平衡",
+      "name_en": "60. Hooked Leg Balance",
+      "description": "少林武术招式 扣腿平衡 — 一腿直立，另一脚扣于支撑腿腘窝处",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 扣腿平衡 (Hooked Leg Balance) martial arts pose.\n一腿直立，另一脚扣于支撑腿腘窝处. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_060.png"
+    },
+    {
+      "id": "shaolin_061",
+      "name": "61. 盘腿平衡",
+      "name_en": "61. Cross-Leg Balance",
+      "description": "少林武术招式 盘腿平衡 — 一腿屈膝盘腿于支撑腿大腿上",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 盘腿平衡 (Cross-Leg Balance) martial arts pose.\n一腿屈膝盘腿于支撑腿大腿上. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_061.png"
+    },
+    {
+      "id": "shaolin_062",
+      "name": "62. 探海平衡",
+      "name_en": "62. Sea-Reaching Balance",
+      "description": "少林武术招式 探海平衡 — 燕式平衡基础上上身前俯如探海",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 探海平衡 (Sea-Reaching Balance) martial arts pose.\n燕式平衡基础上上身前俯如探海. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_062.png"
+    },
+    {
+      "id": "shaolin_063",
+      "name": "63. 提膝亮掌",
+      "name_en": "63. Knee Raise Palm Display",
+      "description": "少林武术招式 提膝亮掌 — 提膝平衡同时一手亮掌于头侧",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 提膝亮掌 (Knee Raise Palm Display) martial arts pose.\n提膝平衡同时一手亮掌于头侧. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_063.png"
+    },
+    {
+      "id": "shaolin_064",
+      "name": "64. 跪步抱掌",
+      "name_en": "64. Kneeling Palm Hold",
+      "description": "少林武术招式 跪步抱掌 — 单膝跪地，双掌抱于胸前",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 跪步抱掌 (Kneeling Palm Hold) martial arts pose.\n单膝跪地，双掌抱于胸前. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_064.png"
+    },
+    {
+      "id": "shaolin_065",
+      "name": "65. 冲拳",
+      "name_en": "65. Straight Punch",
+      "description": "少林武术招式 冲拳 — 直臂向前冲拳，力达拳面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 冲拳 (Straight Punch) martial arts pose.\n直臂向前冲拳，力达拳面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_065.png"
+    },
+    {
+      "id": "shaolin_066",
+      "name": "66. 贯拳",
+      "name_en": "66. Swing Punch",
+      "description": "少林武术招式 贯拳 — 拳由侧向前弧形摆动击打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 贯拳 (Swing Punch) martial arts pose.\n拳由侧向前弧形摆动击打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_066.png"
+    },
+    {
+      "id": "shaolin_067",
+      "name": "67. 抄拳",
+      "name_en": "67. Uppercut",
+      "description": "少林武术招式 抄拳 — 拳由下向上勾打，如抄物",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 抄拳 (Uppercut) martial arts pose.\n拳由下向上勾打，如抄物. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_067.png"
+    },
+    {
+      "id": "shaolin_068",
+      "name": "68. 劈拳",
+      "name_en": "68. Chopping Punch",
+      "description": "少林武术招式 劈拳 — 拳由上向下劈打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 劈拳 (Chopping Punch) martial arts pose.\n拳由上向下劈打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_068.png"
+    },
+    {
+      "id": "shaolin_069",
+      "name": "69. 栽拳",
+      "name_en": "69. Plant Punch",
+      "description": "少林武术招式 栽拳 — 拳由上向下栽打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 栽拳 (Plant Punch) martial arts pose.\n拳由上向下栽打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_069.png"
+    },
+    {
+      "id": "shaolin_070",
+      "name": "70. 砸拳",
+      "name_en": "70. Smash Punch",
+      "description": "少林武术招式 砸拳 — 拳由上向下猛砸",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 砸拳 (Smash Punch) martial arts pose.\n拳由上向下猛砸. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_070.png"
+    },
+    {
+      "id": "shaolin_071",
+      "name": "71. 推掌",
+      "name_en": "71. Push Palm",
+      "description": "少林武术招式 推掌 — 掌根向前推出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 推掌 (Push Palm) martial arts pose.\n掌根向前推出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_071.png"
+    },
+    {
+      "id": "shaolin_072",
+      "name": "72. 挑掌",
+      "name_en": "72. Lift Palm",
+      "description": "少林武术招式 挑掌 — 掌由下向上挑起",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 挑掌 (Lift Palm) martial arts pose.\n掌由下向上挑起. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_072.png"
+    },
+    {
+      "id": "shaolin_073",
+      "name": "73. 劈掌",
+      "name_en": "73. Chopping Palm",
+      "description": "少林武术招式 劈掌 — 掌由上向下劈打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 劈掌 (Chopping Palm) martial arts pose.\n掌由上向下劈打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_073.png"
+    },
+    {
+      "id": "shaolin_074",
+      "name": "74. 按掌",
+      "name_en": "74. Press Palm",
+      "description": "少林武术招式 按掌 — 掌向下按",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 按掌 (Press Palm) martial arts pose.\n掌向下按. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_074.png"
+    },
+    {
+      "id": "shaolin_075",
+      "name": "75. 穿掌",
+      "name_en": "75. Threading Palm",
+      "description": "少林武术招式 穿掌 — 掌沿直线向前穿出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 穿掌 (Threading Palm) martial arts pose.\n掌沿直线向前穿出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_075.png"
+    },
+    {
+      "id": "shaolin_076",
+      "name": "76. 插掌",
+      "name_en": "76. Thrust Palm",
+      "description": "少林武术招式 插掌 — 指尖向前直插",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 插掌 (Thrust Palm) martial arts pose.\n指尖向前直插. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_076.png"
+    },
+    {
+      "id": "shaolin_077",
+      "name": "77. 撩掌",
+      "name_en": "77. Backslash Palm",
+      "description": "少林武术招式 撩掌 — 掌由下向前上方撩打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 撩掌 (Backslash Palm) martial arts pose.\n掌由下向前上方撩打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_077.png"
+    },
+    {
+      "id": "shaolin_078",
+      "name": "78. 掼掌",
+      "name_en": "78. Swinging Palm",
+      "description": "少林武术招式 掼掌 — 掌由侧向前弧形掼打",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 掼掌 (Swinging Palm) martial arts pose.\n掌由侧向前弧形掼打. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_078.png"
+    },
+    {
+      "id": "shaolin_079",
+      "name": "79. 拍掌",
+      "name_en": "79. Slap Palm",
+      "description": "少林武术招式 拍掌 — 掌向前拍击",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 拍掌 (Slap Palm) martial arts pose.\n掌向前拍击. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_079.png"
+    },
+    {
+      "id": "shaolin_080",
+      "name": "80. 勾手",
+      "name_en": "80. Hook Hand",
+      "description": "少林武术招式 勾手 — 五指捏拢成勾，屈腕",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 勾手 (Hook Hand) martial arts pose.\n五指捏拢成勾，屈腕. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_080.png"
+    },
+    {
+      "id": "shaolin_081",
+      "name": "81. 刁手",
+      "name_en": "81. Hooking Hand",
+      "description": "少林武术招式 刁手 — 手成勾手，腕部内扣",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 刁手 (Hooking Hand) martial arts pose.\n手成勾手，腕部内扣. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_081.png"
+    },
+    {
+      "id": "shaolin_082",
+      "name": "82. 缠手",
+      "name_en": "82. Wrapping Hand",
+      "description": "少林武术招式 缠手 — 臂弧形缠绕划圈",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 缠手 (Wrapping Hand) martial arts pose.\n臂弧形缠绕划圈. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_082.png"
+    },
+    {
+      "id": "shaolin_083",
+      "name": "83. 云手",
+      "name_en": "83. Cloud Hand",
+      "description": "少林武术招式 云手 — 双臂在身前交替划云圈",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 云手 (Cloud Hand) martial arts pose.\n双臂在身前交替划云圈. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_083.png"
+    },
+    {
+      "id": "shaolin_084",
+      "name": "84. 扇掌",
+      "name_en": "84. Fan Palm",
+      "description": "少林武术招式 扇掌 — 掌如扇面打开推出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 扇掌 (Fan Palm) martial arts pose.\n掌如扇面打开推出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_084.png"
+    },
+    {
+      "id": "shaolin_085",
+      "name": "85. 正踢腿",
+      "name_en": "85. Front Kick",
+      "description": "少林武术招式 正踢腿 — 支撑腿直立，另一腿脚尖勾起向前额踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 正踢腿 (Front Kick) martial arts pose.\n支撑腿直立，另一腿脚尖勾起向前额踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_085.png"
+    },
+    {
+      "id": "shaolin_086",
+      "name": "86. 侧踢腿",
+      "name_en": "86. Side Kick",
+      "description": "少林武术招式 侧踢腿 — 一腿支撑，另一腿脚尖勾起向体侧踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 侧踢腿 (Side Kick) martial arts pose.\n一腿支撑，另一腿脚尖勾起向体侧踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_086.png"
+    },
+    {
+      "id": "shaolin_087",
+      "name": "87. 里合腿",
+      "name_en": "87. Inside Crescent Kick",
+      "description": "少林武术招式 里合腿 — 腿由外向内弧形摆踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 里合腿 (Inside Crescent Kick) martial arts pose.\n腿由外向内弧形摆踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_087.png"
+    },
+    {
+      "id": "shaolin_088",
+      "name": "88. 外摆腿",
+      "name_en": "88. Outside Crescent Kick",
+      "description": "少林武术招式 外摆腿 — 腿由内向外弧形摆踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 外摆腿 (Outside Crescent Kick) martial arts pose.\n腿由内向外弧形摆踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_088.png"
+    },
+    {
+      "id": "shaolin_089",
+      "name": "89. 弹腿",
+      "name_en": "89. Snap Kick",
+      "description": "少林武术招式 弹腿 — 大腿抬起，小腿快速向前弹出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 弹腿 (Snap Kick) martial arts pose.\n大腿抬起，小腿快速向前弹出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_089.png"
+    },
+    {
+      "id": "shaolin_090",
+      "name": "90. 蹬腿",
+      "name_en": "90. Push Kick",
+      "description": "少林武术招式 蹬腿 — 腿屈膝抬起，然后脚跟向前蹬出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 蹬腿 (Push Kick) martial arts pose.\n腿屈膝抬起，然后脚跟向前蹬出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_090.png"
+    },
+    {
+      "id": "shaolin_091",
+      "name": "91. 踩腿",
+      "name_en": "91. Stomp Kick",
+      "description": "少林武术招式 踩腿 — 腿屈膝抬起，脚底向下踩击",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 踩腿 (Stomp Kick) martial arts pose.\n腿屈膝抬起，脚底向下踩击. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_091.png"
+    },
+    {
+      "id": "shaolin_092",
+      "name": "92. 铲腿",
+      "name_en": "92. Side Scoop Kick",
+      "description": "少林武术招式 铲腿 — 腿由内向外弧形铲出",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 铲腿 (Side Scoop Kick) martial arts pose.\n腿由内向外弧形铲出. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_092.png"
+    },
+    {
+      "id": "shaolin_093",
+      "name": "93. 勾踢腿",
+      "name_en": "93. Hook Kick",
+      "description": "少林武术招式 勾踢腿 — 脚勾起由外向内勾踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 勾踢腿 (Hook Kick) martial arts pose.\n脚勾起由外向内勾踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_093.png"
+    },
+    {
+      "id": "shaolin_094",
+      "name": "94. 撩腿",
+      "name_en": "94. Backslash Kick",
+      "description": "少林武术招式 撩腿 — 腿由下向前上方撩踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 撩腿 (Backslash Kick) martial arts pose.\n腿由下向前上方撩踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_094.png"
+    },
+    {
+      "id": "shaolin_095",
+      "name": "95. 拍脚",
+      "name_en": "95. Slap Kick",
+      "description": "少林武术招式 拍脚 — 一腿伸直抬起，手拍脚面",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 拍脚 (Slap Kick) martial arts pose.\n一腿伸直抬起，手拍脚面. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_095.png"
+    },
+    {
+      "id": "shaolin_096",
+      "name": "96. 斜踢腿",
+      "name_en": "96. Diagonal Kick",
+      "description": "少林武术招式 斜踢腿 — 腿向斜上方踢击",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 斜踢腿 (Diagonal Kick) martial arts pose.\n腿向斜上方踢击. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_096.png"
+    },
+    {
+      "id": "shaolin_097",
+      "name": "97. 后撩腿",
+      "name_en": "97. Back Kick",
+      "description": "少林武术招式 后撩腿 — 腿向后上方撩踢",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 后撩腿 (Back Kick) martial arts pose.\n腿向后上方撩踢. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_097.png"
+    },
+    {
+      "id": "shaolin_098",
+      "name": "98. 前扫腿",
+      "name_en": "98. Front Sweep",
+      "description": "少林武术招式 前扫腿 — 仆步，支撑腿为轴，另一腿向前扫一周",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 前扫腿 (Front Sweep) martial arts pose.\n仆步，支撑腿为轴，另一腿向前扫一周. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_098.png"
+    },
+    {
+      "id": "shaolin_099",
+      "name": "99. 后扫腿",
+      "name_en": "99. Back Sweep",
+      "description": "少林武术招式 后扫腿 — 仆步，支撑腿为轴，另一腿向后扫一周",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 后扫腿 (Back Sweep) martial arts pose.\n仆步，支撑腿为轴，另一腿向后扫一周. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_099.png"
+    },
+    {
+      "id": "shaolin_100",
+      "name": "100. 跌叉",
+      "name_en": "100. Split Fall",
+      "description": "少林武术招式 跌叉 — 两腿前后分开落地成竖叉",
+      "category": "少林招式",
+      "type": "shaolin",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "kungfu"
+      ],
+      "prompt": "A Shaolin monk in traditional grey robes performing the 跌叉 (Split Fall) martial arts pose.\n两腿前后分开落地成竖叉. \nFull body shot, correct martial arts posture, balanced stance, detailed hands and feet position.\nBackground: simple neutral temple courtyard.\nStyle: realistic martial arts photography, clean lighting.\n{MAIN_SUBJECT}, {COLOR_PALETTE}, {SCENE_DETAILS}",
+      "thumbnail": "shaolin_100.png"
     }
   ]
 }
