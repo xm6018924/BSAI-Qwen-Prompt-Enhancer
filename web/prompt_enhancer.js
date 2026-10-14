@@ -38,7 +38,7 @@ const BACKEND_WIDGET_GROUPS = {
     "hf_model_name", "hf_task", "hf_device", "hf_keep_loaded",
   ]),
   "API (OpenAI兼容)": COMMON_WIDGETS.concat(["api_base", "api_key", "api_model_name", "timeout"]),
-  "BSAI Strata (Qwen3.8-Flash-Next @8080)": COMMON_WIDGETS.concat(["timeout"]),
+  "BSAI Strata (Qwen3.8-Flash-Next @8080)": COMMON_WIDGETS.concat(["strata_quant", "timeout"]),
 };
 
 function isMergedNode(node) {
