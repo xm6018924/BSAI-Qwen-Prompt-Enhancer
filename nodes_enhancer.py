@@ -1273,6 +1273,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
                 flash_attn="auto", threads=0,
                 api_base="", api_key="", api_model_name="", timeout=120,
+                strata_quant="Auto (自动适配)",
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
                 preview_only=False,
                 clip=None,

@@ -88,6 +88,7 @@
   .t-poster { background: rgba(251,146,60,0.18); color: #fdba74; }
   .t-style { background: rgba(20,184,166,0.18); color: #5eead4; }
   .t-pose { background: rgba(99,102,241,0.18); color: #a5b4fc; }
+  .t-shaolin { background: rgba(220,38,38,0.20); color: #fca5a5; }
   .t-inspiration { background: rgba(251,113,133,0.18); color: #fda4af; }
   .t-typography { background: rgba(250,204,21,0.18); color: #fde047; }
   .t-user { background: rgba(34,211,238,0.18); color: #67e8f9; }
@@ -204,6 +205,7 @@
   <button data-cat="poster">电影海报</button>
   <button data-cat="style">艺术风格</button>
   <button data-cat="pose">人物姿势</button>
+  <button data-cat="shaolin">少林招式</button>
   <button data-cat="inspiration">灵感精选</button>
   <button data-cat="typography">排版设计</button>
   <button data-cat="card">节日贺卡</button>
@@ -228,11 +230,11 @@ let currentCat = "all";  // 当前激活分类（刷新按钮重渲染用）
 const WALL_BASE = "/extensions/BSAI-Qwen-Prompt-Enhancer";
 // v1.06.0: 缩略图 URL 加版本参数(cache-buster)，强制浏览器绕过旧图缓存加载新缩略图；
 // 以后每次替换缩略图/logo 时把 WALL_VER 改成新值即可（如 20260924-v106）。
-const WALL_VER = "20261006-v109";
+const WALL_VER = "20261014-v110";
 
 // v0.10: 顶部说明/统计数字从模板数据自动统计（新增模板后无需手动改数量）
 function updateStats(list) {
-  const cnt = { official: 0, "official-doc": 0, community: 0, design: 0, cinema: 0, character: 0, poster: 0, style: 0, pose: 0, inspiration: 0, typography: 0, card: 0, user: 0 };
+  const cnt = { official: 0, "official-doc": 0, community: 0, design: 0, cinema: 0, character: 0, poster: 0, style: 0, pose: 0, shaolin: 0, inspiration: 0, typography: 0, card: 0, user: 0 };
   list.forEach(t => { if (t.type in cnt) cnt[t.type]++; });
   const total = list.length;
   const cats = Object.keys(cnt).filter(k => cnt[k] > 0).length;
@@ -271,7 +273,7 @@ function ratioFor(id) {
 let TEMPLATE_TEXTS = {};
 
 function _loadStaticTemplates() {
-  return fetch("/extensions/BSAI_Qwen_Prompt_Enhancer/templates.json")
+  return fetch(WALL_BASE + "/templates.json")
     .then(r => r.json())
     .then(data => {
       TEMPLATES = (data.templates || []).map(t => ({
@@ -304,7 +306,7 @@ fetch("/api/bsai/templates")
   .catch(err => {
     console.warn("[BSAI.QwenPromptEnhancer] 动态模板 API 不可用，回退静态文件:", err);
     _loadStaticTemplates();
-    fetch("/extensions/BSAI_Qwen_Prompt_Enhancer/template_texts.json")
+    fetch(WALL_BASE + "/template_texts.json")
       .then(r => r.json())
       .then(data => {
         (data.templates || []).forEach(t => { TEMPLATE_TEXTS[t.id] = t.text || ""; });
@@ -693,7 +695,7 @@ function render(cat) {
       </div>
       <div class="info">
         <span class="type-tag t-${t.type}">${
-          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产",character:"角色卡",poster:"电影海报",style:"艺术风格",pose:"人物姿势",inspiration:"灵感精选",typography:"排版设计",card:"节日贺卡",user:"用户模板"}[t.type] || t.type
+          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产",character:"角色卡",poster:"电影海报",style:"艺术风格",pose:"人物姿势",shaolin:"少林招式",inspiration:"灵感精选",typography:"排版设计",card:"节日贺卡",user:"用户模板"}[t.type] || t.type
         }</span>
         <h3>${t.name}${t.ratio!=="—" ? ` <span style="color:#64748b;font-weight:400;font-size:12px">· ${t.ratio}</span>` : ""}</h3>
         <div class="desc">${t.desc}</div>

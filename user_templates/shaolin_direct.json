@@ -1,0 +1,1604 @@
+{
+  "templates": [
+    {
+      "id": "shaolin_direct_001",
+      "name": "少林直出 · 1. 马步冲拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步冲拳 — 双腿半蹲成马步，一手收于腰间，另一手向前冲拳，力达拳面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_001.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Both knees bent into a deep horse stance, one fist chambered at the waist, the other fist punched straight forward, force concentrated on the striking knuckles. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_002",
+      "name": "少林直出 · 2. 马步架打",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步架打 — 马步站立，一手屈肘上架于头顶，另一手向前冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_002.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Block & Strike martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, one forearm raised above the head with the elbow bent as a guard, the other fist punched forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_003",
+      "name": "少林直出 · 3. 马步双劈拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步双劈拳 — 马步，双臂由上向下同时劈打，力达拳轮",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_003.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Double Chop martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, both arms chopping downward simultaneously from above, force landing on the heel of the fist. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_004",
+      "name": "少林直出 · 4. 马步勾拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步勾拳 — 马步，由下向上勾拳击打，拳心向内",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_004.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Hook Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, a hooking punch driven upward from below, palm of the fist turned inward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_005",
+      "name": "少林直出 · 5. 马步贯耳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步贯耳 — 马步，双臂弯曲由两侧向前弧形摆动，拳面相对击打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_005.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Ear Strike martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, both arms bent and swung forward in an arc from the sides, the two fists striking together face to face. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_006",
+      "name": "少林直出 · 6. 马步推掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步推掌 — 马步，双掌向前平推，掌心向前，力达掌根",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_006.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Push Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, both palms pushed forward level, palms facing forward, force driven through the heel of the palm. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_007",
+      "name": "少林直出 · 7. 马步双亮掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步双亮掌 — 马步，双掌向两侧上方弧形托起，掌心斜向上",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_007.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Double Palm Raise martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, both palms lifted in an arc upward to either side, palms angled up. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_008",
+      "name": "少林直出 · 8. 马步架掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步架掌 — 马步，一手上架掌，另一手收于腰间",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_008.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Palm Block martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, one palm raised overhead as a block, the other hand chambered at the waist. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_009",
+      "name": "少林直出 · 9. 马步砸拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步砸拳 — 马步，一臂由上向下砸拳，力达拳背",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_009.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Smash Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, one arm smashed downward from above, force driven through the back of the fist. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_010",
+      "name": "少林直出 · 10. 马步分掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步分掌 — 马步，双掌由胸前向两侧分开推出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_010.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Horse Stance Split Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Horse stance, both palms split from the chest and pushed outward to either side. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_011",
+      "name": "少林直出 · 11. 弓步冲拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步冲拳 — 前腿屈膝半蹲，后腿蹬直成弓步，一手向前冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_011.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Front knee bent in a half squat, rear leg extended straight in a bow stance, one fist punched forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_012",
+      "name": "少林直出 · 12. 弓步推掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步推掌 — 弓步，掌根向前推出，指尖向上",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_012.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Push Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, the heel of the palm thrust forward with fingertips pointing up. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_013",
+      "name": "少林直出 · 13. 弓步劈拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步劈拳 — 弓步，臂由上向下劈打，力达拳轮",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_013.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Chop Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, the arm chopping down from above, force landing on the heel of the fist. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_014",
+      "name": "少林直出 · 14. 弓步架打",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步架打 — 弓步，一手屈肘上架，另一手向前冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_014.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Block & Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, one forearm raised overhead as a guard, the other fist punched forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_015",
+      "name": "少林直出 · 15. 弓步双冲拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步双冲拳 — 弓步，双拳同时向前冲击",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_015.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Double Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, both fists driven forward at the same time. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_016",
+      "name": "少林直出 · 16. 弓步顶肘",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步顶肘 — 弓步，屈肘由后向前横顶，力达肘尖",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_016.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Elbow Strike martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, elbow bent and driven horizontally forward from behind, force concentrated at the elbow point. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_017",
+      "name": "少林直出 · 17. 弓步插掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步插掌 — 弓步，直臂向前插掌，指尖向前",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_017.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Thrust Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, a straight arm thrusting the palm forward, fingertips leading. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_018",
+      "name": "少林直出 · 18. 弓步搂手冲拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步搂手冲拳 — 弓步，一手由外向内搂手，另一手冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_018.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Hook & Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, one hand hooking inward from outside while the other fist punches forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_019",
+      "name": "少林直出 · 19. 弓步砸拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步砸拳 — 弓步，一臂由上向下砸拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_019.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Smash Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, one arm smashed downward from above. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_020",
+      "name": "少林直出 · 20. 弓步勾踢",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步勾踢 — 前腿屈膝支撑，另一腿勾脚向前踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_020.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Hook Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. Front leg bent to support the weight, the other leg hooking forward with the toe pulled. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_021",
+      "name": "少林直出 · 21. 弓步单鞭",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步单鞭 — 弓步，一臂立掌前推，另一臂斜下方伸掌",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_021.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Single Whip martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, one arm pushing a vertical palm forward, the other arm extended diagonally down with an open palm. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_022",
+      "name": "少林直出 · 22. 弓步推窗",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步推窗 — 弓步，双掌向前推窗式推出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_022.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Window Push martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, both palms thrust forward in a pushing-a-window motion. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_023",
+      "name": "少林直出 · 23. 弓步压肘",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步压肘 — 弓步，屈肘向下压击",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_023.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Elbow Press martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, elbow bent and pressed downward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_024",
+      "name": "少林直出 · 24. 弓步栽拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步栽拳 — 弓步，拳由上向下栽打，力达拳面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_024.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Plant Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, the fist driving down from above, force concentrated on the striking knuckles. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_025",
+      "name": "少林直出 · 25. 弓步撑掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步撑掌 — 弓步，双掌向两侧撑开展臂",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_025.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Bow Stance Support Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Bow stance, both palms pressing outward to either side with arms spread. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_026",
+      "name": "少林直出 · 26. 仆步穿掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步穿掌 — 一腿全蹲，另一腿伸直铺平，掌沿腿内侧穿出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_026.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Stance Palm Threading martial arts pose, a signature move of the Shaolin Hundred Form routine. One leg fully crouched, the other extended straight and flattened, the palm threading out along the inner side of the leg. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_027",
+      "name": "少林直出 · 27. 仆步亮掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步亮掌 — 仆步，一手在头侧亮掌，另一手按于腿侧",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_027.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Stance Palm Display martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouch stance, one palm displayed beside the head, the other hand resting on the side of the leg. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_028",
+      "name": "少林直出 · 28. 仆步拍脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步拍脚 — 仆步支撑，另一腿伸直抬起，手拍脚面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_028.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Stance Slap Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouched leg supporting the weight, the other leg extended and lifted, the hand slapping the top of the foot. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_029",
+      "name": "少林直出 · 29. 仆步抡拍",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步抡拍 — 仆步，臂轮臂一周后拍击地面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_029.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Stance Wheel & Slap martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouch stance, the arm circling a full rotation then slapping down toward the ground. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_030",
+      "name": "少林直出 · 30. 仆步压腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步压腿 — 仆步，上身前倾下压前腿",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_030.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Stance Leg Press martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouch stance, the torso leaning forward and pressing down onto the extended front leg. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_031",
+      "name": "少林直出 · 31. 仆步穿掌反撩",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步穿掌反撩 — 仆步穿掌后，臂由下向上反撩",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_031.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Palm Thread & Backslash martial arts pose, a signature move of the Shaolin Hundred Form routine. After threading the palm in crouch stance, the arm sweeping backslash upward from below. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_032",
+      "name": "少林直出 · 32. 仆步劈拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步劈拳 — 仆步，一臂由上向下劈拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_032.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Stance Chop Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouch stance, one arm chopping the fist down from above. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_033",
+      "name": "少林直出 · 33. 仆步架打",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步架打 — 仆步，一手上架，另一手向下冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_033.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Crouch Stance Block & Strike martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouch stance, one forearm raised as a guard, the other fist punched downward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_034",
+      "name": "少林直出 · 34. 虚步栽拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步栽拳 — 后腿半蹲支撑，前腿虚点地，拳向下栽打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_034.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Stance Plant Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Rear leg bent in a half squat for support, front leg resting lightly on the toes, the fist driving down. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_035",
+      "name": "少林直出 · 35. 虚步架打",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步架打 — 虚步，一手上架，另一手向前冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_035.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Stance Block & Strike martial arts pose, a signature move of the Shaolin Hundred Form routine. Empty stance, one forearm raised as a guard, the other fist punched forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_036",
+      "name": "少林直出 · 36. 虚步推掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步推掌 — 虚步，掌向前轻推",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_036.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Stance Push Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Empty stance, the palm pushed gently forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_037",
+      "name": "少林直出 · 37. 虚步亮掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步亮掌 — 虚步，一手在头侧亮掌，另一手叉腰",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_037.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Stance Palm Display martial arts pose, a signature move of the Shaolin Hundred Form routine. Empty stance, one palm displayed beside the head, the other hand resting on the hip. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_038",
+      "name": "少林直出 · 38. 虚步勾手",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步勾手 — 虚步，手成勾手向后下方伸出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_038.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Stance Hook Hand martial arts pose, a signature move of the Shaolin Hundred Form routine. Empty stance, the hand formed into a hook and extended down and back. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_039",
+      "name": "少林直出 · 39. 虚步栽拳反臂",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步栽拳反臂 — 虚步栽拳后反臂撩打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_039.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Punch Reverse Arm martial arts pose, a signature move of the Shaolin Hundred Form routine. After the downward plant punch in empty stance, the arm sweeping backslash upward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_040",
+      "name": "少林直出 · 40. 虚步穿心掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步穿心掌 — 虚步，掌向前直刺如穿心",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_040.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Stance Heart-Piercing Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Empty stance, the palm stabbed straight forward like a thrust through the heart. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_041",
+      "name": "少林直出 · 41. 虚步挑掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步挑掌 — 虚步，掌由下向上挑起",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_041.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Empty Stance Palm Lift martial arts pose, a signature move of the Shaolin Hundred Form routine. Empty stance, the palm lifted upward from below. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_042",
+      "name": "少林直出 · 42. 歇步压腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步压腿 — 两腿交叉全蹲，臀部坐于小腿上",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_042.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Rest Stance Leg Press martial arts pose, a signature move of the Shaolin Hundred Form routine. Both legs crossed in a full squat, the hips resting on the heels. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_043",
+      "name": "少林直出 · 43. 歇步冲拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步冲拳 — 歇步，一臂向前冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_043.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Rest Stance Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Rest stance, one arm punching the fist forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_044",
+      "name": "少林直出 · 44. 歇步盖打",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步盖打 — 歇步，一手由上向下盖打，另一手冲拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_044.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Rest Stance Cover & Strike martial arts pose, a signature move of the Shaolin Hundred Form routine. Rest stance, one hand covering downward while the other fist punches forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_045",
+      "name": "少林直出 · 45. 歇步抡砸",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步抡砸 — 歇步，臂轮一周后向下砸拳",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_045.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Rest Stance Wheel Smash martial arts pose, a signature move of the Shaolin Hundred Form routine. Rest stance, the arm circling a full rotation then smashing the fist downward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_046",
+      "name": "少林直出 · 46. 歇步挑拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步挑拳 — 歇步，拳由下向上挑起",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_046.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Rest Stance Hook Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. Rest stance, the fist lifted upward from below. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_047",
+      "name": "少林直出 · 47. 腾空飞脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空飞脚 — 起跳后，右腿向前踢出，右手拍击右脚面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_047.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Flying Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. After the jump, the right leg kicks forward while the right hand slaps the top of the right foot. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_048",
+      "name": "少林直出 · 48. 旋风脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 旋风脚 — 起跳后空中转体180度，里合腿击响",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_048.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Whirlwind Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. After the jump, the body spins 180 degrees in the air, the inside crescent kick striking. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_049",
+      "name": "少林直出 · 49. 腾空摆莲",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空摆莲 — 起跳后右腿外摆，两手依次拍击脚面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_049.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Flying Lotus Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. After the jump, the right leg sweeps outward, both hands slapping the top of the foot in turn. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_050",
+      "name": "少林直出 · 50. 腾空蹬踢",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空蹬踢 — 起跳后双脚向前蹬踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_050.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Flying Push Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. After the jump, both feet kick forward and push away. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_051",
+      "name": "少林直出 · 51. 大跃步前穿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 大跃步前穿 — 大跨步跳跃落地成仆步穿掌",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_051.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Long Leap Forward Thread martial arts pose, a signature move of the Shaolin Hundred Form routine. A long striding leap landing into a crouch stance with a threading palm. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_052",
+      "name": "少林直出 · 52. 二起脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 二起脚 — 左脚起跳，右脚先踢，左脚再踢，右手拍右脚",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_052.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Double Jump Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. Jumping off the left foot, kicking first with the right foot then the left, the right hand slapping the right foot. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_053",
+      "name": "少林直出 · 53. 跺子脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 跺子脚 — 起跳后一脚在空中跺击",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_053.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Stamping Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. After the jump, one foot stamping down forcefully in mid-air. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_054",
+      "name": "少林直出 · 54. 旋风脚接跌叉",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 旋风脚接跌叉 — 旋风脚后落地成劈叉",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_054.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Whirlwind to Split Fall martial arts pose, a signature move of the Shaolin Hundred Form routine. After the whirlwind kick, landing into a full front split. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_055",
+      "name": "少林直出 · 55. 腾空双飞脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空双飞脚 — 起跳后双脚同时向前踢出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_055.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Flying Double Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. After the jump, both feet kicking forward at the same time. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_056",
+      "name": "少林直出 · 56. 踩脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 踩脚 — 一脚支撑，另一脚屈膝抬起前踩",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_056.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Step Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. One foot supporting, the other knee lifted and stepping forward to stomp. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_057",
+      "name": "少林直出 · 57. 燕式平衡",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 燕式平衡 — 一腿后抬水平，上身前倾，两臂侧平举如燕展翅",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_057.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Swallow Balance martial arts pose, a signature move of the Shaolin Hundred Form routine. One leg raised horizontally behind, the torso leaning forward, both arms extended sideways like a swallow spreading its wings. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_058",
+      "name": "少林直出 · 58. 提膝平衡",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 提膝平衡 — 一腿直立支撑，另一腿屈膝提起，掌前推",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_058.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Knee Raise Balance martial arts pose, a signature move of the Shaolin Hundred Form routine. One leg standing straight in support, the other knee raised, the palm pushing forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_059",
+      "name": "少林直出 · 59. 望月平衡",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 望月平衡 — 一腿后抬，上身侧倾转头后视如望月",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_059.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Moon-Gazing Balance martial arts pose, a signature move of the Shaolin Hundred Form routine. One leg raised behind, the torso tilting sideways and the head turned back to gaze, like watching the moon. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_060",
+      "name": "少林直出 · 60. 扣腿平衡",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 扣腿平衡 — 一腿直立，另一脚扣于支撑腿腘窝处",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_060.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Hooked Leg Balance martial arts pose, a signature move of the Shaolin Hundred Form routine. One leg standing straight, the other foot hooked behind the knee of the supporting leg. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_061",
+      "name": "少林直出 · 61. 盘腿平衡",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 盘腿平衡 — 一腿屈膝盘腿于支撑腿大腿上",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_061.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Cross-Leg Balance martial arts pose, a signature move of the Shaolin Hundred Form routine. One knee bent and the leg crossed up onto the thigh of the supporting leg. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_062",
+      "name": "少林直出 · 62. 探海平衡",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 探海平衡 — 燕式平衡基础上上身前俯如探海",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_062.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Sea-Reaching Balance martial arts pose, a signature move of the Shaolin Hundred Form routine. Based on the swallow balance, the torso bowing forward as if reaching into the sea. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_063",
+      "name": "少林直出 · 63. 提膝亮掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 提膝亮掌 — 提膝平衡同时一手亮掌于头侧",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_063.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Knee Raise Palm Display martial arts pose, a signature move of the Shaolin Hundred Form routine. During the knee-raise balance, one palm displayed beside the head. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_064",
+      "name": "少林直出 · 64. 跪步抱掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 跪步抱掌 — 单膝跪地，双掌抱于胸前",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_064.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Kneeling Palm Hold martial arts pose, a signature move of the Shaolin Hundred Form routine. Kneeling on one knee, both palms held together in front of the chest. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_065",
+      "name": "少林直出 · 65. 冲拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 冲拳 — 直臂向前冲拳，力达拳面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_065.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Straight Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. A straight arm punching forward, force concentrated on the striking knuckles. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_066",
+      "name": "少林直出 · 66. 贯拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 贯拳 — 拳由侧向前弧形摆动击打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_066.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Swing Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. The fist swung forward in an arc from the side to strike. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_067",
+      "name": "少林直出 · 67. 抄拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 抄拳 — 拳由下向上勾打，如抄物",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_067.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Uppercut martial arts pose, a signature move of the Shaolin Hundred Form routine. The fist hooking upward from below, like scooping something up. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_068",
+      "name": "少林直出 · 68. 劈拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 劈拳 — 拳由上向下劈打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_068.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Chopping Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. The fist chopping down from above. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_069",
+      "name": "少林直出 · 69. 栽拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 栽拳 — 拳由上向下栽打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_069.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Plant Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. The fist driving down from above. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_070",
+      "name": "少林直出 · 70. 砸拳",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 砸拳 — 拳由上向下猛砸",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_070.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Smash Punch martial arts pose, a signature move of the Shaolin Hundred Form routine. The fist smashed down hard from above. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_071",
+      "name": "少林直出 · 71. 推掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 推掌 — 掌根向前推出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_071.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Push Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The heel of the palm thrust forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_072",
+      "name": "少林直出 · 72. 挑掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 挑掌 — 掌由下向上挑起",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_072.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Lift Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm lifted upward from below. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_073",
+      "name": "少林直出 · 73. 劈掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 劈掌 — 掌由上向下劈打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_073.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Chopping Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm chopping down from above. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_074",
+      "name": "少林直出 · 74. 按掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 按掌 — 掌向下按",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_074.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Press Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm pressing downward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_075",
+      "name": "少林直出 · 75. 穿掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 穿掌 — 掌沿直线向前穿出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_075.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Threading Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm threading straight forward in a straight line. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_076",
+      "name": "少林直出 · 76. 插掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 插掌 — 指尖向前直插",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_076.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Thrust Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. Fingertips stabbing straight forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_077",
+      "name": "少林直出 · 77. 撩掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 撩掌 — 掌由下向前上方撩打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_077.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Backslash Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm sweeping backslash upward from below to the front. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_078",
+      "name": "少林直出 · 78. 掼掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 掼掌 — 掌由侧向前弧形掼打",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_078.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Swinging Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm swung forward in an arc from the side. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_079",
+      "name": "少林直出 · 79. 拍掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 拍掌 — 掌向前拍击",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_079.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Slap Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm slapping forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_080",
+      "name": "少林直出 · 80. 勾手",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 勾手 — 五指捏拢成勾，屈腕",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_080.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Hook Hand martial arts pose, a signature move of the Shaolin Hundred Form routine. The five fingers pinched together into a hook with the wrist bent. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_081",
+      "name": "少林直出 · 81. 刁手",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 刁手 — 手成勾手，腕部内扣",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_081.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Hooking Hand martial arts pose, a signature move of the Shaolin Hundred Form routine. The hand formed into a hook with the wrist turned inward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_082",
+      "name": "少林直出 · 82. 缠手",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 缠手 — 臂弧形缠绕划圈",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_082.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Wrapping Hand martial arts pose, a signature move of the Shaolin Hundred Form routine. The arm wrapping in an arc, tracing a circle. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_083",
+      "name": "少林直出 · 83. 云手",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 云手 — 双臂在身前交替划云圈",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_083.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Cloud Hand martial arts pose, a signature move of the Shaolin Hundred Form routine. Both arms alternating circular cloud-hand motions in front of the body. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_084",
+      "name": "少林直出 · 84. 扇掌",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 扇掌 — 掌如扇面打开推出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_084.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Fan Palm martial arts pose, a signature move of the Shaolin Hundred Form routine. The palm opening like a fan and pushing forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_085",
+      "name": "少林直出 · 85. 正踢腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 正踢腿 — 支撑腿直立，另一腿脚尖勾起向前额踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_085.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Front Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. Support leg straight, the other leg with the toe hooked, kicking forward to head height. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_086",
+      "name": "少林直出 · 86. 侧踢腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 侧踢腿 — 一腿支撑，另一腿脚尖勾起向体侧踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_086.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Side Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. One leg supporting, the other leg with the toe hooked, kicking out to the side. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_087",
+      "name": "少林直出 · 87. 里合腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 里合腿 — 腿由外向内弧形摆踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_087.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Inside Crescent Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The leg swinging in an arc from outside to inside. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_088",
+      "name": "少林直出 · 88. 外摆腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 外摆腿 — 腿由内向外弧形摆踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_088.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Outside Crescent Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The leg swinging in an arc from inside to outside. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_089",
+      "name": "少林直出 · 89. 弹腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弹腿 — 大腿抬起，小腿快速向前弹出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_089.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Snap Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The thigh raised, the lower leg snapping forward quickly. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_090",
+      "name": "少林直出 · 90. 蹬腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 蹬腿 — 腿屈膝抬起，然后脚跟向前蹬出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_090.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Push Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The knee bent and lifted, then the heel driving forward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_091",
+      "name": "少林直出 · 91. 踩腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 踩腿 — 腿屈膝抬起，脚底向下踩击",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_091.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Stomp Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The knee bent and lifted, the sole stamping down. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_092",
+      "name": "少林直出 · 92. 铲腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 铲腿 — 腿由内向外弧形铲出",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_092.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Side Scoop Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The leg scooping out in an arc from inside to outside. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_093",
+      "name": "少林直出 · 93. 勾踢腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 勾踢腿 — 脚勾起由外向内勾踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_093.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Hook Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The toe hooked, kicking inward from outside to inside. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_094",
+      "name": "少林直出 · 94. 撩腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 撩腿 — 腿由下向前上方撩踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_094.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Backslash Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The leg sweeping backslash upward from below to the front. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_095",
+      "name": "少林直出 · 95. 拍脚",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 拍脚 — 一腿伸直抬起，手拍脚面",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_095.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Slap Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. One leg extended and lifted, the hand slapping the top of the foot. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_096",
+      "name": "少林直出 · 96. 斜踢腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 斜踢腿 — 腿向斜上方踢击",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_096.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Diagonal Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The leg kicking diagonally upward. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_097",
+      "name": "少林直出 · 97. 后撩腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 后撩腿 — 腿向后上方撩踢",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_097.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Back Kick martial arts pose, a signature move of the Shaolin Hundred Form routine. The leg sweeping backslash upward and behind. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_098",
+      "name": "少林直出 · 98. 前扫腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 前扫腿 — 仆步，支撑腿为轴，另一腿向前扫一周",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_098.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Front Sweep martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouch stance, pivoting on the supporting leg, the other leg sweeping forward in a full circle. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_099",
+      "name": "少林直出 · 99. 后扫腿",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 后扫腿 — 仆步，支撑腿为轴，另一腿向后扫一周",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_099.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Back Sweep martial arts pose, a signature move of the Shaolin Hundred Form routine. Crouch stance, pivoting on the supporting leg, the other leg sweeping backward in a full circle. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    },
+    {
+      "id": "shaolin_direct_100",
+      "name": "少林直出 · 100. 跌叉",
+      "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 跌叉 — 两腿前后分开落地成竖叉",
+      "type": "user",
+      "category": "少林直出",
+      "tags": [
+        "少林",
+        "武术",
+        "招式",
+        "直出",
+        "kungfu"
+      ],
+      "thumbnail": "shaolin_100.png",
+      "text": "A Shaolin monk in traditional grey robes performing the Split Fall martial arts pose, a signature move of the Shaolin Hundred Form routine. Both legs landing split front and back into a full front split. Full body shot, the entire figure from head to toe inside the frame with generous margin around it, correct martial arts posture, stable centre of gravity, hands and feet clearly placed, anatomically accurate limbs, natural muscle tension. Background: a simple uncluttered temple training courtyard, softly blurred, free of objects. Style: realistic martial arts photography, clean soft lighting, the figure in sharp focus, the monk and the courtyard are the only content in a clean photographic frame."
+    }
+  ]
+}
