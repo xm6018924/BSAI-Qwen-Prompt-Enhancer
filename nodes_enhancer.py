@@ -1,31 +1,31 @@
 # -*- coding: utf-8 -*-
 """
-BSAI Qwen Prompt Enhancer — 四合一增强通道节点
-节点: BSAI_Qwen_Prompt_Enhancer
+BSAI Qwen Prompt Enhancer 鈥?鍥涘悎涓€澧炲己閫氶亾鑺傜偣
+鑺傜偣: BSAI_Qwen_Prompt_Enhancer
 
-一个节点、四种增强后端，用 backend 下拉一键切换：
-  1. 官方PE (本地 Qwen3.5-9B)  — CLIPLoader 加载官方 PE 模型，clip.tokenize/generate/decode
-     （与 ComfyUI 0.37 官方 TextGenerate 同一体系，官方 chat_template.jinja 构造消息）
-  2. 本地LLaMA (GGUF+mmproj)   — llama.cpp 加载本地视觉大模型，create_chat_completion
-     （自动扫描 models/LLM 与 models/text_encoders 下的 *.gguf，自动配对 mmproj，自动识别 chat_handler）
-     [移植自 G 盘 BSAI_QwenNodes] MTP 层自动检测与剥离 / LLM 状态重置 / 签名兼容调用
-  3. 本地HF (Transformers)      — 加载 models/LLM 下 HuggingFace safetensors 模型（Florence-2 / Llama 等）
-  4. API (OpenAI兼容)          — 在线/本地 OpenAI 兼容 Chat Completions 接口
+涓€涓妭鐐广€佸洓绉嶅寮哄悗绔紝鐢?backend 涓嬫媺涓€閿垏鎹細
+  1. 瀹樻柟PE (鏈湴 Qwen3.5-9B)  鈥?CLIPLoader 鍔犺浇瀹樻柟 PE 妯″瀷锛宑lip.tokenize/generate/decode
+     锛堜笌 ComfyUI 0.37 瀹樻柟 TextGenerate 鍚屼竴浣撶郴锛屽畼鏂?chat_template.jinja 鏋勯€犳秷鎭級
+  2. 鏈湴LLaMA (GGUF+mmproj)   鈥?llama.cpp 鍔犺浇鏈湴瑙嗚澶фā鍨嬶紝create_chat_completion
+     锛堣嚜鍔ㄦ壂鎻?models/LLM 涓?models/text_encoders 涓嬬殑 *.gguf锛岃嚜鍔ㄩ厤瀵?mmproj锛岃嚜鍔ㄨ瘑鍒?chat_handler锛?
+     [绉绘鑷?G 鐩?BSAI_QwenNodes] MTP 灞傝嚜鍔ㄦ娴嬩笌鍓ョ / LLM 鐘舵€侀噸缃?/ 绛惧悕鍏煎璋冪敤
+  3. 鏈湴HF (Transformers)      鈥?鍔犺浇 models/LLM 涓?HuggingFace safetensors 妯″瀷锛團lorence-2 / Llama 绛夛級
+  4. API (OpenAI鍏煎)          鈥?鍦ㄧ嚎/鏈湴 OpenAI 鍏煎 Chat Completions 鎺ュ彛
 
-参数分层（前端 JS 按 backend 自动显隐后端专属 widget）：
-  · 公共参数（四后端共用）：prompt_text / system_template / custom_system_prompt /
+鍙傛暟鍒嗗眰锛堝墠绔?JS 鎸?backend 鑷姩鏄鹃殣鍚庣涓撳睘 widget锛夛細
+  路 鍏叡鍙傛暟锛堝洓鍚庣鍏辩敤锛夛細prompt_text / system_template / custom_system_prompt /
     temperature / top_p / top_k / repeat_penalty / seed / max_tokens / speed_preset / image_1~16
-  · 官方PE 专属：clip(输入) / pe_mode / min_p / thinking / mtp
-  · 本地LLaMA 专属：llm_model_name / mmproj_name / chat_handler / n_ctx / n_gpu_layers / load_mtp / keep_loaded
-  · 本地HF 专属：hf_model_name / hf_task / hf_device / hf_keep_loaded
-  · API 专属：api_base / api_key / api_model_name / timeout
+  路 瀹樻柟PE 涓撳睘锛歝lip(杈撳叆) / pe_mode / min_p / thinking / mtp
+  路 鏈湴LLaMA 涓撳睘锛歭lm_model_name / mmproj_name / chat_handler / n_ctx / n_gpu_layers / load_mtp / keep_loaded
+  路 鏈湴HF 涓撳睘锛歨f_model_name / hf_task / hf_device / hf_keep_loaded
+  路 API 涓撳睘锛歛pi_base / api_key / api_model_name / timeout
 
-输出统一 10 路（四个后端一致）：
+杈撳嚭缁熶竴 10 璺紙鍥涗釜鍚庣涓€鑷达級锛?
   ENHANCED_PROMPT / WH_RATIO / RATIO_FOLLOW / RAW_OUTPUT / THINKING /
   RECOMMENDED_STEPS / RECOMMENDED_CFG / RECOMMENDED_SAMPLER / RECOMMENDED_SCHEDULER /
   MERGED_TEXT
 
-模型目录（相对路径）：ComfyUI/models/LLM  —  放置所有 GGUF / HF 模型文件
+妯″瀷鐩綍锛堢浉瀵硅矾寰勶級锛欳omfyUI/models/LLM  鈥? 鏀剧疆鎵€鏈?GGUF / HF 妯″瀷鏂囦欢
 """
 import gc
 import inspect
@@ -42,7 +42,7 @@ try:
 except Exception:
     mm = None
 
-# BSAI Qwen image 2.1 采样器依赖（老式节点，参照官方 SamplerCustomAdvanced / KSampler 语义）
+# BSAI Qwen image 2.1 閲囨牱鍣ㄤ緷璧栵紙鑰佸紡鑺傜偣锛屽弬鐓у畼鏂?SamplerCustomAdvanced / KSampler 璇箟锛?
 try:
     import comfy.samplers as _comfy_samplers
     import comfy.sample as _comfy_sample
@@ -62,13 +62,13 @@ except Exception:
     _BSAI_SCHEDULER_NAMES = ["normal", "karras", "exponential", "sgm_uniform",
                              "simple", "ddim_uniform", "beta"]
 
-# llama-cpp-python（本地 GGUF 模型推理），未安装时不影响其他后端
+# llama-cpp-python锛堟湰鍦?GGUF 妯″瀷鎺ㄧ悊锛夛紝鏈畨瑁呮椂涓嶅奖鍝嶅叾浠栧悗绔?
 try:
     from llama_cpp import Llama
 except Exception:
     Llama = None
 
-# 专用 chat handler（与 BSAI_ComfyUI_Nodes 对齐，优先用专用 handler 而非 MTMDChatHandler）
+# 涓撶敤 chat handler锛堜笌 BSAI_ComfyUI_Nodes 瀵归綈锛屼紭鍏堢敤涓撶敤 handler 鑰岄潪 MTMDChatHandler锛?
 try:
     from llama_cpp.llama_chat_format import Qwen3VLChatHandler
 except Exception:
@@ -90,24 +90,25 @@ from .common import (
     resolve_template, template_display_list,
 )
 
-# ---- 后端选项（前端 JS 按这些标签精确匹配显隐分组，勿随意改名）----
-BACKEND_PE = "官方PE (本地 Qwen3.5-9B)"
-BACKEND_LLAMA = "本地LLaMA (GGUF+mmproj)"
-BACKEND_HF = "本地HF (Transformers)"
-BACKEND_API = "API (OpenAI兼容)"
-BACKEND_LABELS = [BACKEND_PE, BACKEND_LLAMA, BACKEND_HF, BACKEND_API]
+# ---- 鍚庣閫夐」锛堝墠绔?JS 鎸夎繖浜涙爣绛剧簿纭尮閰嶆樉闅愬垎缁勶紝鍕块殢鎰忔敼鍚嶏級----
+BACKEND_PE = "瀹樻柟PE (鏈湴 Qwen3.5-9B)"
+BACKEND_LLAMA = "鏈湴LLaMA (GGUF+mmproj)"
+BACKEND_HF = "鏈湴HF (Transformers)"
+BACKEND_API = "API (OpenAI鍏煎)"
+BACKEND_STRATA = "BSAI Strata (Qwen3.8-Flash-Next @127.0.0.1:8080)"
+BACKEND_LABELS = [BACKEND_PE, BACKEND_LLAMA, BACKEND_HF, BACKEND_API, BACKEND_STRATA]
 
-_DEFAULT_SPEED = "官方标准 25步/CFG1 (推荐)"
+_DEFAULT_SPEED = "瀹樻柟鏍囧噯 25姝?CFG1 (鎺ㄨ崘)"
 
 
 # ============================================================
-# 本地 LLaMA 通道辅助（扫描/配对/加载，逻辑与原 nodes_local_llama.py 一致）
+# 鏈湴 LLaMA 閫氶亾杈呭姪锛堟壂鎻?閰嶅/鍔犺浇锛岄€昏緫涓庡師 nodes_local_llama.py 涓€鑷达級
 # ============================================================
 def _scan_gguf():
-    """递归扫描本地 GGUF（model 与 mmproj），返回 ([model 列表], [mmproj 列表])
-    递归所有子目录，文件名带相对子路径，便于区分同名模型。
-    模型目录：ComfyUI/models/LLM 与 ComfyUI/models/text_encoders（相对路径）。"""
-    # 确保 LLM 文件夹在 folder_paths 中注册（与 G 盘 BSAI_QwenNodes 对齐）
+    """閫掑綊鎵弿鏈湴 GGUF锛坢odel 涓?mmproj锛夛紝杩斿洖 ([model 鍒楄〃], [mmproj 鍒楄〃])
+    閫掑綊鎵€鏈夊瓙鐩綍锛屾枃浠跺悕甯︾浉瀵瑰瓙璺緞锛屼究浜庡尯鍒嗗悓鍚嶆ā鍨嬨€?
+    妯″瀷鐩綍锛欳omfyUI/models/LLM 涓?ComfyUI/models/text_encoders锛堢浉瀵硅矾寰勶級銆?""
+    # 纭繚 LLM 鏂囦欢澶瑰湪 folder_paths 涓敞鍐岋紙涓?G 鐩?BSAI_QwenNodes 瀵归綈锛?
     llm_dir = os.path.join(folder_paths.models_dir, "LLM")
     try:
         if "LLM" not in folder_paths.folder_names_and_paths:
@@ -124,19 +125,19 @@ def _scan_gguf():
         dirs += llm_dirs
     except Exception:
         pass
-    # 兜底：始终加入 models/LLM 与 models/text_encoders（相对 ComfyUI 根目录）
+    # 鍏滃簳锛氬缁堝姞鍏?models/LLM 涓?models/text_encoders锛堢浉瀵?ComfyUI 鏍圭洰褰曪級
     dirs.append(os.path.join(folder_paths.models_dir, "LLM"))
     dirs.append(os.path.join(folder_paths.models_dir, "text_encoders"))
     seen = set()
     for d in dirs:
         if not os.path.isdir(d):
             continue
-        # 递归遍历所有子目录
+        # 閫掑綊閬嶅巻鎵€鏈夊瓙鐩綍
         for root, _subdirs, files in os.walk(d):
             for f in sorted(files):
                 if not f.lower().endswith(".gguf"):
                     continue
-                # 用相对路径做去重键（不同子目录同名文件视为不同）
+                # 鐢ㄧ浉瀵硅矾寰勫仛鍘婚噸閿紙涓嶅悓瀛愮洰褰曞悓鍚嶆枃浠惰涓轰笉鍚岋級
                 rel = os.path.relpath(os.path.join(root, f), d)
                 if rel in seen:
                     continue
@@ -149,15 +150,15 @@ def _scan_gguf():
 
 
 def _auto_pair_mmproj(model_name, mmprojs):
-    """按名称前缀自动配对 mmproj"""
+    """鎸夊悕绉板墠缂€鑷姩閰嶅 mmproj"""
     stem = os.path.splitext(model_name)[0].lower()
-    # 尝试: 去掉版本/量化后缀后按前缀匹配
+    # 灏濊瘯: 鍘绘帀鐗堟湰/閲忓寲鍚庣紑鍚庢寜鍓嶇紑鍖归厤
     for m in mmprojs:
         mstem = os.path.splitext(m)[0].lower()
         common = os.path.commonprefix([stem, mstem])
         if len(common) >= 8:
             return m
-    # 兜底: 首字母系列匹配
+    # 鍏滃簳: 棣栧瓧姣嶇郴鍒楀尮閰?
     for m in mmprojs:
         if model_name[:10].lower() in m.lower() or m[:10].lower() in model_name.lower():
             return m
@@ -165,14 +166,14 @@ def _auto_pair_mmproj(model_name, mmprojs):
 
 
 def _pick_chat_handler(model_name):
-    """根据模型名自动选择 llama.cpp chat handler 类名。
-    返回的优先是 llama-cpp-python 当前版本里**确实存在**的 handler；
-    如果模型对应的新版 handler（如 Qwen35/GLM46V/LFM25VL/Step3VL）在你装的
-    llama-cpp-python 里没有，自动降级到 MTMDChatHandler（llama.cpp 0.3.x
-    官方推荐的"GGUF + mtmd 投影器"通用方案，Qwen3.5+/Gemma4/GLM/Step 等
-    带 mtmd-mmproj 的模型都能用）。实在没法识别时返回空串，由调用方报错。"""
+    """鏍规嵁妯″瀷鍚嶈嚜鍔ㄩ€夋嫨 llama.cpp chat handler 绫诲悕銆?
+    杩斿洖鐨勪紭鍏堟槸 llama-cpp-python 褰撳墠鐗堟湰閲?*纭疄瀛樺湪**鐨?handler锛?
+    濡傛灉妯″瀷瀵瑰簲鐨勬柊鐗?handler锛堝 Qwen35/GLM46V/LFM25VL/Step3VL锛夊湪浣犺鐨?
+    llama-cpp-python 閲屾病鏈夛紝鑷姩闄嶇骇鍒?MTMDChatHandler锛坙lama.cpp 0.3.x
+    瀹樻柟鎺ㄨ崘鐨?GGUF + mtmd 鎶曞奖鍣?閫氱敤鏂规锛孮wen3.5+/Gemma4/GLM/Step 绛?
+    甯?mtmd-mmproj 鐨勬ā鍨嬮兘鑳界敤锛夈€傚疄鍦ㄦ病娉曡瘑鍒椂杩斿洖绌轰覆锛岀敱璋冪敤鏂规姤閿欍€?""
     n = model_name.lower().replace("-", "").replace("_", "").replace(".", "").replace(" ", "")
-    # ----- 第一优先级：本版本 llama-cpp-python 里真实存在的专用 handler -----
+    # ----- 绗竴浼樺厛绾э細鏈増鏈?llama-cpp-python 閲岀湡瀹炲瓨鍦ㄧ殑涓撶敤 handler -----
     if "qwen2vl" in n or "qwen25vl" in n or "qwen2.5vl" in n:
         return "Qwen25VLChatHandler"
     if "gemma4" in n:
@@ -180,12 +181,12 @@ def _pick_chat_handler(model_name):
     if "gemma3" in n:
         return "Gemma3ChatHandler"
     if "minicpmv45" in n or "minicpm45" in n or "minicpmv26" in n or "minicpm26" in n:
-        # 优先 v4.5（若 llama-cpp-python 已合入），否则 v2.6
+        # 浼樺厛 v4.5锛堣嫢 llama-cpp-python 宸插悎鍏ワ級锛屽惁鍒?v2.6
         return "MiniCPMv45ChatHandler" if "45" in n else "MiniCPMv26ChatHandler"
 
-    # ----- 第二优先级：模型家族名 → 期望的 handler 类名 -----
-    # 这些 handler 在新版 llama-cpp-python（≥0.3.36/nightly）才存在；
-    # 0.3.35（PyPI 当前最新）里没有，所以下面用 _resolve_handler_cls() 自动降级
+    # ----- 绗簩浼樺厛绾э細妯″瀷瀹舵棌鍚?鈫?鏈熸湜鐨?handler 绫诲悕 -----
+    # 杩欎簺 handler 鍦ㄦ柊鐗?llama-cpp-python锛堚墺0.3.36/nightly锛夋墠瀛樺湪锛?
+    # 0.3.35锛圥yPI 褰撳墠鏈€鏂帮級閲屾病鏈夛紝鎵€浠ヤ笅闈㈢敤 _resolve_handler_cls() 鑷姩闄嶇骇
     preferred = ""
     if "qwen38" in n or "qwen36" in n or "qwen35" in n:
         preferred = "Qwen35ChatHandler"
@@ -204,34 +205,34 @@ def _pick_chat_handler(model_name):
     if preferred:
         return preferred
 
-    # ----- 第三优先级：兜底 mtmd（带 mmproj-BF16 的模型基本都是 mtmd 投影） -----
+    # ----- 绗笁浼樺厛绾э細鍏滃簳 mtmd锛堝甫 mmproj-BF16 鐨勬ā鍨嬪熀鏈兘鏄?mtmd 鎶曞奖锛?-----
     return "MTMDChatHandler"
 
 
 def _resolve_handler_cls(preferred_name):
-    """把期望的 handler 类名解析成**当前 llama-cpp-python 里真实可用**的类。
-    顺序：preferred（若存在）→ MTMDChatHandler（若存在）→ None。
-    返回 None 时上层报错，并附上当前可用 handler 清单便于排错。"""
-    # 1) 首选专用 handler
+    """鎶婃湡鏈涚殑 handler 绫诲悕瑙ｆ瀽鎴?*褰撳墠 llama-cpp-python 閲岀湡瀹炲彲鐢?*鐨勭被銆?
+    椤哄簭锛歱referred锛堣嫢瀛樺湪锛夆啋 MTMDChatHandler锛堣嫢瀛樺湪锛夆啋 None銆?
+    杩斿洖 None 鏃朵笂灞傛姤閿欙紝骞堕檮涓婂綋鍓嶅彲鐢?handler 娓呭崟渚夸簬鎺掗敊銆?""
+    # 1) 棣栭€変笓鐢?handler
     cls = _get_handler_cls(preferred_name)
     if cls is not None:
         return cls
-    # 2) mtmd 通用兜底
+    # 2) mtmd 閫氱敤鍏滃簳
     if preferred_name != "MTMDChatHandler":
         cls = _get_handler_cls("MTMDChatHandler")
         if cls is not None:
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 提示：你装的 llama-cpp-python 没有 {preferred_name}，"
-                  f"已自动改用 MTMDChatHandler（通用多模态，mtmd-mmproj 投影器均可）。")
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 鎻愮ず锛氫綘瑁呯殑 llama-cpp-python 娌℃湁 {preferred_name}锛?
+                  f"宸茶嚜鍔ㄦ敼鐢?MTMDChatHandler锛堥€氱敤澶氭ā鎬侊紝mtmd-mmproj 鎶曞奖鍣ㄥ潎鍙級銆?)
             return cls
     return None
 
 
 def _list_available_handlers():
-    """动态枚举 llama_cpp.llama_chat_format 里实际可用的 *ChatHandler（视觉类优先）"""
+    """鍔ㄦ€佹灇涓?llama_cpp.llama_chat_format 閲屽疄闄呭彲鐢ㄧ殑 *ChatHandler锛堣瑙夌被浼樺厛锛?""
     try:
         from llama_cpp import llama_chat_format as lcf
         handlers = [n for n in dir(lcf) if n.endswith("ChatHandler")]
-        # 视觉/多模态优先排序（含 V/vision/VL 字样或知名视觉模型）
+        # 瑙嗚/澶氭ā鎬佷紭鍏堟帓搴忥紙鍚?V/vision/VL 瀛楁牱鎴栫煡鍚嶈瑙夋ā鍨嬶級
         vision_kw = ("VL", "Vision", "GLM", "Gemma", "MiniCPM", "Moondream", "Llava",
                      "Step", "LFM", "Qwen", "Obsidian")
         vision = sorted([h for h in handlers if any(k in h for k in vision_kw)],
@@ -243,28 +244,28 @@ def _list_available_handlers():
                 "Gemma3ChatHandler", "Gemma4ChatHandler"]
 
 
-# 友好模型名标签 -> 实际 handler 类名（用户直观可见的"最新模型"列表）
+# 鍙嬪ソ妯″瀷鍚嶆爣绛?-> 瀹為檯 handler 绫诲悕锛堢敤鎴风洿瑙傚彲瑙佺殑"鏈€鏂版ā鍨?鍒楄〃锛?
 _FRIENDLY_HANDLERS = [
-    # 把 mtmd 通用多模态放到第一位：兼容最广（任何带 mtmd-mmproj 的 GGUF 都能跑）
-    ("MTMD 通用多模态 (推荐: Qwen3.5+/Gemma4/GLM 等带 mtmd-mmproj 的模型)", "MTMDChatHandler"),
-    ("Qwen 3.8 / 3.6 / 3.5 视觉 (需更新 llama-cpp-python)", "Qwen35ChatHandler"),
-    ("Qwen 3 / 3-VL 视觉 (需更新 llama-cpp-python)", "Qwen3VLChatHandler"),
-    ("Qwen 2.5-VL / 2-VL 视觉", "Qwen25VLChatHandler"),
-    ("Gemma 4 视觉", "Gemma4ChatHandler"),
-    ("Gemma 3 视觉 (需更新 llama-cpp-python)", "Gemma3ChatHandler"),
-    ("GLM 4.6V 视觉 (需更新 llama-cpp-python)", "GLM46VChatHandler"),
-    ("GLM 4.1V 视觉 (需更新 llama-cpp-python)", "GLM41VChatHandler"),
-    ("MiniCPM-V4.5 (需更新 llama-cpp-python)", "MiniCPMv45ChatHandler"),
+    # 鎶?mtmd 閫氱敤澶氭ā鎬佹斁鍒扮涓€浣嶏細鍏煎鏈€骞匡紙浠讳綍甯?mtmd-mmproj 鐨?GGUF 閮借兘璺戯級
+    ("MTMD 閫氱敤澶氭ā鎬?(鎺ㄨ崘: Qwen3.5+/Gemma4/GLM 绛夊甫 mtmd-mmproj 鐨勬ā鍨?", "MTMDChatHandler"),
+    ("Qwen 3.8 / 3.6 / 3.5 瑙嗚 (闇€鏇存柊 llama-cpp-python)", "Qwen35ChatHandler"),
+    ("Qwen 3 / 3-VL 瑙嗚 (闇€鏇存柊 llama-cpp-python)", "Qwen3VLChatHandler"),
+    ("Qwen 2.5-VL / 2-VL 瑙嗚", "Qwen25VLChatHandler"),
+    ("Gemma 4 瑙嗚", "Gemma4ChatHandler"),
+    ("Gemma 3 瑙嗚 (闇€鏇存柊 llama-cpp-python)", "Gemma3ChatHandler"),
+    ("GLM 4.6V 瑙嗚 (闇€鏇存柊 llama-cpp-python)", "GLM46VChatHandler"),
+    ("GLM 4.1V 瑙嗚 (闇€鏇存柊 llama-cpp-python)", "GLM41VChatHandler"),
+    ("MiniCPM-V4.5 (闇€鏇存柊 llama-cpp-python)", "MiniCPMv45ChatHandler"),
     ("MiniCPM-V2.6", "MiniCPMv26ChatHandler"),
-    ("LFM 2.5-VL (需更新 llama-cpp-python)", "LFM25VLChatHandler"),
-    ("LFM 2-VL (需更新 llama-cpp-python)", "LFM2VLChatHandler"),
-    ("Step 3-VL (需更新 llama-cpp-python)", "Step3VLChatHandler"),
+    ("LFM 2.5-VL (闇€鏇存柊 llama-cpp-python)", "LFM25VLChatHandler"),
+    ("LFM 2-VL (闇€鏇存柊 llama-cpp-python)", "LFM2VLChatHandler"),
+    ("Step 3-VL (闇€鏇存柊 llama-cpp-python)", "Step3VLChatHandler"),
 ]
-_AUTO_LABEL = "auto（按模型名自动识别 Qwen3.8/Gemma4/GLM4.6 等全部支持模型）"
+_AUTO_LABEL = "auto锛堟寜妯″瀷鍚嶈嚜鍔ㄨ瘑鍒?Qwen3.8/Gemma4/GLM4.6 绛夊叏閮ㄦ敮鎸佹ā鍨嬶級"
 
 
 def _chat_handler_labels():
-    """chat_handler 下拉：auto + 友好模型名 + 其他实际可用 handler 类名 + None"""
+    """chat_handler 涓嬫媺锛歛uto + 鍙嬪ソ妯″瀷鍚?+ 鍏朵粬瀹為檯鍙敤 handler 绫诲悕 + None"""
     friendly_labels = [lbl for lbl, _ in _FRIENDLY_HANDLERS]
     available = set(_list_available_handlers())
     mapped_cls = {cls for _, cls in _FRIENDLY_HANDLERS}
@@ -273,8 +274,8 @@ def _chat_handler_labels():
 
 
 def _resolve_handler_label(label):
-    """友好标签 -> 实际 handler 类名；auto 走自动识别；纯类名原样返回。
-    返回 '__auto__' 表示让 _pick_chat_handler(model_name) 自动判断。"""
+    """鍙嬪ソ鏍囩 -> 瀹為檯 handler 绫诲悕锛沘uto 璧拌嚜鍔ㄨ瘑鍒紱绾被鍚嶅師鏍疯繑鍥炪€?
+    杩斿洖 '__auto__' 琛ㄧず璁?_pick_chat_handler(model_name) 鑷姩鍒ゆ柇銆?""
     if not label or label == "None":
         return ""
     if label.startswith("auto"):
@@ -282,7 +283,7 @@ def _resolve_handler_label(label):
     for friendly, cls in _FRIENDLY_HANDLERS:
         if label == friendly:
             return cls
-    return label  # 纯类名（Llava/Moondream/Obsidian 等）兜底
+    return label  # 绾被鍚嶏紙Llava/Moondream/Obsidian 绛夛級鍏滃簳
 
 
 _CHAT_HANDLER_CACHE = {}
@@ -299,20 +300,20 @@ def _get_handler_cls(handler_name):
         _CHAT_HANDLER_CACHE[handler_name] = cls
         return cls
     except Exception as e:
-        print(f"[BSAI_Qwen_Prompt_Enhancer] 加载 chat handler {handler_name} 失败: {e}")
+        print(f"[BSAI_Qwen_Prompt_Enhancer] 鍔犺浇 chat handler {handler_name} 澶辫触: {e}")
         _CHAT_HANDLER_CACHE[handler_name] = None
         return None
 
 
 # ============================================================
-# 本地 HF (HuggingFace Transformers) 通道辅助
-# 扫描 models/LLM 下 safetensors/bin 的 HF 模型（Florence-2 / Llama / …），
-# 用 transformers 加载，覆盖非 GGUF 的本地模型，实现"调用 LLM 目录全部模型"。
+# 鏈湴 HF (HuggingFace Transformers) 閫氶亾杈呭姪
+# 鎵弿 models/LLM 涓?safetensors/bin 鐨?HF 妯″瀷锛團lorence-2 / Llama / 鈥︼級锛?
+# 鐢?transformers 鍔犺浇锛岃鐩栭潪 GGUF 鐨勬湰鍦版ā鍨嬶紝瀹炵幇"璋冪敤 LLM 鐩綍鍏ㄩ儴妯″瀷"銆?
 # ============================================================
 def _scan_hf_models():
-    """扫描 models/LLM 下的 HuggingFace 模型目录 -> [{id, path, arch, kind}]
-    kind: 'florence2'（视觉 caption/prompt 生成，需要图片） | 'causal'（文本 LLM）
-    判定依据 config.json 的 architectures。"""
+    """鎵弿 models/LLM 涓嬬殑 HuggingFace 妯″瀷鐩綍 -> [{id, path, arch, kind}]
+    kind: 'florence2'锛堣瑙?caption/prompt 鐢熸垚锛岄渶瑕佸浘鐗囷級 | 'causal'锛堟枃鏈?LLM锛?
+    鍒ゅ畾渚濇嵁 config.json 鐨?architectures銆?""
     dirs = []
     try:
         dirs += folder_paths.get_folder_paths("LLM")
@@ -349,16 +350,16 @@ def _scan_hf_models():
                               "MistralForCausalLM", "GPT2LMHeadModel", "Phi3ForCausalLM"):
                     kind = "causal"
                 else:
-                    # 未知架构：默认按文本 causal 尝试
+                    # 鏈煡鏋舵瀯锛氶粯璁ゆ寜鏂囨湰 causal 灏濊瘯
                     kind = "causal"
             except Exception as e:
-                print(f"[BSAI_Qwen_Prompt_Enhancer] 读取 HF config 失败 {cfg_path}: {e}")
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 璇诲彇 HF config 澶辫触 {cfg_path}: {e}")
             found.append({"id": rel, "path": root, "arch": arch, "kind": kind})
     return found
 
 
 def _hf_model_display_list():
-    """HF 模型下拉：'目录名 [arch]'"""
+    """HF 妯″瀷涓嬫媺锛?鐩綍鍚?[arch]'"""
     items = []
     for m in _scan_hf_models():
         label = m["id"] if m["arch"] else m["id"]
@@ -369,7 +370,7 @@ def _hf_model_display_list():
 
 
 def _hf_model_id_from_label(label):
-    """从下拉标签反查模型目录 id（去掉尾部 [arch]）"""
+    """浠庝笅鎷夋爣绛惧弽鏌ユā鍨嬬洰褰?id锛堝幓鎺夊熬閮?[arch]锛?""
     if not label:
         return ""
     m = re.search(r"\[([^\[\]]+)\]\s*$", label.strip())
@@ -382,7 +383,7 @@ _HF_CACHE = {}
 
 
 def _load_hf(model_dir_id, device):
-    """加载 HF 模型 -> dict {model, processor/tokenizer, kind, arch}"""
+    """鍔犺浇 HF 妯″瀷 -> dict {model, processor/tokenizer, kind, arch}"""
     key = (model_dir_id, device)
     if key in _HF_CACHE and _HF_CACHE[key] is not None:
         return _HF_CACHE[key]
@@ -391,10 +392,10 @@ def _load_hf(model_dir_id, device):
         from transformers import AutoProcessor, AutoTokenizer, AutoModelForCausalLM
     except ImportError as e:
         raise RuntimeError(
-            f"[BSAI_Qwen_Prompt_Enhancer] 缺少 transformers/torch: {e}\n"
-            "请在本 ComfyUI 的 python 环境执行: pip install transformers torch")
+            f"[BSAI_Qwen_Prompt_Enhancer] 缂哄皯 transformers/torch: {e}\n"
+            "璇峰湪鏈?ComfyUI 鐨?python 鐜鎵ц: pip install transformers torch")
 
-    # 定位模型目录
+    # 瀹氫綅妯″瀷鐩綍
     dirs = []
     try:
         dirs += folder_paths.get_folder_paths("LLM")
@@ -408,9 +409,9 @@ def _load_hf(model_dir_id, device):
             model_dir = p
             break
     if model_dir is None:
-        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] 找不到 HF 模型目录: {model_dir_id}")
+        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] 鎵句笉鍒?HF 妯″瀷鐩綍: {model_dir_id}")
 
-    # 判定架构
+    # 鍒ゅ畾鏋舵瀯
     arch = ""
     with open(os.path.join(model_dir, "config.json"), "r", encoding="utf-8") as f:
         cfg = json.load(f)
@@ -422,7 +423,7 @@ def _load_hf(model_dir_id, device):
     torch_dtype = dtype
 
     if arch == "Florence2ForConditionalGeneration":
-        # Florence-2 需要 trust_remote_code=True（自带 modeling/configuration 脚本）
+        # Florence-2 闇€瑕?trust_remote_code=True锛堣嚜甯?modeling/configuration 鑴氭湰锛?
         from transformers import AutoProcessor as _AP, AutoModelForCausalLM as _AM
         processor = _AP.from_pretrained(model_dir, trust_remote_code=True)
         model = _AM.from_pretrained(model_dir, trust_remote_code=True, torch_dtype=torch_dtype)
@@ -439,7 +440,7 @@ def _load_hf(model_dir_id, device):
                  "kind": "causal", "arch": arch}
 
     _HF_CACHE[key] = entry
-    print(f"[BSAI_Qwen_Prompt_Enhancer] 加载本地 HF 模型: {model_dir_id} arch={arch} device={device}")
+    print(f"[BSAI_Qwen_Prompt_Enhancer] 鍔犺浇鏈湴 HF 妯″瀷: {model_dir_id} arch={arch} device={device}")
     return entry
 
 
@@ -448,14 +449,14 @@ def _clear_hf_cache():
 
 
 def _run_florence2(entry, images, task, max_tokens, temperature, top_p, device):
-    """Florence-2 视觉生成：支持 <CAPTION> / <DETAILED_CAPTION> / <MORE_DETAILED_CAPTION>
-    以及 PromptGen 微调模型常用任务。返回文本。"""
+    """Florence-2 瑙嗚鐢熸垚锛氭敮鎸?<CAPTION> / <DETAILED_CAPTION> / <MORE_DETAILED_CAPTION>
+    浠ュ強 PromptGen 寰皟妯″瀷甯哥敤浠诲姟銆傝繑鍥炴枃鏈€?""
     import torch
     model = entry["model"]
     processor = entry["processor"]
     if images is None or len(images.shape) < 3 or images.shape[0] == 0:
-        raise RuntimeError("[BSAI_Qwen_Prompt_Enhancer] Florence-2 需要接入 image_1 输入（视觉模型）")
-    # 取第一张图
+        raise RuntimeError("[BSAI_Qwen_Prompt_Enhancer] Florence-2 闇€瑕佹帴鍏?image_1 杈撳叆锛堣瑙夋ā鍨嬶級")
+    # 鍙栫涓€寮犲浘
     arr = images.cpu().numpy()
     if arr.ndim == 4:
         arr = arr[0]
@@ -481,7 +482,7 @@ def _run_florence2(entry, images, task, max_tokens, temperature, top_p, device):
 
 
 def _run_causal_hf(entry, system_prompt, prompt_text, max_tokens, temperature, top_p, top_k, device):
-    """文本 causal LLM（Llama/Gemma/Qwen 等）用 chat_template 生成。"""
+    """鏂囨湰 causal LLM锛圠lama/Gemma/Qwen 绛夛級鐢?chat_template 鐢熸垚銆?""
     import torch
     model = entry["model"]
     tokenizer = entry["tokenizer"]
@@ -493,7 +494,7 @@ def _run_causal_hf(entry, system_prompt, prompt_text, max_tokens, temperature, t
     if has_template:
         text = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)
     else:
-        # 兜底：简单拼接
+        # 鍏滃簳锛氱畝鍗曟嫾鎺?
         text = system_prompt + "\n\n" + prompt_text
     inputs = tokenizer(text, return_tensors="pt").to(device)
     gen_kwargs = {"max_new_tokens": int(max_tokens), "do_sample": True,
@@ -503,7 +504,7 @@ def _run_causal_hf(entry, system_prompt, prompt_text, max_tokens, temperature, t
     with torch.no_grad():
         out = model.generate(**inputs, **gen_kwargs)
     full = tokenizer.decode(out[0], skip_special_tokens=True)
-    # 去掉输入部分，只保留生成段
+    # 鍘绘帀杈撳叆閮ㄥ垎锛屽彧淇濈暀鐢熸垚娈?
     if has_template:
         inp_text = tokenizer.decode(inputs["input_ids"][0], skip_special_tokens=True)
         if full.startswith(inp_text):
@@ -512,12 +513,12 @@ def _run_causal_hf(entry, system_prompt, prompt_text, max_tokens, temperature, t
 
 
 # ============================================================
-# MTP / NextN 预测层检测与自动剥离（移植自 BSAI_QwenNodes）
-# Qwen3.5/3.6/3.8 等模型常带 MTP 层，旧版 llama-cpp-python 不支持，
-# 这里自动检测并生成去 MTP 版本的 GGUF，保证模型能正常加载。
+# MTP / NextN 棰勬祴灞傛娴嬩笌鑷姩鍓ョ锛堢Щ妞嶈嚜 BSAI_QwenNodes锛?
+# Qwen3.5/3.6/3.8 绛夋ā鍨嬪父甯?MTP 灞傦紝鏃х増 llama-cpp-python 涓嶆敮鎸侊紝
+# 杩欓噷鑷姩妫€娴嬪苟鐢熸垚鍘?MTP 鐗堟湰鐨?GGUF锛屼繚璇佹ā鍨嬭兘姝ｅ父鍔犺浇銆?
 # ============================================================
 def _check_mtp_layer(model_path):
-    """检查 GGUF 文件是否包含 MTP/NextN 预测层元数据。"""
+    """妫€鏌?GGUF 鏂囦欢鏄惁鍖呭惈 MTP/NextN 棰勬祴灞傚厓鏁版嵁銆?""
     try:
         with open(model_path, 'rb') as f:
             magic = _struct.unpack('<I', f.read(4))[0]
@@ -571,7 +572,7 @@ def _check_mtp_layer(model_path):
 
 
 def _strip_mtp_layer(model_path):
-    """从 GGUF 文件中剥离 MTP/NextN 层，返回剥离后文件路径，失败返回 None。"""
+    """浠?GGUF 鏂囦欢涓墺绂?MTP/NextN 灞傦紝杩斿洖鍓ョ鍚庢枃浠惰矾寰勶紝澶辫触杩斿洖 None銆?""
     try:
         from gguf.constants import GGML_QUANT_SIZES
     except Exception:
@@ -699,15 +700,15 @@ def _strip_mtp_layer(model_path):
                     if padded_written > len(data):
                         fout.write(b'\x00' * (padded_written - len(data)))
 
-        print(f"[BSAI_Qwen_Prompt_Enhancer] 已自动生成去 MTP 版本: {os.path.basename(no_mtp_path)}")
+        print(f"[BSAI_Qwen_Prompt_Enhancer] 宸茶嚜鍔ㄧ敓鎴愬幓 MTP 鐗堟湰: {os.path.basename(no_mtp_path)}")
         return no_mtp_path
     except Exception as e:
-        print(f"[BSAI_Qwen_Prompt_Enhancer] MTP 剥离失败: {e}")
+        print(f"[BSAI_Qwen_Prompt_Enhancer] MTP 鍓ョ澶辫触: {e}")
         return None
 
 
 def _reset_llm_state(llm):
-    """重置 LLM 上下文状态，避免多次推理间上下文残留污染输出。"""
+    """閲嶇疆 LLM 涓婁笅鏂囩姸鎬侊紝閬垮厤澶氭鎺ㄧ悊闂翠笂涓嬫枃娈嬬暀姹℃煋杈撳嚭銆?""
     try:
         ctx = getattr(llm, "_ctx", None)
         if ctx is not None and hasattr(ctx, "memory_clear"):
@@ -725,7 +726,7 @@ def _reset_llm_state(llm):
 
 
 def _call_chat_completion(llm, messages, params):
-    """签名兼容的 create_chat_completion 调用，自动适配不同版本 llama-cpp-python 的参数名。"""
+    """绛惧悕鍏煎鐨?create_chat_completion 璋冪敤锛岃嚜鍔ㄩ€傞厤涓嶅悓鐗堟湰 llama-cpp-python 鐨勫弬鏁板悕銆?""
     kwargs = dict(params or {})
     kwargs["messages"] = messages
     try:
@@ -737,7 +738,7 @@ def _call_chat_completion(llm, messages, params):
 
     if sig is not None and not has_var_kw:
         allowed = sig.parameters
-        # 兼容 presence_penalty -> present_penalty 的拼写差异
+        # 鍏煎 presence_penalty -> present_penalty 鐨勬嫾鍐欏樊寮?
         if "presence_penalty" in kwargs and "presence_penalty" not in allowed and "present_penalty" in allowed:
             kwargs["present_penalty"] = kwargs.pop("presence_penalty")
         kwargs = {k: v for k, v in kwargs.items() if k in allowed}
@@ -745,7 +746,7 @@ def _call_chat_completion(llm, messages, params):
 
 
 def _normalize_seed(seed_value):
-    """规范化 seed 值，失败返回 None（让 llama.cpp 自己随机）。"""
+    """瑙勮寖鍖?seed 鍊硷紝澶辫触杩斿洖 None锛堣 llama.cpp 鑷繁闅忔満锛夈€?""
     try:
         seed_value = int(seed_value)
     except Exception:
@@ -759,7 +760,7 @@ _LLM_CACHE = {}
 
 
 def _detect_family_from_name(model_name):
-    """从模型名推断模型系列（与 BSAI_ComfyUI_Nodes 的 family 下拉对应）。"""
+    """浠庢ā鍨嬪悕鎺ㄦ柇妯″瀷绯诲垪锛堜笌 BSAI_ComfyUI_Nodes 鐨?family 涓嬫媺瀵瑰簲锛夈€?""
     n = model_name.lower()
     if "qwen3.8" in n or "qwen3-8" in n:
         return "Qwen3.8-VL"
@@ -776,9 +777,9 @@ def _detect_family_from_name(model_name):
 
 def _build_accel_kwargs(n_cmoe=0, kv_cache_quant="auto", use_mmap=True,
                         use_mlock=False, flash_attn="auto", threads=0):
-    """llama.cpp 极限提速参数映射（-ncmoe / -ctk/-ctv / --no-mmap / --mlock / -fa / -t）。
-    仅 MoE 模型的 n_cmoe 有收益（专家拆分显存/内存），稠密模型无效。
-    llama-cpp-python 0.3.36：n_cmoe 暂未暴露，检测到支持会自动透传（升级后即生效）。
+    """llama.cpp 鏋侀檺鎻愰€熷弬鏁版槧灏勶紙-ncmoe / -ctk/-ctv / --no-mmap / --mlock / -fa / -t锛夈€?
+    浠?MoE 妯″瀷鐨?n_cmoe 鏈夋敹鐩婏紙涓撳鎷嗗垎鏄惧瓨/鍐呭瓨锛夛紝绋犲瘑妯″瀷鏃犳晥銆?
+    llama-cpp-python 0.3.36锛歯_cmoe 鏆傛湭鏆撮湶锛屾娴嬪埌鏀寔浼氳嚜鍔ㄩ€忎紶锛堝崌绾у悗鍗崇敓鏁堬級銆?
     """
     out = {"use_mmap": bool(use_mmap), "use_mlock": bool(use_mlock)}
     q = str(kv_cache_quant).lower()
@@ -792,7 +793,7 @@ def _build_accel_kwargs(n_cmoe=0, kv_cache_quant="auto", use_mmap=True,
         out["flash_attn_type"] = 1  # LLAMA_FLASH_ATTN_TYPE_ENABLED
     elif fa == "off":
         out["flash_attn_type"] = 0  # LLAMA_FLASH_ATTN_TYPE_DISABLED
-    # auto: 不传 → 默认 AUTO(-1)
+    # auto: 涓嶄紶 鈫?榛樿 AUTO(-1)
     if int(threads) > 0:
         out["n_threads"] = int(threads)
     if int(n_cmoe) > 0:
@@ -800,10 +801,10 @@ def _build_accel_kwargs(n_cmoe=0, kv_cache_quant="auto", use_mmap=True,
             sig = inspect.signature(Llama.__init__)
             if "n_cmoe" in sig.parameters:
                 out["n_cmoe"] = int(n_cmoe)
-                print(f"[BSAI_Qwen_Prompt_Enhancer] 已启用 MoE 专家拆分加速 n_cmoe={n_cmoe}")
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 宸插惎鐢?MoE 涓撳鎷嗗垎鍔犻€?n_cmoe={n_cmoe}")
             else:
-                print("[BSAI_Qwen_Prompt_Enhancer] 当前 llama-cpp-python 不支持 n_cmoe（需支持 -ncmoe 的新构建），"
-                      "已跳过专家拆分；升级 llama-cpp-python 后此参数自动生效。")
+                print("[BSAI_Qwen_Prompt_Enhancer] 褰撳墠 llama-cpp-python 涓嶆敮鎸?n_cmoe锛堥渶鏀寔 -ncmoe 鐨勬柊鏋勫缓锛夛紝"
+                      "宸茶烦杩囦笓瀹舵媶鍒嗭紱鍗囩骇 llama-cpp-python 鍚庢鍙傛暟鑷姩鐢熸晥銆?)
         except Exception:
             pass
     return out
@@ -812,13 +813,13 @@ def _build_accel_kwargs(n_cmoe=0, kv_cache_quant="auto", use_mmap=True,
 def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, load_mtp,
               n_cmoe=0, kv_cache_quant="auto", use_mmap=True, use_mlock=False,
               flash_attn="auto", threads=0):
-    """加载本地 GGUF 模型 — 精确对齐 BSAI_ComfyUI_Nodes 的 BSAI_QwenNodes.py 加载逻辑。
-    优先使用 Qwen35ChatHandler / Qwen3VLChatHandler / Gemma4ChatHandler 等专用 handler，
-    不用 MTMDChatHandler（部分版本缺符号，会导致崩溃）。"""
+    """鍔犺浇鏈湴 GGUF 妯″瀷 鈥?绮剧‘瀵归綈 BSAI_ComfyUI_Nodes 鐨?BSAI_QwenNodes.py 鍔犺浇閫昏緫銆?
+    浼樺厛浣跨敤 Qwen35ChatHandler / Qwen3VLChatHandler / Gemma4ChatHandler 绛変笓鐢?handler锛?
+    涓嶇敤 MTMDChatHandler锛堥儴鍒嗙増鏈己绗﹀彿锛屼細瀵艰嚧宕╂簝锛夈€?""
     if Llama is None:
         raise RuntimeError(
-            "未检测到 llama-cpp-python（llama_cpp）。请先安装该依赖。\n"
-            "安装方法：在 ComfyUI 的 python 环境中执行 pip install llama-cpp-python"
+            "鏈娴嬪埌 llama-cpp-python锛坙lama_cpp锛夈€傝鍏堝畨瑁呰渚濊禆銆俓n"
+            "瀹夎鏂规硶锛氬湪 ComfyUI 鐨?python 鐜涓墽琛?pip install llama-cpp-python"
         )
 
     key = (model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, load_mtp,
@@ -828,7 +829,7 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
         cached_llm, cached_active = _LLM_CACHE[key]
         return cached_llm, cached_active
 
-    # ---- 模型目录：使用 ComfyUI 内置的 models/LLM 相对路径 ----
+    # ---- 妯″瀷鐩綍锛氫娇鐢?ComfyUI 鍐呯疆鐨?models/LLM 鐩稿璺緞 ----
     dirs = []
     try:
         dirs += folder_paths.get_folder_paths("LLM")
@@ -842,20 +843,20 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
             p = os.path.join(d, name)
             if os.path.isfile(p):
                 return p
-        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] 找不到模型文件: {name}（已扫描 {dirs}）")
+        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] 鎵句笉鍒版ā鍨嬫枃浠? {name}锛堝凡鎵弿 {dirs}锛?)
 
     model_path = find(model_name)
 
-    # ---- MTP 层自动检测与预剥离（与 BSAI_QwenNodes 完全一致）----
+    # ---- MTP 灞傝嚜鍔ㄦ娴嬩笌棰勫墺绂伙紙涓?BSAI_QwenNodes 瀹屽叏涓€鑷达級----
     has_mtp = _check_mtp_layer(model_path)
     if has_mtp and not load_mtp:
         no_mtp_path = _strip_mtp_layer(model_path)
         if no_mtp_path and os.path.exists(no_mtp_path):
             model_path = no_mtp_path
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 检测到 MTP 层，已切换到去 MTP 版本: "
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 妫€娴嬪埌 MTP 灞傦紝宸插垏鎹㈠埌鍘?MTP 鐗堟湰: "
                   f"{os.path.basename(no_mtp_path)}")
 
-    # ---- chat handler：优先用专用 handler（与 BSAI_QwenNodes 一致）----
+    # ---- chat handler锛氫紭鍏堢敤涓撶敤 handler锛堜笌 BSAI_QwenNodes 涓€鑷达級----
     mmproj_path = None
     if mmproj_name:
         mmproj_path = find(mmproj_name)
@@ -863,16 +864,16 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
     chat_handler = None
     mmproj_actually_active = False
     if mmproj_path:
-        # 1) 先按模型名推断家族，尝试专用 handler（最可靠）
+        # 1) 鍏堟寜妯″瀷鍚嶆帹鏂鏃忥紝灏濊瘯涓撶敤 handler锛堟渶鍙潬锛?
         family = _detect_family_from_name(model_name)
 
-        # 2) 若用户在下拉里选了特定 handler 名（非 auto / 非 None），用那个覆盖
+        # 2) 鑻ョ敤鎴峰湪涓嬫媺閲岄€変簡鐗瑰畾 handler 鍚嶏紙闈?auto / 闈?None锛夛紝鐢ㄩ偅涓鐩?
         resolved = _resolve_handler_label(chat_handler_name)
         if resolved and resolved != "__auto__":
-            # 用户明确指定了 handler 类名，直接用
+            # 鐢ㄦ埛鏄庣‘鎸囧畾浜?handler 绫诲悕锛岀洿鎺ョ敤
             handler_cls = _resolve_handler_cls(resolved)
             if handler_cls is not None:
-                # 专用 handler：按 BSAI_QwenNodes 的参数组合构造
+                # 涓撶敤 handler锛氭寜 BSAI_QwenNodes 鐨勫弬鏁扮粍鍚堟瀯閫?
                 try:
                     chat_handler = handler_cls(
                         clip_model_path=mmproj_path,
@@ -882,7 +883,7 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
                         image_min_tokens=1024,
                     )
                 except TypeError:
-                    # 老版本 handler 参数不同，降级尝试
+                    # 鑰佺増鏈?handler 鍙傛暟涓嶅悓锛岄檷绾у皾璇?
                     try:
                         chat_handler = handler_cls(
                             clip_model_path=mmproj_path,
@@ -895,7 +896,7 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
                 except Exception:
                     chat_handler = None
 
-        # 3) 自动模式 / 指定 handler 失败 → 按家族用专用 handler（BSAI_QwenNodes 同款）
+        # 3) 鑷姩妯″紡 / 鎸囧畾 handler 澶辫触 鈫?鎸夊鏃忕敤涓撶敤 handler锛圔SAI_QwenNodes 鍚屾锛?
         if chat_handler is None and family in ("Qwen3.5-VL", "Qwen3.6-VL", "Qwen3.8-VL"):
             if Qwen35ChatHandler is not None:
                 try:
@@ -959,7 +960,7 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
                     except Exception:
                         chat_handler = None
 
-        # 4) 专用 handler 都没有 → 尝试通用 MTMDChatHandler（注意：旧版可能缺符号）
+        # 4) 涓撶敤 handler 閮芥病鏈?鈫?灏濊瘯閫氱敤 MTMDChatHandler锛堟敞鎰忥細鏃х増鍙兘缂虹鍙凤級
         if chat_handler is None:
             mtmd_cls = _resolve_handler_cls("MTMDChatHandler")
             if mtmd_cls is not None:
@@ -967,15 +968,15 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
                     chat_handler = mtmd_cls(clip_model_path=mmproj_path, verbose=False)
                 except Exception as e:
                     print(
-                        f"[BSAI_Qwen_Prompt_Enhancer] [WARN] MTMDChatHandler 初始化失败: {e}\n"
-                        "    已降级为纯文本模式（图片将不会被发送给模型）。\n"
-                        "    建议：更新 llama-cpp-python 到支持 Qwen35ChatHandler 的版本。"
+                        f"[BSAI_Qwen_Prompt_Enhancer] [WARN] MTMDChatHandler 鍒濆鍖栧け璐? {e}\n"
+                        "    宸查檷绾т负绾枃鏈ā寮忥紙鍥剧墖灏嗕笉浼氳鍙戦€佺粰妯″瀷锛夈€俓n"
+                        "    寤鸿锛氭洿鏂?llama-cpp-python 鍒版敮鎸?Qwen35ChatHandler 鐨勭増鏈€?
                     )
                     chat_handler = None
 
         mmproj_actually_active = chat_handler is not None
 
-    # ---- 加载模型：与 BSAI_QwenNodes 完全一致的参数组合 ----
+    # ---- 鍔犺浇妯″瀷锛氫笌 BSAI_QwenNodes 瀹屽叏涓€鑷寸殑鍙傛暟缁勫悎 ----
     llama_kwargs = {
         "model_path": model_path,
         "chat_handler": chat_handler,
@@ -984,7 +985,7 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
         "verbose": False,
     }
 
-    # ── 视频同款极限提速参数（n_cmoe / KV量化 / mmap / mlock / flash-attn / 线程）──
+    # 鈹€鈹€ 瑙嗛鍚屾鏋侀檺鎻愰€熷弬鏁帮紙n_cmoe / KV閲忓寲 / mmap / mlock / flash-attn / 绾跨▼锛夆攢鈹€
     llama_kwargs.update(_build_accel_kwargs(
         n_cmoe=int(n_cmoe or 0),
         kv_cache_quant=str(kv_cache_quant),
@@ -996,8 +997,8 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
 
     display_name = os.path.basename(model_path)
     handler_label = type(chat_handler).__name__ if chat_handler else "None"
-    print(f"[BSAI_Qwen_Prompt_Enhancer] 加载本地 LLaMA: {display_name} "
-          f"+ {mmproj_name or '无'} handler={handler_label} "
+    print(f"[BSAI_Qwen_Prompt_Enhancer] 鍔犺浇鏈湴 LLaMA: {display_name} "
+          f"+ {mmproj_name or '鏃?} handler={handler_label} "
           f"(active={mmproj_actually_active}) n_ctx={n_ctx} n_gpu_layers={n_gpu_layers}")
 
     try:
@@ -1005,11 +1006,11 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
     except ValueError as e:
         err_str = str(e)
         if "Failed to load model from file" in err_str:
-            # MTP 相关失败：自动尝试去 MTP 版本
+            # MTP 鐩稿叧澶辫触锛氳嚜鍔ㄥ皾璇曞幓 MTP 鐗堟湰
             if has_mtp and not load_mtp:
                 no_mtp_path = _strip_mtp_layer(model_path)
                 if no_mtp_path and no_mtp_path != model_path:
-                    print(f"[BSAI_Qwen_Prompt_Enhancer] 模型加载失败，尝试去 MTP 版本: "
+                    print(f"[BSAI_Qwen_Prompt_Enhancer] 妯″瀷鍔犺浇澶辫触锛屽皾璇曞幓 MTP 鐗堟湰: "
                           f"{os.path.basename(no_mtp_path)}")
                     llama_kwargs["model_path"] = no_mtp_path
                     try:
@@ -1019,38 +1020,38 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
                     except Exception:
                         pass
                 raise RuntimeError(
-                    "模型加载失败：该 GGUF 文件包含 MTP/NextN 预测层（nextn_predict_layers），\n"
-                    "当前 llama-cpp-python 版本不支持此特性。\n\n"
-                    "解决方案：\n"
-                    "1. 已尝试自动生成去 MTP 版本，请检查同目录下是否有 -noMTP.gguf 文件\n"
-                    "2. 手动使用去 MTP 版本的 GGUF 文件\n"
-                    "3. 或使用不含 MTP 层的 Qwen3.5/3.6/3.8 模型作为替代\n"
-                    f"原始错误：{e}"
+                    "妯″瀷鍔犺浇澶辫触锛氳 GGUF 鏂囦欢鍖呭惈 MTP/NextN 棰勬祴灞傦紙nextn_predict_layers锛夛紝\n"
+                    "褰撳墠 llama-cpp-python 鐗堟湰涓嶆敮鎸佹鐗规€с€俓n\n"
+                    "瑙ｅ喅鏂规锛歕n"
+                    "1. 宸插皾璇曡嚜鍔ㄧ敓鎴愬幓 MTP 鐗堟湰锛岃妫€鏌ュ悓鐩綍涓嬫槸鍚︽湁 -noMTP.gguf 鏂囦欢\n"
+                    "2. 鎵嬪姩浣跨敤鍘?MTP 鐗堟湰鐨?GGUF 鏂囦欢\n"
+                    "3. 鎴栦娇鐢ㄤ笉鍚?MTP 灞傜殑 Qwen3.5/3.6/3.8 妯″瀷浣滀负鏇夸唬\n"
+                    f"鍘熷閿欒锛歿e}"
                 )
             raise RuntimeError(
-                "模型加载失败：Failed to load model from file\n"
-                "可能的原因：\n"
-                "1. 模型文件损坏或格式不兼容\n"
-                "2. llama-cpp-python 版本不支持该模型架构\n"
-                "3. 模型文件路径错误\n"
-                "建议：\n"
-                "- 检查模型文件完整性\n"
-                "- 更新 llama-cpp-python 到最新版本\n"
-                "- 确保模型路径正确"
+                "妯″瀷鍔犺浇澶辫触锛欶ailed to load model from file\n"
+                "鍙兘鐨勫師鍥狅細\n"
+                "1. 妯″瀷鏂囦欢鎹熷潖鎴栨牸寮忎笉鍏煎\n"
+                "2. llama-cpp-python 鐗堟湰涓嶆敮鎸佽妯″瀷鏋舵瀯\n"
+                "3. 妯″瀷鏂囦欢璺緞閿欒\n"
+                "寤鸿锛歕n"
+                "- 妫€鏌ユā鍨嬫枃浠跺畬鏁存€n"
+                "- 鏇存柊 llama-cpp-python 鍒版渶鏂扮増鏈琝n"
+                "- 纭繚妯″瀷璺緞姝ｇ‘"
             )
         if "Failed to create context with model" in err_str:
             raise RuntimeError(
-                "模型加载失败：Failed to create context with model\n"
-                "可能的原因：\n"
-                "1. 模型文件损坏或格式不兼容\n"
-                "2. llama-cpp-python 版本不支持该模型\n"
-                "3. 显存不足\n"
-                "4. 模型文件路径错误\n"
-                "建议：\n"
-                "- 检查模型文件完整性\n"
-                "- 更新 llama-cpp-python 到最新版本\n"
-                "- 减少 GPU 层数或使用更小的模型\n"
-                "- 确保模型路径正确"
+                "妯″瀷鍔犺浇澶辫触锛欶ailed to create context with model\n"
+                "鍙兘鐨勫師鍥狅細\n"
+                "1. 妯″瀷鏂囦欢鎹熷潖鎴栨牸寮忎笉鍏煎\n"
+                "2. llama-cpp-python 鐗堟湰涓嶆敮鎸佽妯″瀷\n"
+                "3. 鏄惧瓨涓嶈冻\n"
+                "4. 妯″瀷鏂囦欢璺緞閿欒\n"
+                "寤鸿锛歕n"
+                "- 妫€鏌ユā鍨嬫枃浠跺畬鏁存€n"
+                "- 鏇存柊 llama-cpp-python 鍒版渶鏂扮増鏈琝n"
+                "- 鍑忓皯 GPU 灞傛暟鎴栦娇鐢ㄦ洿灏忕殑妯″瀷\n"
+                "- 纭繚妯″瀷璺緞姝ｇ‘"
             )
         raise
 
@@ -1059,7 +1060,7 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
 
 
 def _clear_cache():
-    """清空本地 LLaMA 缓存并释放显存（与 G 盘 BSAI_QwenNodes 对齐）。"""
+    """娓呯┖鏈湴 LLaMA 缂撳瓨骞堕噴鏀炬樉瀛橈紙涓?G 鐩?BSAI_QwenNodes 瀵归綈锛夈€?""
     for key, entry in list(_LLM_CACHE.items()):
         try:
             llm = entry[0]
@@ -1074,53 +1075,53 @@ def _clear_cache():
 
 
 # ============================================================
-# 三合一增强节点
+# 涓夊悎涓€澧炲己鑺傜偣
 # ============================================================
 class BSAI_Qwen_Prompt_Enhancer:
-    # 【v1.01】一键兼容旧工作流存档：hf_model_name / llm_model_name / system_template 等 combo
-    # 在「模型未下载 / 模型目录变化 / 模板库版本不同」时，存档值可能不在当前下拉列表
-    # （典型报错：Value not in list: hf_model_name: 'Florence-2-base [...]' not in ['<未发现 HF 模型>']）。
-    # ComfyUI 默认会对 combo 做 value-in-list 校验并红框报错、阻塞整图（Output will be ignored）。
-    # 这里放行所有 combo 校验：开图不红框、不阻塞；运行时后端逻辑会给出友好中文提示，
-    # 前端 JS（prompt_enhancer.js）还会在加载工作流时自动把非法 combo 值重置为当前列表首项。
+    # 銆恦1.01銆戜竴閿吋瀹规棫宸ヤ綔娴佸瓨妗ｏ細hf_model_name / llm_model_name / system_template 绛?combo
+    # 鍦ㄣ€屾ā鍨嬫湭涓嬭浇 / 妯″瀷鐩綍鍙樺寲 / 妯℃澘搴撶増鏈笉鍚屻€嶆椂锛屽瓨妗ｅ€煎彲鑳戒笉鍦ㄥ綋鍓嶄笅鎷夊垪琛?
+    # 锛堝吀鍨嬫姤閿欙細Value not in list: hf_model_name: 'Florence-2-base [...]' not in ['<鏈彂鐜?HF 妯″瀷>']锛夈€?
+    # ComfyUI 榛樿浼氬 combo 鍋?value-in-list 鏍￠獙骞剁孩妗嗘姤閿欍€侀樆濉炴暣鍥撅紙Output will be ignored锛夈€?
+    # 杩欓噷鏀捐鎵€鏈?combo 鏍￠獙锛氬紑鍥句笉绾㈡銆佷笉闃诲锛涜繍琛屾椂鍚庣閫昏緫浼氱粰鍑哄弸濂戒腑鏂囨彁绀猴紝
+    # 鍓嶇 JS锛坧rompt_enhancer.js锛夎繕浼氬湪鍔犺浇宸ヤ綔娴佹椂鑷姩鎶婇潪娉?combo 鍊奸噸缃负褰撳墠鍒楄〃棣栭」銆?
     @staticmethod
     def VALIDATE_INPUTS(*args, **kwargs):
-        # v1.01.2: 返回值兼容新旧两代 ComfyUI 校验语义：
-        # - 旧版以位置参调用 VALIDATE_INPUTS(input_name, input_value)，返回 None 表示通过；
-        # - 新版以 **kwargs 传入全部输入调用，要求返回 True（返回 None 会报
-        #   "Custom validation failed for node: X - None"），且 kwargs 形态自动跳过 combo 校验。
-        # 判别：收到 kwargs（新版形态）=> True；仅两个位置参（旧版形态）=> None。
+        # v1.01.2: 杩斿洖鍊煎吋瀹规柊鏃т袱浠?ComfyUI 鏍￠獙璇箟锛?
+        # - 鏃х増浠ヤ綅缃弬璋冪敤 VALIDATE_INPUTS(input_name, input_value)锛岃繑鍥?None 琛ㄧず閫氳繃锛?
+        # - 鏂扮増浠?**kwargs 浼犲叆鍏ㄩ儴杈撳叆璋冪敤锛岃姹傝繑鍥?True锛堣繑鍥?None 浼氭姤
+        #   "Custom validation failed for node: X - None"锛夛紝涓?kwargs 褰㈡€佽嚜鍔ㄨ烦杩?combo 鏍￠獙銆?
+        # 鍒ゅ埆锛氭敹鍒?kwargs锛堟柊鐗堝舰鎬侊級=> True锛涗粎涓や釜浣嶇疆鍙傦紙鏃х増褰㈡€侊級=> None銆?
         if not kwargs and len(args) == 2:
             return None
         return True
 
     @classmethod
     def INPUT_TYPES(cls):
-        # 每次打开节点都重新递归扫描，新增模型无需重启 ComfyUI
+        # 姣忔鎵撳紑鑺傜偣閮介噸鏂伴€掑綊鎵弿锛屾柊澧炴ā鍨嬫棤闇€閲嶅惎 ComfyUI
         models, mmprojs = _scan_gguf()
-        no_model = "<未发现 GGUF>"
+        no_model = "<鏈彂鐜?GGUF>"
         return {
             "required": {
-                # ---- 后端切换 ----
+                # ---- 鍚庣鍒囨崲 ----
                 "backend": (BACKEND_LABELS, {"default": BACKEND_PE}),
-                # ---- 公共参数（三个后端共用）----
+                # ---- 鍏叡鍙傛暟锛堜笁涓悗绔叡鐢級----
                 "prompt_text": ("STRING", {
                     "multiline": True,
-                    "default": "一个穿红裙的女孩站在樱花树下，手里拿着奶茶，傍晚阳光",
-                    "placeholder": "输入大白话提示词（中文/英文均可）。I2I/多图模式可用 图1/图2… 指代参考图。",
+                    "default": "涓€涓┛绾㈣鐨勫コ瀛╃珯鍦ㄦū鑺辨爲涓嬶紝鎵嬮噷鎷跨潃濂惰尪锛屽倣鏅氶槼鍏?,
+                    "placeholder": "杈撳叆澶х櫧璇濇彁绀鸿瘝锛堜腑鏂?鑻辨枃鍧囧彲锛夈€侷2I/澶氬浘妯″紡鍙敤 鍥?/鍥?鈥?鎸囦唬鍙傝€冨浘銆?,
                 }),
-                "system_template": (template_display_list(), {"default": "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]"}),
+                "system_template": (template_display_list(), {"default": "Qwen-Image-2.1 瀹樻柟 PE-T2I 绯荤粺瑙勫垯 [official_t2i]"}),
                 "custom_system_prompt": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "留空使用上方模板；填写则覆盖模板作为 system prompt",
+                    "placeholder": "鐣欑┖浣跨敤涓婃柟妯℃澘锛涘～鍐欏垯瑕嗙洊妯℃澘浣滀负 system prompt",
                 }),
-                # 【v2】用户额外要求（拼到 MERGED_TEXT 输出），不进入 LLM 内部对话。
-                # 海报墙选模板时也会同步触发预览，让 Show Text 立即显示合并文本。
+                # 銆恦2銆戠敤鎴烽澶栬姹傦紙鎷煎埌 MERGED_TEXT 杈撳嚭锛夛紝涓嶈繘鍏?LLM 鍐呴儴瀵硅瘽銆?
+                # 娴锋姤澧欓€夋ā鏉挎椂涔熶細鍚屾瑙﹀彂棰勮锛岃 Show Text 绔嬪嵆鏄剧ず鍚堝苟鏂囨湰銆?
                 "user_requirement": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "用户对当前任务的额外要求（拼到 MERGED_TEXT 输出，与下方海报墙配合使用）\n例：封面含主标题+副标题；左侧放主视觉，右侧留白放文案；配色用深蓝+橙金。",
+                    "placeholder": "鐢ㄦ埛瀵瑰綋鍓嶄换鍔＄殑棰濆瑕佹眰锛堟嫾鍒?MERGED_TEXT 杈撳嚭锛屼笌涓嬫柟娴锋姤澧欓厤鍚堜娇鐢級\n渚嬶細灏侀潰鍚富鏍囬+鍓爣棰橈紱宸︿晶鏀句富瑙嗚锛屽彸渚х暀鐧芥斁鏂囨锛涢厤鑹茬敤娣辫摑+姗欓噾銆?,
                 }),
                 "temperature": ("FLOAT", {"default": 0.7, "min": 0.0, "max": 2.0, "step": 0.01}),
                 "top_p": ("FLOAT", {"default": 0.95, "min": 0.0, "max": 1.0, "step": 0.01}),
@@ -1129,52 +1130,52 @@ class BSAI_Qwen_Prompt_Enhancer:
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
                 "max_tokens": ("INT", {"default": 4096, "min": 64, "max": 32768}),
                 "speed_preset": (list(cls._SPEED_PRESETS.keys()), {"default": _DEFAULT_SPEED}),
-                # ---- 官方PE 专属 ----
-                "pe_mode": (["auto", "T2I (文生图)", "I2I (图生图/编辑)"], {"default": "auto"}),
+                # ---- 瀹樻柟PE 涓撳睘 ----
+                "pe_mode": (["auto", "T2I (鏂囩敓鍥?", "I2I (鍥剧敓鍥?缂栬緫)"], {"default": "auto"}),
                 "min_p": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.01}),
                 "thinking": ("BOOLEAN", {"default": True}),
                 "mtp": (["auto", "off", "2", "3", "4", "5"], {"default": "auto"}),
-                # ---- 本地LLaMA 专属 ----
+                # ---- 鏈湴LLaMA 涓撳睘 ----
                 "llm_model_name": ((models if models else [no_model]), {"default": models[0] if models else no_model}),
                 "mmproj_name": ([""] + mmprojs, {"default": _auto_pair_mmproj(models[0], mmprojs) if models else ""}),
                 "chat_handler": (_chat_handler_labels(), {"default": _AUTO_LABEL}),
                 "n_ctx": ("INT", {"default": 8192, "min": 512, "max": 65536}),
                 "n_gpu_layers": ("INT", {"default": -1, "min": -1, "max": 200}),
                 "load_mtp": ("BOOLEAN", {"default": False}),
-                # ---- 极限提速参数（视频同款 llama.cpp：显存+内存混合模式）----
+                # ---- 鏋侀檺鎻愰€熷弬鏁帮紙瑙嗛鍚屾 llama.cpp锛氭樉瀛?鍐呭瓨娣峰悎妯″紡锛?---
                 "n_cmoe": ("INT", {
                     "default": 0, "min": 0, "max": 256, "step": 1,
-                    "tooltip": "MoE专家拆分到CPU/内存层数(-ncmoe)。仅MoE有效，稠密无效。\nQwen-35B-A3B实测约24最稳；0=关闭。当前0.3.36暂未支持，升级后自动生效。",
+                    "tooltip": "MoE涓撳鎷嗗垎鍒癈PU/鍐呭瓨灞傛暟(-ncmoe)銆備粎MoE鏈夋晥锛岀瀵嗘棤鏁堛€俓nQwen-35B-A3B瀹炴祴绾?4鏈€绋筹紱0=鍏抽棴銆傚綋鍓?.3.36鏆傛湭鏀寔锛屽崌绾у悗鑷姩鐢熸晥銆?,
                 }),
-                "kv_cache_quant": (["auto(f16不量化)", "q8_0", "q4_0"], {
-                    "default": "auto(f16不量化)",
-                    "tooltip": "KV缓存量化(-ctk/-ctv，q4_0=视频效果)。降显存提速，精度略降。",
+                "kv_cache_quant": (["auto(f16涓嶉噺鍖?", "q8_0", "q4_0"], {
+                    "default": "auto(f16涓嶉噺鍖?",
+                    "tooltip": "KV缂撳瓨閲忓寲(-ctk/-ctv锛宷4_0=瑙嗛鏁堟灉)銆傞檷鏄惧瓨鎻愰€燂紝绮惧害鐣ラ檷銆?,
                 }),
-                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap；内存不足/换页可关闭(--no-mmap)。"}),
-                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock(--mlock)锁内存防换出。"}),
-                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa。auto=模型支持即启用。"}),
-                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t 线程数(视频示例14)；0=自动。"}),
+                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap锛涘唴瀛樹笉瓒?鎹㈤〉鍙叧闂?--no-mmap)銆?}),
+                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock(--mlock)閿佸唴瀛橀槻鎹㈠嚭銆?}),
+                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa銆俛uto=妯″瀷鏀寔鍗冲惎鐢ㄣ€?}),
+                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t 绾跨▼鏁?瑙嗛绀轰緥14)锛?=鑷姩銆?}),
                 "keep_loaded": ("BOOLEAN", {"default": False}),
-                # ---- API 专属 ----
+                # ---- API 涓撳睘 ----
                 "api_base": ("STRING", {
                     "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-                    "placeholder": "OpenAI 兼容接口地址，例如 https://dashscope.aliyuncs.com/compatible-mode/v1 或 http://127.0.0.1:8000/v1",
+                    "placeholder": "OpenAI 鍏煎鎺ュ彛鍦板潃锛屼緥濡?https://dashscope.aliyuncs.com/compatible-mode/v1 鎴?http://127.0.0.1:8000/v1",
                 }),
-                "api_key": ("STRING", {"default": "", "placeholder": "API Key（在线服务必填）"}),
+                "api_key": ("STRING", {"default": "", "placeholder": "API Key锛堝湪绾挎湇鍔″繀濉級"}),
                 "api_model_name": ("STRING", {
                     "default": "qwen3.5-vl-9b",
-                    "placeholder": "模型名，如 qwen3.5-vl-9b / qwen-plus / 本地部署的模型名",
+                    "placeholder": "妯″瀷鍚嶏紝濡?qwen3.5-vl-9b / qwen-plus / 鏈湴閮ㄧ讲鐨勬ā鍨嬪悕",
                 }),
                 "timeout": ("INT", {"default": 120, "min": 10, "max": 600}),
-                # ---- 本地HF (Transformers) 专属 ----
-                "hf_model_name": (_hf_model_display_list() or ["<未发现 HF 模型>"],),
+                # ---- 鏈湴HF (Transformers) 涓撳睘 ----
+                "hf_model_name": (_hf_model_display_list() or ["<鏈彂鐜?HF 妯″瀷>"],),
                 "hf_task": (["<MORE_DETAILED_CAPTION>", "<DETAILED_CAPTION>", "<CAPTION>", "<OD>", "<REGION_CAPTION>"], {"default": "<MORE_DETAILED_CAPTION>"}),
                 "hf_device": (["auto", "cuda", "cpu"], {"default": "auto"}),
                 "hf_keep_loaded": ("BOOLEAN", {"default": True}),
-                # 【v3】纯预览：勾上后跳过所有模型调用，仅输出 MERGED_TEXT。
-                # 海报墙选模板时会自动勾上 → 触发一次 queuePrompt → 下游 Show Text 立即显示。
-                # 用户后续要 LLM 增强时手动关掉再 Queue Prompt。
-                "preview_only": ("BOOLEAN", {"default": False, "label": "仅预览（跳过 LLM）"}),
+                # 銆恦3銆戠函棰勮锛氬嬀涓婂悗璺宠繃鎵€鏈夋ā鍨嬭皟鐢紝浠呰緭鍑?MERGED_TEXT銆?
+                # 娴锋姤澧欓€夋ā鏉挎椂浼氳嚜鍔ㄥ嬀涓?鈫?瑙﹀彂涓€娆?queuePrompt 鈫?涓嬫父 Show Text 绔嬪嵆鏄剧ず銆?
+                # 鐢ㄦ埛鍚庣画瑕?LLM 澧炲己鏃舵墜鍔ㄥ叧鎺夊啀 Queue Prompt銆?
+                "preview_only": ("BOOLEAN", {"default": False, "label": "浠呴瑙堬紙璺宠繃 LLM锛?}),
             },
             "optional": {
                 "clip": ("CLIP",),
@@ -1190,71 +1191,71 @@ class BSAI_Qwen_Prompt_Enhancer:
     CATEGORY = "BSAI/Qwen Image 2.1"
     OUTPUT_NODE = True
     DESCRIPTION = (
-        "一个节点、四种增强后端（backend 下拉切换，前端自动显隐对应参数）：\n"
-        "① 官方PE（本地 Qwen3.5-9B）：CLIPLoader 加载 text_encoders 目录下的官方 PE 模型，"
-        "按官方 chat 模板生成，输出 rewritten_prompt / wh_ratio / ratio_follow；"
-        "I2I 模式接 image_1~image_16（最多 16 张），提示词用 图1/图2 描述编辑需求。\n"
-        "② 本地LLaMA（GGUF+mmproj）：llama.cpp 加载本地视觉大模型，自动扫描 models/LLM 与 text_encoders，"
-        "多图识别反推，chat_handler 自动识别全系列最新模型。\n"
-        "③ 本地HF（Transformers）：加载 models/LLM 下的 HuggingFace safetensors 模型，"
-        "覆盖 Florence-2（视觉 caption 反推提示词，需接 image_1）与 Llama/Gemma 等文本 LLM（chat_template 生成）。\n"
-        "④ API（OpenAI兼容）：配置 api_base / api_key / model_name 调在线或本地 API。\n"
-        "公共参数四后端共用；输出统一 10 路。speed_preset 选档后 RECOMMENDED_* 端口输出对应 KSampler 参数，"
-        "在 KSampler 上右键 steps/cfg → Convert to input 接上即可一键套用。"
-        "Qwen Image 2.1 为 CFG-distilled 架构，官方推荐 cfg=1.0；加速档基于官方 day-0 参数（25步/cfg1/euler/simple）。"
-        "v1.08.0 新增蒸馏LoRA档：Viggle Turbo 6步(官方节点) / Pruna 5-8步(社区转换) / 阿里PAI Fun-Acc 4步(实验)，"
-        "蒸馏档必须搭配对应 LoRA 与固定 sigma（Viggle Turbo Sigmas / ManualSigmas / PDD），详见 ACCELERATION_GUIDE.md。"
+        "涓€涓妭鐐广€佸洓绉嶅寮哄悗绔紙backend 涓嬫媺鍒囨崲锛屽墠绔嚜鍔ㄦ樉闅愬搴斿弬鏁帮級锛歕n"
+        "鈶?瀹樻柟PE锛堟湰鍦?Qwen3.5-9B锛夛細CLIPLoader 鍔犺浇 text_encoders 鐩綍涓嬬殑瀹樻柟 PE 妯″瀷锛?
+        "鎸夊畼鏂?chat 妯℃澘鐢熸垚锛岃緭鍑?rewritten_prompt / wh_ratio / ratio_follow锛?
+        "I2I 妯″紡鎺?image_1~image_16锛堟渶澶?16 寮狅級锛屾彁绀鸿瘝鐢?鍥?/鍥? 鎻忚堪缂栬緫闇€姹傘€俓n"
+        "鈶?鏈湴LLaMA锛圙GUF+mmproj锛夛細llama.cpp 鍔犺浇鏈湴瑙嗚澶фā鍨嬶紝鑷姩鎵弿 models/LLM 涓?text_encoders锛?
+        "澶氬浘璇嗗埆鍙嶆帹锛宑hat_handler 鑷姩璇嗗埆鍏ㄧ郴鍒楁渶鏂版ā鍨嬨€俓n"
+        "鈶?鏈湴HF锛圱ransformers锛夛細鍔犺浇 models/LLM 涓嬬殑 HuggingFace safetensors 妯″瀷锛?
+        "瑕嗙洊 Florence-2锛堣瑙?caption 鍙嶆帹鎻愮ず璇嶏紝闇€鎺?image_1锛変笌 Llama/Gemma 绛夋枃鏈?LLM锛坈hat_template 鐢熸垚锛夈€俓n"
+        "鈶?API锛圤penAI鍏煎锛夛細閰嶇疆 api_base / api_key / model_name 璋冨湪绾挎垨鏈湴 API銆俓n"
+        "鍏叡鍙傛暟鍥涘悗绔叡鐢紱杈撳嚭缁熶竴 10 璺€俿peed_preset 閫夋。鍚?RECOMMENDED_* 绔彛杈撳嚭瀵瑰簲 KSampler 鍙傛暟锛?
+        "鍦?KSampler 涓婂彸閿?steps/cfg 鈫?Convert to input 鎺ヤ笂鍗冲彲涓€閿鐢ㄣ€?
+        "Qwen Image 2.1 涓?CFG-distilled 鏋舵瀯锛屽畼鏂规帹鑽?cfg=1.0锛涘姞閫熸。鍩轰簬瀹樻柟 day-0 鍙傛暟锛?5姝?cfg1/euler/simple锛夈€?
+        "v1.08.0 鏂板钂搁LoRA妗ｏ細Viggle Turbo 6姝?瀹樻柟鑺傜偣) / Pruna 5-8姝?绀惧尯杞崲) / 闃块噷PAI Fun-Acc 4姝?瀹為獙)锛?
+        "钂搁妗ｅ繀椤绘惌閰嶅搴?LoRA 涓庡浐瀹?sigma锛圴iggle Turbo Sigmas / ManualSigmas / PDD锛夛紝璇﹁ ACCELERATION_GUIDE.md銆?
     )
 
-    # 加速档位 → (steps, cfg, sampler, scheduler[, hint])
-    # Qwen Image 2.1 是 CFG-distilled 架构，cfg=1.0 为官方推荐值（非旧版的 3~4）
-    # 官方 day-0 联调：25步/cfg1/euler/simple（ComfyUI v0.37.0+ 原生模板）
-    # v1.08.0 新增：2026-09~10 已发布的 2.1 专用蒸馏 LoRA 档（Viggle / Pruna / 阿里PAI Fun-Acc）。
-    # 蒸馏档必须搭配对应 LoRA + 固定 sigma（Viggle Turbo Sigmas / ManualSigmas / PDD），
-    # 不能直接用普通 KSampler 的 scheduler 生成 sigma，否则出噪图；详见 ACCELERATION_GUIDE.md。
+    # 鍔犻€熸。浣?鈫?(steps, cfg, sampler, scheduler[, hint])
+    # Qwen Image 2.1 鏄?CFG-distilled 鏋舵瀯锛宑fg=1.0 涓哄畼鏂规帹鑽愬€硷紙闈炴棫鐗堢殑 3~4锛?
+    # 瀹樻柟 day-0 鑱旇皟锛?5姝?cfg1/euler/simple锛圕omfyUI v0.37.0+ 鍘熺敓妯℃澘锛?
+    # v1.08.0 鏂板锛?026-09~10 宸插彂甯冪殑 2.1 涓撶敤钂搁 LoRA 妗ｏ紙Viggle / Pruna / 闃块噷PAI Fun-Acc锛夈€?
+    # 钂搁妗ｅ繀椤绘惌閰嶅搴?LoRA + 鍥哄畾 sigma锛圴iggle Turbo Sigmas / ManualSigmas / PDD锛夛紝
+    # 涓嶈兘鐩存帴鐢ㄦ櫘閫?KSampler 鐨?scheduler 鐢熸垚 sigma锛屽惁鍒欏嚭鍣浘锛涜瑙?ACCELERATION_GUIDE.md銆?
     _SPEED_PRESETS = {
-        # ===== 2.1 原生正确参数（基于官方 day-0 联调）=====
+        # ===== 2.1 鍘熺敓姝ｇ‘鍙傛暟锛堝熀浜庡畼鏂?day-0 鑱旇皟锛?====
         _DEFAULT_SPEED: (25, 1.0, "euler", "simple"),
-        "快速 15步/CFG1 (迭代预览)": (15, 1.0, "euler", "simple"),
-        "极速 10步/CFG1 (快速草稿)": (10, 1.0, "euler", "simple"),
-        "高质量 35步/CFG1 (精细出图)": (35, 1.0, "euler", "simple"),
-        # ===== 配合外部加速节点（无LoRA）=====
-        "缓存加速 20步/CFG1 (配合EasyCache节点)": (20, 1.0, "euler", "simple"),
-        # ===== 蒸馏 LoRA 加速档（2.1 专用蒸馏适配器，2026-09~10 已发布）=====
-        "Viggle Turbo 6步/CFG1 (官方节点,推荐)": (
+        "蹇€?15姝?CFG1 (杩唬棰勮)": (15, 1.0, "euler", "simple"),
+        "鏋侀€?10姝?CFG1 (蹇€熻崏绋?": (10, 1.0, "euler", "simple"),
+        "楂樿川閲?35姝?CFG1 (绮剧粏鍑哄浘)": (35, 1.0, "euler", "simple"),
+        # ===== 閰嶅悎澶栭儴鍔犻€熻妭鐐癸紙鏃燣oRA锛?====
+        "缂撳瓨鍔犻€?20姝?CFG1 (閰嶅悎EasyCache鑺傜偣)": (20, 1.0, "euler", "simple"),
+        # ===== 钂搁 LoRA 鍔犻€熸。锛?.1 涓撶敤钂搁閫傞厤鍣紝2026-09~10 宸插彂甯冿級=====
+        "Viggle Turbo 6姝?CFG1 (瀹樻柟鑺傜偣,鎺ㄨ崘)": (
             6, 1.0, "euler", "simple",
-            "Viggle v0.3：模型仓库 comfyui/viggle_turbo.py 提供 Viggle Turbo Sigmas + Viggle Turbo LoRA(unmerged) 两节点，"
-            "接 BasicGuider + SamplerCustomAdvanced，CFG=1.0、负向留空；勿用 KSampler 自带 scheduler。"
-            "原始6步sigma=1.0,0.9375,0.875,0.75,0.5,0.25（节点按分辨率shift）。"
-            "ComfyUI工作流用 r128 版（已下载至 models/loras）；本机另有 v0.1 4步 r64 旧版。",
+            "Viggle v0.3锛氭ā鍨嬩粨搴?comfyui/viggle_turbo.py 鎻愪緵 Viggle Turbo Sigmas + Viggle Turbo LoRA(unmerged) 涓よ妭鐐癸紝"
+            "鎺?BasicGuider + SamplerCustomAdvanced锛孋FG=1.0銆佽礋鍚戠暀绌猴紱鍕跨敤 KSampler 鑷甫 scheduler銆?
+            "鍘熷6姝igma=1.0,0.9375,0.875,0.75,0.5,0.25锛堣妭鐐规寜鍒嗚鲸鐜噑hift锛夈€?
+            "ComfyUI宸ヤ綔娴佺敤 r128 鐗堬紙宸蹭笅杞借嚦 models/loras锛夛紱鏈満鍙︽湁 v0.1 4姝?r64 鏃х増銆?,
         ),
-        "Viggle Turbo 9步/CFG1 (仅diffusers)": (
+        "Viggle Turbo 9姝?CFG1 (浠卍iffusers)": (
             9, 1.0, "euler", "simple",
-            "v0.3 的9步模式=前7步turbo+后2步切回base模型，细节/小字更好（约3.5x于40步）；"
-            "目前仅 diffusers 与演示Space 可用，ComfyUI 暂未提供。",
+            "v0.3 鐨?姝ユā寮?鍓?姝urbo+鍚?姝ュ垏鍥瀊ase妯″瀷锛岀粏鑺?灏忓瓧鏇村ソ锛堢害3.5x浜?0姝ワ級锛?
+            "鐩墠浠?diffusers 涓庢紨绀篠pace 鍙敤锛孋omfyUI 鏆傛湭鎻愪緵銆?,
         ),
-        "Pruna 8步/CFG1 (质量优先,推荐)": (
+        "Pruna 8姝?CFG1 (璐ㄩ噺浼樺厛,鎺ㄨ崘)": (
             8, 1.0, "euler", "simple",
-            "Pruna 8步（官方推荐默认）：sigma=1.0,0.933333333,0.857142857,0.769230769,0.666666667,"
-            "0.545454545,0.4,0.222222222（末尾0由调度器补）。需用社区转换版LoRA（NidAll/pruna-image-2.1-comfyui-loras，"
-            "自带alpha标量）+ ManualSigmas + SamplerCustom；CFG=1.0、负向留空。",
+            "Pruna 8姝ワ紙瀹樻柟鎺ㄨ崘榛樿锛夛細sigma=1.0,0.933333333,0.857142857,0.769230769,0.666666667,"
+            "0.545454545,0.4,0.222222222锛堟湯灏?鐢辫皟搴﹀櫒琛ワ級銆傞渶鐢ㄧぞ鍖鸿浆鎹㈢増LoRA锛圢idAll/pruna-image-2.1-comfyui-loras锛?
+            "鑷甫alpha鏍囬噺锛? ManualSigmas + SamplerCustom锛汣FG=1.0銆佽礋鍚戠暀绌恒€?,
         ),
-        "Pruna 5步/CFG1 (极速)": (
+        "Pruna 5姝?CFG1 (鏋侀€?": (
             5, 1.0, "euler", "simple",
-            "Pruna 5步：sigma=1.0,0.94,0.857142857,0.666666667,0.4；H100@1024 约1.06s（提速5.7x），"
-            "画质明显低于8步版；用法同上（转换版LoRA + ManualSigmas + SamplerCustom）。",
+            "Pruna 5姝ワ細sigma=1.0,0.94,0.857142857,0.666666667,0.4锛汬100@1024 绾?.06s锛堟彁閫?.7x锛夛紝"
+            "鐢昏川鏄庢樉浣庝簬8姝ョ増锛涚敤娉曞悓涓婏紙杞崲鐗圠oRA + ManualSigmas + SamplerCustom锛夈€?,
         ),
-        "官方Fun-Acc 4步/CFG1 (PAI,实验)": (
+        "瀹樻柟Fun-Acc 4姝?CFG1 (PAI,瀹為獙)": (
             4, 1.0, "euler", "simple",
-            "阿里PAI官方4步蒸馏（PDD）：sigma=1.0,0.9169867,0.7861579,0.549491,0.0；默认2048采样。"
-            "ComfyUI无官方支持：需Kijai的 Qwen-Image-2.1-PDD 分支 + LoRA转换（norm_q/norm_k/text_norm为全参），"
-            "属社区实验路径。",
+            "闃块噷PAI瀹樻柟4姝ヨ捀棣忥紙PDD锛夛細sigma=1.0,0.9169867,0.7861579,0.549491,0.0锛涢粯璁?048閲囨牱銆?
+            "ComfyUI鏃犲畼鏂规敮鎸侊細闇€Kijai鐨?Qwen-Image-2.1-PDD 鍒嗘敮 + LoRA杞崲锛坣orm_q/norm_k/text_norm涓哄叏鍙傦級锛?
+            "灞炵ぞ鍖哄疄楠岃矾寰勩€?,
         ),
-        # ===== 旧版兼容（保留key防旧工作流失效，值已修正为2.1正确参数）=====
-        "标准质量 20步/CFG3 (推荐, 7B原生)": (25, 1.0, "euler", "simple"),
-        "极速 8步/CFG2": (8, 1.0, "euler", "simple"),
-        "闪电 4步/CFG1 (需2.1 Lightning LoRA)": (4, 1.0, "euler", "simple"),
-        "旧保守 50步/CFG4": (35, 1.0, "euler", "simple"),
+        # ===== 鏃х増鍏煎锛堜繚鐣檏ey闃叉棫宸ヤ綔娴佸け鏁堬紝鍊煎凡淇涓?.1姝ｇ‘鍙傛暟锛?====
+        "鏍囧噯璐ㄩ噺 20姝?CFG3 (鎺ㄨ崘, 7B鍘熺敓)": (25, 1.0, "euler", "simple"),
+        "鏋侀€?8姝?CFG2": (8, 1.0, "euler", "simple"),
+        "闂數 4姝?CFG1 (闇€2.1 Lightning LoRA)": (4, 1.0, "euler", "simple"),
+        "鏃т繚瀹?50姝?CFG4": (35, 1.0, "euler", "simple"),
     }
 
     def enhance(self, backend, prompt_text, system_template, custom_system_prompt="",
@@ -1264,7 +1265,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 pe_mode="auto", min_p=0.0, thinking=True, mtp="auto",
                 llm_model_name="", mmproj_name="", chat_handler="", n_ctx=8192,
                 n_gpu_layers=-1, load_mtp=False, keep_loaded=False,
-                n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                n_cmoe=0, kv_cache_quant="auto(f16涓嶉噺鍖?", use_mmap=True, use_mlock=False,
                 flash_attn="auto", threads=0,
                 api_base="", api_key="", api_model_name="", timeout=120,
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
@@ -1273,8 +1274,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                 image_1=None, image_2=None, image_3=None, image_4=None, image_5=None, image_6=None,
                 image_7=None, image_8=None, image_9=None, image_10=None, image_11=None, image_12=None,
                 image_13=None, image_14=None, image_15=None, image_16=None):
-        # 【v3】纯预览：勾上后跳过所有模型调用，仅输出 MERGED_TEXT。
-        # 用于海报墙选模板时让下游 Show Text 立刻显示，无需加载 LLM。
+        # 銆恦3銆戠函棰勮锛氬嬀涓婂悗璺宠繃鎵€鏈夋ā鍨嬭皟鐢紝浠呰緭鍑?MERGED_TEXT銆?
+        # 鐢ㄤ簬娴锋姤澧欓€夋ā鏉挎椂璁╀笅娓?Show Text 绔嬪埢鏄剧ず锛屾棤闇€鍔犺浇 LLM銆?
         if preview_only:
             print(f"[BSAI_Qwen_Prompt_Enhancer] [preview] custom_system_prompt={custom_system_prompt!r} len={len(custom_system_prompt or '')} system_template={system_template!r}")
             merged_text = self._build_preview_merged(
@@ -1284,21 +1285,21 @@ class BSAI_Qwen_Prompt_Enhancer:
             )
             steps, cfg, sampler, scheduler, *extra = self._SPEED_PRESETS.get(
                 speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 纯预览模式 → 仅输出 MERGED_TEXT，不调用任何模型")
-            # 【修复 2026-09-23】纯预览同样释放常驻 LLM（此前 keep_loaded=true 遗留的 27B 占 ~20GB 显存），
-            # 否则预览/后续出图仍会被常驻 LLM 拖死。_clear_cache 只清本地 LLaMA 缓存，不影响 clip。
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 绾瑙堟ā寮?鈫?浠呰緭鍑?MERGED_TEXT锛屼笉璋冪敤浠讳綍妯″瀷")
+            # 銆愪慨澶?2026-09-23銆戠函棰勮鍚屾牱閲婃斁甯搁┗ LLM锛堟鍓?keep_loaded=true 閬楃暀鐨?27B 鍗?~20GB 鏄惧瓨锛夛紝
+            # 鍚﹀垯棰勮/鍚庣画鍑哄浘浠嶄細琚父椹?LLM 鎷栨銆俖clear_cache 鍙竻鏈湴 LLaMA 缂撳瓨锛屼笉褰卞搷 clip銆?
             _clear_cache()
-            hint_line = f"\n⚠ {extra[0]}" if extra else ""
+            hint_line = f"\n鈿?{extra[0]}" if extra else ""
             ui_text = [
                 merged_text,
-                f"\n── 纯预览模式 ──\n未调用任何模型。MERGED_TEXT 已生成，下游 Show Text / KSampler 可直接使用。\n"
-                f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。\n"
-                f"\n── 当前加速档: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──"
+                f"\n鈹€鈹€ 绾瑙堟ā寮?鈹€鈹€\n鏈皟鐢ㄤ换浣曟ā鍨嬨€侻ERGED_TEXT 宸茬敓鎴愶紝涓嬫父 Show Text / KSampler 鍙洿鎺ヤ娇鐢ㄣ€俓n"
+                f"闇€瑕?LLM 澧炲己璇峰叧闂€屼粎棰勮銆嶅悗鍐?Queue Prompt銆俓n"
+                f"\n鈹€鈹€ 褰撳墠鍔犻€熸。: {speed_preset} 鈫?steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} 鈹€鈹€"
                 f"{hint_line}",
             ]
-            # 【修复 2026-09-23 v2】海报墙选模板后，ENHANCED_PROMPT(第1路) 输出模板拼接 merged_text：
-            # 无论后端模式，选模板后提示词统一走 ENHANCED_PROMPT 展示模板效果（用户需求）。
-            # 无模板且无用户要求时 merged_text 为空 → 回退用户原文 prompt_text，防空条件出沙土图。
+            # 銆愪慨澶?2026-09-23 v2銆戞捣鎶ュ閫夋ā鏉垮悗锛孍NHANCED_PROMPT(绗?璺? 杈撳嚭妯℃澘鎷兼帴 merged_text锛?
+            # 鏃犺鍚庣妯″紡锛岄€夋ā鏉垮悗鎻愮ず璇嶇粺涓€璧?ENHANCED_PROMPT 灞曠ず妯℃澘鏁堟灉锛堢敤鎴烽渶姹傦級銆?
+            # 鏃犳ā鏉夸笖鏃犵敤鎴疯姹傛椂 merged_text 涓虹┖ 鈫?鍥為€€鐢ㄦ埛鍘熸枃 prompt_text锛岄槻绌烘潯浠跺嚭娌欏湡鍥俱€?
             enhanced_out = merged_text if (merged_text or "").strip() else (prompt_text or "")
             return {
                 "ui": {"text": ui_text, "merged_text": [merged_text]},
@@ -1340,6 +1341,18 @@ class BSAI_Qwen_Prompt_Enhancer:
                 temperature=temperature, top_p=top_p, top_k=top_k, seed=seed,
                 speed_preset=speed_preset, images=images,
             )
+        if backend == BACKEND_STRATA:
+            # Reuse OpenAI-compatible path, pointed at local Strata server.
+            return self._enhance_api(
+                api_base="http://127.0.0.1:8080/v1",
+                api_key="strata",
+                api_model_name="qwen3.8-flash-next",
+                prompt_text=prompt_text, system_template=system_template,
+                custom_system_prompt=custom_system_prompt, user_requirement=user_requirement,
+                max_tokens=max_tokens,
+                temperature=temperature, top_p=top_p, top_k=top_k, seed=seed,
+                timeout=timeout, speed_preset=speed_preset, images=images,
+            )
         if backend == BACKEND_API:
             return self._enhance_api(
                 api_base=api_base, api_key=api_key, api_model_name=api_model_name,
@@ -1349,20 +1362,20 @@ class BSAI_Qwen_Prompt_Enhancer:
                 temperature=temperature, top_p=top_p, top_k=top_k, seed=seed,
                 timeout=timeout, speed_preset=speed_preset, images=images,
             )
-        raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] 未知 backend: {backend!r}")
+        raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] 鏈煡 backend: {backend!r}")
 
-    # ---------------- 官方PE ----------------
+    # ---------------- 瀹樻柟PE ----------------
     def _enhance_official(self, clip, prompt_text, pe_mode, system_template, custom_system_prompt,
                           user_requirement,
                           max_tokens, temperature, top_p, top_k, repeat_penalty, min_p,
                           seed, thinking, mtp, speed_preset, images):
         if clip is None:
             raise ValueError(
-                "[BSAI_Qwen_Prompt_Enhancer] 官方PE 后端需要接入 clip：\n"
-                "用 CLIPLoader 加载 text_encoders 目录下的官方 PE 模型（qwen3.5_9b_qwen_image_2.1_pe_*.safetensors），"
-                "把 CLIP 输出接到本节点的 clip 输入。"
+                "[BSAI_Qwen_Prompt_Enhancer] 瀹樻柟PE 鍚庣闇€瑕佹帴鍏?clip锛歕n"
+                "鐢?CLIPLoader 鍔犺浇 text_encoders 鐩綍涓嬬殑瀹樻柟 PE 妯″瀷锛坬wen3.5_9b_qwen_image_2.1_pe_*.safetensors锛夛紝"
+                "鎶?CLIP 杈撳嚭鎺ュ埌鏈妭鐐圭殑 clip 杈撳叆銆?
             )
-        # 1) 模式判定: auto -> 有图即 I2I
+        # 1) 妯″紡鍒ゅ畾: auto -> 鏈夊浘鍗?I2I
         has_images = images is not None and len(images.shape) > 1 and images.shape[0] > 0
         mode = "T2I"
         if pe_mode != "auto":
@@ -1370,24 +1383,24 @@ class BSAI_Qwen_Prompt_Enhancer:
         elif has_images:
             mode = "I2I"
 
-        # 2) system prompt: 自定义优先，否则模板（auto/I2I 且未改模板时自动切官方 I2I 规则）
-        DEFAULT_T2I = "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]"
-        DEFAULT_I2I = "Qwen-Image-2.1 官方 PE-I2I 系统规则 [official_i2i]"
+        # 2) system prompt: 鑷畾涔変紭鍏堬紝鍚﹀垯妯℃澘锛坅uto/I2I 涓旀湭鏀规ā鏉挎椂鑷姩鍒囧畼鏂?I2I 瑙勫垯锛?
+        DEFAULT_T2I = "Qwen-Image-2.1 瀹樻柟 PE-T2I 绯荤粺瑙勫垯 [official_t2i]"
+        DEFAULT_I2I = "Qwen-Image-2.1 瀹樻柟 PE-I2I 绯荤粺瑙勫垯 [official_i2i]"
         system_prompt = custom_system_prompt.strip() if custom_system_prompt.strip() else None
         template_id = "custom"
         if system_prompt is None:
             if mode == "I2I" and system_template == DEFAULT_T2I:
                 system_template = DEFAULT_I2I
             system_prompt, template_id = resolve_template(system_template, "")
-            # 【修复 2026-09-23】官方PE 是专用微调模型，无系统规则时输出不可控（乱图/沙土）：
-            # 空 system prompt 自动回退对应模式官方规则并警告。
+            # 銆愪慨澶?2026-09-23銆戝畼鏂筆E 鏄笓鐢ㄥ井璋冩ā鍨嬶紝鏃犵郴缁熻鍒欐椂杈撳嚭涓嶅彲鎺э紙涔卞浘/娌欏湡锛夛細
+            # 绌?system prompt 鑷姩鍥為€€瀵瑰簲妯″紡瀹樻柟瑙勫垯骞惰鍛娿€?
             if not system_prompt.strip():
-                print("[BSAI_Qwen_Prompt_Enhancer] 警告: 无模板/空 system prompt 下官方PE 输出不可控，"
-                      "已自动回退官方 %s 规则" % ("I2I" if mode == "I2I" else "T2I"))
+                print("[BSAI_Qwen_Prompt_Enhancer] 璀﹀憡: 鏃犳ā鏉?绌?system prompt 涓嬪畼鏂筆E 杈撳嚭涓嶅彲鎺э紝"
+                      "宸茶嚜鍔ㄥ洖閫€瀹樻柟 %s 瑙勫垯" % ("I2I" if mode == "I2I" else "T2I"))
                 system_prompt = load_official_system_prompt(mode)
                 template_id = "official_i2i" if mode == "I2I" else "official_t2i"
 
-        # 3) 构造官方 chat 消息（图片 token 前置）
+        # 3) 鏋勯€犲畼鏂?chat 娑堟伅锛堝浘鐗?token 鍓嶇疆锛?
         n_images = int(images.shape[0]) if has_images else 0
         chat = build_official_chat(system_prompt, prompt_text, image_count=n_images, thinking=thinking)
 
@@ -1410,7 +1423,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 mtp=mtp,
             )
         except TypeError:
-            # 兼容较老 CLIP.generate 签名
+            # 鍏煎杈冭€?CLIP.generate 绛惧悕
             ids = clip.generate(
                 tokens, do_sample=True, max_length=int(max_tokens),
                 temperature=float(temperature), top_k=int(top_k), top_p=float(top_p),
@@ -1418,17 +1431,17 @@ class BSAI_Qwen_Prompt_Enhancer:
             )
         raw = clip.decode(ids, skip_special_tokens=False)
 
-        return self._finalize(raw, speed_preset, f"后端=官方PE 模式={mode} 模板={template_id}",
+        return self._finalize(raw, speed_preset, f"鍚庣=瀹樻柟PE 妯″紡={mode} 妯℃澘={template_id}",
                               system_template=system_template,
                               custom_system_prompt=custom_system_prompt,
                               user_requirement=user_requirement)
 
-    # ---------------- 本地LLaMA ----------------
+    # ---------------- 鏈湴LLaMA ----------------
     def _enhance_local(self, llm_model_name, mmproj_name, chat_handler, prompt_text, system_template,
                        custom_system_prompt, user_requirement,
                        max_tokens, temperature, top_p, top_k, repeat_penalty,
                        seed, n_ctx, n_gpu_layers, load_mtp, keep_loaded, speed_preset, images,
-                       n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                       n_cmoe=0, kv_cache_quant="auto(f16涓嶉噺鍖?", use_mmap=True, use_mlock=False,
                        flash_attn="auto", threads=0):
         resolved = _resolve_handler_label(chat_handler)
         if resolved == "__auto__":
@@ -1439,7 +1452,7 @@ class BSAI_Qwen_Prompt_Enhancer:
             _m, mmprojs_now = _scan_gguf()
             mmproj_name = _auto_pair_mmproj(llm_model_name, mmprojs_now)
             if not mmproj_name:
-                print("[BSAI_Qwen_Prompt_Enhancer] 警告: 接了图片但未选择 mmproj，视觉信息将不被使用")
+                print("[BSAI_Qwen_Prompt_Enhancer] 璀﹀憡: 鎺ヤ簡鍥剧墖浣嗘湭閫夋嫨 mmproj锛岃瑙変俊鎭皢涓嶈浣跨敤")
 
         system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
 
@@ -1459,9 +1472,9 @@ class BSAI_Qwen_Prompt_Enhancer:
             for u in urls:
                 user_content.append({"type": "image_url", "image_url": {"url": u}})
         elif images is not None and not mmproj_actually_active:
-            # mmproj 选了但 handler 初始化失败（已降级为纯文本）
-            print("[BSAI_Qwen_Prompt_Enhancer] 提示: 多模态被降级为纯文本，已忽略输入图片，"
-                  "仅用文字提示词生成。")
+            # mmproj 閫変簡浣?handler 鍒濆鍖栧け璐ワ紙宸查檷绾т负绾枃鏈級
+            print("[BSAI_Qwen_Prompt_Enhancer] 鎻愮ず: 澶氭ā鎬佽闄嶇骇涓虹函鏂囨湰锛屽凡蹇界暐杈撳叆鍥剧墖锛?
+                  "浠呯敤鏂囧瓧鎻愮ず璇嶇敓鎴愩€?)
         user_content.append({"type": "text", "text": prompt_text})
 
         messages = [
@@ -1482,79 +1495,79 @@ class BSAI_Qwen_Prompt_Enhancer:
             "stop": ["</s>"],
         }
 
-        # 重置 LLM 状态，避免上一次推理残留影响本次输出（移植自 BSAI_QwenNodes）
+        # 閲嶇疆 LLM 鐘舵€侊紝閬垮厤涓婁竴娆℃帹鐞嗘畫鐣欏奖鍝嶆湰娆¤緭鍑猴紙绉绘鑷?BSAI_QwenNodes锛?
         _reset_llm_state(llm)
 
         try:
-            # 使用签名兼容调用，自动适配不同版本 llama-cpp-python 的参数名
+            # 浣跨敤绛惧悕鍏煎璋冪敤锛岃嚜鍔ㄩ€傞厤涓嶅悓鐗堟湰 llama-cpp-python 鐨勫弬鏁板悕
             resp = _call_chat_completion(llm, messages=messages, params=params)
         except RuntimeError as e:
             if "Context Shift is explicitly disabled" in str(e):
-                current_n_ctx = getattr(llm, "n_ctx", "未知")
+                current_n_ctx = getattr(llm, "n_ctx", "鏈煡")
                 raise RuntimeError(
-                    "Context Shift 被 C++ 后端禁用（M-RoPE 模型不支持上下文滑动窗口）。\n"
-                    f"当前 n_ctx = {current_n_ctx}，无法容纳完整对话。\n"
-                    "请在节点中增大「n_ctx 上下文长度」：\n"
-                    "  - 纯文本建议 16384\n"
-                    "  - 含图片/视频建议 32768 或更高\n"
-                    f"原始错误：{e}"
+                    "Context Shift 琚?C++ 鍚庣绂佺敤锛圡-RoPE 妯″瀷涓嶆敮鎸佷笂涓嬫枃婊戝姩绐楀彛锛夈€俓n"
+                    f"褰撳墠 n_ctx = {current_n_ctx}锛屾棤娉曞绾冲畬鏁村璇濄€俓n"
+                    "璇峰湪鑺傜偣涓澶с€宯_ctx 涓婁笅鏂囬暱搴︺€嶏細\n"
+                    "  - 绾枃鏈缓璁?16384\n"
+                    "  - 鍚浘鐗?瑙嗛寤鸿 32768 鎴栨洿楂榎n"
+                    f"鍘熷閿欒锛歿e}"
                 ) from e
             raise
         except ValueError as e:
             if "Media evaluation failed" in str(e):
                 raise RuntimeError(
-                    "多模态图像编码失败（Media evaluation failed）。\n"
-                    "可能的原因和解决方案：\n"
-                    "1. 输入图像分辨率过大 — 请尝试减少输入图片数量，或缩小原图。\n"
-                    "2. mmproj 视觉投影模型与主模型不匹配 — 请确保加载了对应版本的 mmproj 文件。\n"
-                    "   例如：Qwen3.8-VL 主模型必须搭配 Qwen3.8-VL 的 mmproj。\n"
-                    "3. 显存不足导致 CLIP 编码失败 — 请尝试减少输入图片数量，或重启 ComfyUI。\n"
-                    "4. 图像文件损坏或格式异常 — 请检查输入图像能否正常打开。\n"
-                    f"原始错误：{e}"
+                    "澶氭ā鎬佸浘鍍忕紪鐮佸け璐ワ紙Media evaluation failed锛夈€俓n"
+                    "鍙兘鐨勫師鍥犲拰瑙ｅ喅鏂规锛歕n"
+                    "1. 杈撳叆鍥惧儚鍒嗚鲸鐜囪繃澶?鈥?璇峰皾璇曞噺灏戣緭鍏ュ浘鐗囨暟閲忥紝鎴栫缉灏忓師鍥俱€俓n"
+                    "2. mmproj 瑙嗚鎶曞奖妯″瀷涓庝富妯″瀷涓嶅尮閰?鈥?璇风‘淇濆姞杞戒簡瀵瑰簲鐗堟湰鐨?mmproj 鏂囦欢銆俓n"
+                    "   渚嬪锛歈wen3.8-VL 涓绘ā鍨嬪繀椤绘惌閰?Qwen3.8-VL 鐨?mmproj銆俓n"
+                    "3. 鏄惧瓨涓嶈冻瀵艰嚧 CLIP 缂栫爜澶辫触 鈥?璇峰皾璇曞噺灏戣緭鍏ュ浘鐗囨暟閲忥紝鎴栭噸鍚?ComfyUI銆俓n"
+                    "4. 鍥惧儚鏂囦欢鎹熷潖鎴栨牸寮忓紓甯?鈥?璇锋鏌ヨ緭鍏ュ浘鍍忚兘鍚︽甯告墦寮€銆俓n"
+                    f"鍘熷閿欒锛歿e}"
                 ) from e
-            # 采样参数不兼容时降级重试
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 首次调用失败({e})，降级采样参数重试…")
+            # 閲囨牱鍙傛暟涓嶅吋瀹规椂闄嶇骇閲嶈瘯
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 棣栨璋冪敤澶辫触({e})锛岄檷绾ч噰鏍峰弬鏁伴噸璇曗€?)
             resp = llm.create_chat_completion(
                 messages=messages, max_tokens=int(max_tokens),
                 temperature=float(temperature), top_p=float(top_p),
             )
         except Exception as e:
-            # 其他错误（如参数不兼容）降级重试
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 首次调用失败({e})，降级采样参数重试…")
+            # 鍏朵粬閿欒锛堝鍙傛暟涓嶅吋瀹癸級闄嶇骇閲嶈瘯
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 棣栨璋冪敤澶辫触({e})锛岄檷绾ч噰鏍峰弬鏁伴噸璇曗€?)
             resp = llm.create_chat_completion(
                 messages=messages, max_tokens=int(max_tokens),
                 temperature=float(temperature), top_p=float(top_p),
             )
 
         raw = resp["choices"][0]["message"].get("content") or ""
-        # 兼容 thinking 输出（reasoning_content）
+        # 鍏煎 thinking 杈撳嚭锛坮easoning_content锛?
         if not raw:
             raw = resp["choices"][0]["message"].get("reasoning_content") or ""
 
-        # 结果清理（与 G 盘 BSAI_QwenNodes 对齐：去除前缀冒号等）
+        # 缁撴灉娓呯悊锛堜笌 G 鐩?BSAI_QwenNodes 瀵归綈锛氬幓闄ゅ墠缂€鍐掑彿绛夛級
         raw = raw.lstrip().removeprefix(": ").strip()
 
-        # 【修复 2026-09-23】keep_loaded=false：LLM 用完后再卸载。
-        # 之前"加载完立即 _clear_cache"会把刚拿到/命中的 llm close 掉，
-        # 导致后续 create_chat_completion 报 Invalid chat handler: None。
+        # 銆愪慨澶?2026-09-23銆慿eep_loaded=false锛歀LM 鐢ㄥ畬鍚庡啀鍗歌浇銆?
+        # 涔嬪墠"鍔犺浇瀹岀珛鍗?_clear_cache"浼氭妸鍒氭嬁鍒?鍛戒腑鐨?llm close 鎺夛紝
+        # 瀵艰嚧鍚庣画 create_chat_completion 鎶?Invalid chat handler: None銆?
         if not keep_loaded:
             _clear_cache()
 
-        return self._finalize(raw, speed_preset, f"后端=本地LLaMA 模板={template_id}",
+        return self._finalize(raw, speed_preset, f"鍚庣=鏈湴LLaMA 妯℃澘={template_id}",
                               system_template=system_template,
                               custom_system_prompt=custom_system_prompt,
                               user_requirement=user_requirement)
 
-    # ---------------- 本地HF (Transformers) ----------------
+    # ---------------- 鏈湴HF (Transformers) ----------------
     def _enhance_hf(self, hf_model_name, hf_task, hf_device, hf_keep_loaded,
                     prompt_text, system_template, custom_system_prompt, user_requirement,
                     max_tokens,
                     temperature, top_p, top_k, seed, speed_preset, images):
-        if not hf_model_name or hf_model_name.startswith("<未发现"):
-            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] 本地HF 后端需要选择一个：models/LLM 下的 HuggingFace 模型（safetensors/bin）")
+        if not hf_model_name or hf_model_name.startswith("<鏈彂鐜?):
+            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] 鏈湴HF 鍚庣闇€瑕侀€夋嫨涓€涓細models/LLM 涓嬬殑 HuggingFace 妯″瀷锛坰afetensors/bin锛?)
 
         model_dir_id = _hf_model_id_from_label(hf_model_name)
-        # 设备选择
+        # 璁惧閫夋嫨
         import torch
         if hf_device == "auto":
             device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -1568,14 +1581,14 @@ class BSAI_Qwen_Prompt_Enhancer:
         system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
 
         if entry["kind"] == "florence2":
-            # 视觉 caption / prompt 反推（Florence-2 / PromptGen）
+            # 瑙嗚 caption / prompt 鍙嶆帹锛團lorence-2 / PromptGen锛?
             raw = _run_florence2(entry, images, hf_task, max_tokens, temperature, top_p, device)
-            tag = f"后端=本地HF(视觉) 模型={model_dir_id} 任务={hf_task}"
+            tag = f"鍚庣=鏈湴HF(瑙嗚) 妯″瀷={model_dir_id} 浠诲姟={hf_task}"
         else:
-            # 文本 causal LLM（Llama/Gemma/Qwen 等）
+            # 鏂囨湰 causal LLM锛圠lama/Gemma/Qwen 绛夛級
             raw = _run_causal_hf(entry, system_prompt, prompt_text, max_tokens,
                                  temperature, top_p, top_k, device)
-            tag = f"后端=本地HF(文本) 模型={model_dir_id} 模板={template_id}"
+            tag = f"鍚庣=鏈湴HF(鏂囨湰) 妯″瀷={model_dir_id} 妯℃澘={template_id}"
 
         return self._finalize(raw, speed_preset, tag,
                               system_template=system_template,
@@ -1588,7 +1601,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                      max_tokens, temperature, top_p, top_k, seed,
                      timeout, speed_preset, images):
         if not api_base.strip():
-            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] API 后端需要填写 api_base（OpenAI 兼容接口地址）")
+            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] API 鍚庣闇€瑕佸～鍐?api_base锛圤penAI 鍏煎鎺ュ彛鍦板潃锛?)
 
         system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
 
@@ -1616,14 +1629,49 @@ class BSAI_Qwen_Prompt_Enhancer:
             headers["Authorization"] = "Bearer " + api_key.strip()
 
         url = api_base.rstrip("/") + "/chat/completions"
+
+        # Auto-start Strata backend if we're pointing at the local Strata endpoint.
+        if "127.0.0.1:8080" in api_base or "localhost:8080" in api_base:
+            StrataManager = None
+            # Strategy 1: already imported as a custom node module
+            for _mod_name in list(sys.modules.keys()):
+                if "strata" in _mod_name.lower() and "manager" in _mod_name.lower():
+                    mod = sys.modules[_mod_name]
+                    StrataManager = getattr(mod, "StrataManager", None)
+                    if StrataManager:
+                        break
+            # Strategy 2: direct file load
+            if StrataManager is None:
+                _sm = os.path.join(
+                    os.path.dirname(os.path.abspath(__file__)),
+                    "..", "BSAI-LLM-Strata", "strata_manager.py",
+                )
+                if os.path.exists(_sm):
+                    try:
+                        import importlib.util as _ilu
+                        _spec = _ilu.spec_from_file_location("bsai_strata_manager", _sm)
+                        _m = _ilu.util.module_from_spec(_spec)
+                        _spec.loader.exec_module(_m)
+                        StrataManager = getattr(_m, "StrataManager", None)
+                    except Exception:
+                        pass
+            if StrataManager is not None:
+                try:
+                    ok, msg = StrataManager.ensure_running()
+                    if not ok:
+                        raise RuntimeError(f"Strata 鍚庣鏈氨缁? {msg}")
+                    print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 鍚庣灏辩华: {msg}")
+                except Exception as _se:
+                    raise RuntimeError(f"Strata 鑷姩鍚姩澶辫触: {_se}")
+
         try:
             data = _api_request(url, payload, headers, timeout)
         except urllib.error.HTTPError as e:
             body = e.read().decode("utf-8", errors="replace")[:500]
             if e.code == 400:
-                # 部分服务端不认 top_k/seed 等扩展采样参数，降级为最小 payload 重试一次
+                # 閮ㄥ垎鏈嶅姟绔笉璁?top_k/seed 绛夋墿灞曢噰鏍峰弬鏁帮紝闄嶇骇涓烘渶灏?payload 閲嶈瘯涓€娆?
                 minimal = {k: payload[k] for k in ("model", "messages", "temperature", "max_tokens")}
-                print(f"[BSAI_Qwen_Prompt_Enhancer] API 400({body[:200]})，用最小 payload 重试…")
+                print(f"[BSAI_Qwen_Prompt_Enhancer] API 400({body[:200]})锛岀敤鏈€灏?payload 閲嶈瘯鈥?)
                 try:
                     data = _api_request(url, minimal, headers, timeout)
                 except urllib.error.HTTPError as e2:
@@ -1632,57 +1680,57 @@ class BSAI_Qwen_Prompt_Enhancer:
             else:
                 raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] API HTTP {e.code}: {body}")
         except Exception as e:
-            raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] API 调用失败: {e}")
+            raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] API 璋冪敤澶辫触: {e}")
 
         msg = data["choices"][0]["message"]
         raw = msg.get("content") or ""
         if not raw and msg.get("reasoning_content"):
             raw = msg["reasoning_content"]
 
-        return self._finalize(raw, speed_preset, f"后端=API 模板={template_id}",
+        return self._finalize(raw, speed_preset, f"鍚庣=API 妯℃澘={template_id}",
                               system_template=system_template,
                               custom_system_prompt=custom_system_prompt,
                               user_requirement=user_requirement)
 
-    # ---------------- 统一收尾 ----------------
+    # ---------------- 缁熶竴鏀跺熬 ----------------
     def _finalize(self, raw, speed_preset, tag,
                   system_template=None, custom_system_prompt="", user_requirement=""):
         enhanced, wh_ratio, ratio_follow, raw, thinking_text = get_enhanced_result(raw)
         steps, cfg, sampler, scheduler, *extra = self._SPEED_PRESETS.get(speed_preset, self._SPEED_PRESETS[_DEFAULT_SPEED])
 
-        # 【v2】MERGED_TEXT = (解析后的 system prompt) + user_requirement 拼接
-        # 仅用作「下游 Show Text / 提前预览 / 直接接 KSampler」的合并版文本，
-        # 不进入 LLM 内部对话；空 user_requirement 时与 SYSTEM_PROMPT 等价。
+        # 銆恦2銆慚ERGED_TEXT = (瑙ｆ瀽鍚庣殑 system prompt) + user_requirement 鎷兼帴
+        # 浠呯敤浣溿€屼笅娓?Show Text / 鎻愬墠棰勮 / 鐩存帴鎺?KSampler銆嶇殑鍚堝苟鐗堟枃鏈紝
+        # 涓嶈繘鍏?LLM 鍐呴儴瀵硅瘽锛涚┖ user_requirement 鏃朵笌 SYSTEM_PROMPT 绛変环銆?
         try:
             resolved_system_prompt, _tid = resolve_template(
-                system_template or "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]",
+                system_template or "Qwen-Image-2.1 瀹樻柟 PE-T2I 绯荤粺瑙勫垯 [official_t2i]",
                 custom_system_prompt,
             )
         except Exception as _e:
             resolved_system_prompt = ""
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 解析模板失败: {_e}")
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 瑙ｆ瀽妯℃澘澶辫触: {_e}")
         merged_text = self._build_merged_text(resolved_system_prompt, user_requirement)
 
         print(f"[BSAI_Qwen_Prompt_Enhancer] {tag} wh_ratio={wh_ratio} "
-              f"| 加速档={speed_preset} → steps={steps} cfg={cfg} sampler={sampler} scheduler={scheduler}")
-        hint_line = f"\n⚠ 该档为蒸馏LoRA档：{extra[0]}" if extra else ""
+              f"| 鍔犻€熸。={speed_preset} 鈫?steps={steps} cfg={cfg} sampler={sampler} scheduler={scheduler}")
+        hint_line = f"\n鈿?璇ユ。涓鸿捀棣廘oRA妗ｏ細{extra[0]}" if extra else ""
         ui_text = [
             enhanced,
-            f"\n── 加速采样建议 ──\n档位: {speed_preset}\n"
-            f"KSampler → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler}\n"
-            f"接线: KSampler 右键 steps/cfg → Convert to input，接入 RECOMMENDED_* 端口\n"
+            f"\n鈹€鈹€ 鍔犻€熼噰鏍峰缓璁?鈹€鈹€\n妗ｄ綅: {speed_preset}\n"
+            f"KSampler 鈫?steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler}\n"
+            f"鎺ョ嚎: KSampler 鍙抽敭 steps/cfg 鈫?Convert to input锛屾帴鍏?RECOMMENDED_* 绔彛\n"
             f"{hint_line}"
-            f"\n── Qwen Image 2.1 加速要点 ──\n"
-            f"1. cfg=1.0 是正确值（2.1 为 CFG-distilled 架构，无需高CFG；负向提示词在cfg=1时无效）\n"
-            f"2. 官方默认 int8 模型: qwen_image_2.1_int8_convrot.safetensors（显存减半）\n"
-            f"3. 编辑工作流: 添加「Qwen Image 2.1 Cache」节点(device=auto,dtype=int8)复用前缀KV\n"
-            f"4. 通用提速: model→EasyCache节点→KSampler (ComfyUI核心内置,约1.2-1.5x)\n"
-            f"5. 注意力加速: 启动参数加 --use-sage-attention (采样阶段快20-40%)\n"
-            f"6. 蒸馏LoRA（2026-09~10已发布）: Viggle Turbo 6步官方节点 / Pruna 5-8步(社区转换) / 阿里PAI Fun-Acc 4步(实验)，"
-            f"均需固定sigma，详见 ACCELERATION_GUIDE.md\n"
-            f"7. lightx2v 的 2.1 专用 Lightning LoRA 尚未发布（勿选 Lightning 档）；勿用 TeaCache（已冻结不兼容2.1）；"
-            f"勿用旧版20B Lightning LoRA（架构不同）",
-            f"\n── 合并文本预览（MERGED_TEXT 输出）──\n{merged_text}",
+            f"\n鈹€鈹€ Qwen Image 2.1 鍔犻€熻鐐?鈹€鈹€\n"
+            f"1. cfg=1.0 鏄纭€硷紙2.1 涓?CFG-distilled 鏋舵瀯锛屾棤闇€楂楥FG锛涜礋鍚戞彁绀鸿瘝鍦╟fg=1鏃舵棤鏁堬級\n"
+            f"2. 瀹樻柟榛樿 int8 妯″瀷: qwen_image_2.1_int8_convrot.safetensors锛堟樉瀛樺噺鍗婏級\n"
+            f"3. 缂栬緫宸ヤ綔娴? 娣诲姞銆孮wen Image 2.1 Cache銆嶈妭鐐?device=auto,dtype=int8)澶嶇敤鍓嶇紑KV\n"
+            f"4. 閫氱敤鎻愰€? model鈫扙asyCache鑺傜偣鈫扠Sampler (ComfyUI鏍稿績鍐呯疆,绾?.2-1.5x)\n"
+            f"5. 娉ㄦ剰鍔涘姞閫? 鍚姩鍙傛暟鍔?--use-sage-attention (閲囨牱闃舵蹇?0-40%)\n"
+            f"6. 钂搁LoRA锛?026-09~10宸插彂甯冿級: Viggle Turbo 6姝ュ畼鏂硅妭鐐?/ Pruna 5-8姝?绀惧尯杞崲) / 闃块噷PAI Fun-Acc 4姝?瀹為獙)锛?
+            f"鍧囬渶鍥哄畾sigma锛岃瑙?ACCELERATION_GUIDE.md\n"
+            f"7. lightx2v 鐨?2.1 涓撶敤 Lightning LoRA 灏氭湭鍙戝竷锛堝嬁閫?Lightning 妗ｏ級锛涘嬁鐢?TeaCache锛堝凡鍐荤粨涓嶅吋瀹?.1锛夛紱"
+            f"鍕跨敤鏃х増20B Lightning LoRA锛堟灦鏋勪笉鍚岋級",
+            f"\n鈹€鈹€ 鍚堝苟鏂囨湰棰勮锛圡ERGED_TEXT 杈撳嚭锛夆攢鈹€\n{merged_text}",
         ]
         return {"ui": {"text": ui_text, "merged_text": [merged_text]},
                 "result": (enhanced, wh_ratio, ratio_follow, raw, thinking_text,
@@ -1690,30 +1738,30 @@ class BSAI_Qwen_Prompt_Enhancer:
 
     @staticmethod
     def _build_preview_merged(system_template, custom_system_prompt, user_requirement):
-        """纯预览模式：解析模板 + 拼用户要求。不调用任何模型。
-        与 _finalize 内的逻辑同源；用于海报墙选模板时让下游立即拿到 MERGED_TEXT。
+        """绾瑙堟ā寮忥細瑙ｆ瀽妯℃澘 + 鎷肩敤鎴疯姹傘€備笉璋冪敤浠讳綍妯″瀷銆?
+        涓?_finalize 鍐呯殑閫昏緫鍚屾簮锛涚敤浜庢捣鎶ュ閫夋ā鏉挎椂璁╀笅娓哥珛鍗虫嬁鍒?MERGED_TEXT銆?
         """
-        # 与 _enhance_official 完全一致的解析优先级
+        # 涓?_enhance_official 瀹屽叏涓€鑷寸殑瑙ｆ瀽浼樺厛绾?
         csp = (custom_system_prompt or "").strip()
         if csp:
             resolved = csp
         else:
             try:
                 resolved, _ = resolve_template(
-                    system_template or "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]",
+                    system_template or "Qwen-Image-2.1 瀹樻柟 PE-T2I 绯荤粺瑙勫垯 [official_t2i]",
                     "",
                 )
             except Exception as e:
-                print(f"[BSAI_Qwen_Prompt_Enhancer] 预览模式解析模板失败: {e}")
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 棰勮妯″紡瑙ｆ瀽妯℃澘澶辫触: {e}")
                 resolved = ""
         print(f"[BSAI_Qwen_Prompt_Enhancer] [preview-build] csp_len={len(csp)} resolved_head={resolved[:60]!r}")
         return BSAI_Qwen_Prompt_Enhancer._build_merged_text(resolved, user_requirement)
 
     @staticmethod
     def _build_merged_text(template_text, user_requirement):
-        """模板原文 + 用户要求拼接（与模板节点 QwenImage21_Prompt_Template 同源逻辑）
-        - 空 user_requirement: merged_text == template_text（不破坏现有工作流）
-        - 非空: 在尾部追加「【用户要求】\n<要求>\n（请务必在生成时满足以上用户要求。）」
+        """妯℃澘鍘熸枃 + 鐢ㄦ埛瑕佹眰鎷兼帴锛堜笌妯℃澘鑺傜偣 QwenImage21_Prompt_Template 鍚屾簮閫昏緫锛?
+        - 绌?user_requirement: merged_text == template_text锛堜笉鐮村潖鐜版湁宸ヤ綔娴侊級
+        - 闈炵┖: 鍦ㄥ熬閮ㄨ拷鍔犮€屻€愮敤鎴疯姹傘€慭n<瑕佹眰>\n锛堣鍔″繀鍦ㄧ敓鎴愭椂婊¤冻浠ヤ笂鐢ㄦ埛瑕佹眰銆傦級銆?
         """
         if not template_text:
             template_text = ""
@@ -1722,34 +1770,52 @@ class BSAI_Qwen_Prompt_Enhancer:
         body = str(user_requirement).strip()
         return (
             template_text.rstrip()
-            + "\n\n【用户要求】\n"
-            + "用户对当前任务的额外要求：\n"
+            + "\n\n銆愮敤鎴疯姹傘€慭n"
+            + "鐢ㄦ埛瀵瑰綋鍓嶄换鍔＄殑棰濆瑕佹眰锛歕n"
             + body
-            + "\n（请务必在生成时满足以上用户要求。）"
+            + "\n锛堣鍔″繀鍦ㄧ敓鎴愭椂婊¤冻浠ヤ笂鐢ㄦ埛瑕佹眰銆傦級"
         )
 
 
 def _api_request(url, payload, headers, timeout):
-    req = urllib.request.Request(
-        url, data=json.dumps(payload).encode("utf-8"),
-        headers=headers, method="POST",
-    )
-    with urllib.request.urlopen(req, timeout=int(timeout)) as resp:
-        return json.loads(resp.read().decode("utf-8"))
+    import socket as _sock
+    import http.client
+    from urllib.parse import urlparse as _urlparse
+
+    parsed = _urlparse(url)
+    host = parsed.hostname
+    port = parsed.port or 80
+    path = parsed.path or "/"
+    body = json.dumps(payload).encode("utf-8")
+
+    # Python 3.14 Windows + asyncio: default socket inherits non-blocking mode.
+    # Create socket manually in BLOCKING mode to avoid WinError 10035.
+    s = _sock.socket(_sock.AF_INET, _sock.SOCK_STREAM)
+    s.settimeout(int(timeout))
+    s.setblocking(True)
+    s.connect((host, port))
+
+    conn = http.client.HTTPConnection(host, port, timeout=int(timeout))
+    conn.sock = s
+    conn.request("POST", path, body=body, headers=headers)
+    resp = conn.getresponse()
+    raw = resp.read().decode("utf-8")
+    conn.close()
+    return json.loads(raw)
 
 
 class BSAI_Qwen_Image21_Sampler:
     """
-    BSAI Qwen image 2.1 采样器 — KSampler 参数 + 可选 guider / sigmas 输入端口。
+    BSAI Qwen image 2.1 閲囨牱鍣?鈥?KSampler 鍙傛暟 + 鍙€?guider / sigmas 杈撳叆绔彛銆?
 
-    · 保留 KSampler 全部参数：seed / steps / cfg / sampler_name / scheduler / denoise
-    · 新增可选输入端口：
-        guider (GUIDER)  — 直连 BasicGuider / CFGGuider 等上游节点；不接时内置 CFGGuider(model, positive, negative, cfg)
-        sigmas (SIGMAS)  — 直连 ViggleTurboSigmas / ManualSigmas 等上游节点；不接时按 scheduler+steps+denoise 生成
-    · 语义对齐：
-        - 接 sigmas 时以 sigmas 为准（如 Viggle Turbo 固定 6 步 sigma），steps 参数仅作 UI 显示
-        - 接 guider 时 cfg 参数被 guider 内部配置覆盖（BasicGuider 无 CFG）
-        - 未接 guider/sigmas 时行为与 KSampler 完全一致（含 denoise 截断）
+    路 淇濈暀 KSampler 鍏ㄩ儴鍙傛暟锛歴eed / steps / cfg / sampler_name / scheduler / denoise
+    路 鏂板鍙€夎緭鍏ョ鍙ｏ細
+        guider (GUIDER)  鈥?鐩磋繛 BasicGuider / CFGGuider 绛変笂娓歌妭鐐癸紱涓嶆帴鏃跺唴缃?CFGGuider(model, positive, negative, cfg)
+        sigmas (SIGMAS)  鈥?鐩磋繛 ViggleTurboSigmas / ManualSigmas 绛変笂娓歌妭鐐癸紱涓嶆帴鏃舵寜 scheduler+steps+denoise 鐢熸垚
+    路 璇箟瀵归綈锛?
+        - 鎺?sigmas 鏃朵互 sigmas 涓哄噯锛堝 Viggle Turbo 鍥哄畾 6 姝?sigma锛夛紝steps 鍙傛暟浠呬綔 UI 鏄剧ず
+        - 鎺?guider 鏃?cfg 鍙傛暟琚?guider 鍐呴儴閰嶇疆瑕嗙洊锛圔asicGuider 鏃?CFG锛?
+        - 鏈帴 guider/sigmas 鏃惰涓轰笌 KSampler 瀹屽叏涓€鑷达紙鍚?denoise 鎴柇锛?
     """
 
     @classmethod
@@ -1779,33 +1845,33 @@ class BSAI_Qwen_Image21_Sampler:
     CATEGORY = "sampling/custom_sampling"
 
     DESCRIPTION = (
-        "BSAI Qwen image 2.1 采样器：KSampler 全部参数（种子/步数/CFG/采样器/调度器/降噪）均保留为 widget，"
-        "且每个参数都可右键「Convert widget to input」转为输入端口接入上游（如增强器 RECOMMENDED_STEPS/CFG 智能联动）；"
-        "新增可选 guider / sigmas 输入端口，直连 BasicGuider / ViggleTurboSigmas 等蒸馏采样上游。\n"
-        "步数规则：steps 始终为主控——外部 sigmas 仅在步数与 steps 一致时生效；"
-        "不一致时忽略外部 sigmas、按 steps 重新生成并提示（蒸馏 LoRA 请保持 steps 与 LoRA/σ 序列步数一致）。"
+        "BSAI Qwen image 2.1 閲囨牱鍣細KSampler 鍏ㄩ儴鍙傛暟锛堢瀛?姝ユ暟/CFG/閲囨牱鍣?璋冨害鍣?闄嶅櫔锛夊潎淇濈暀涓?widget锛?
+        "涓旀瘡涓弬鏁伴兘鍙彸閿€孋onvert widget to input銆嶈浆涓鸿緭鍏ョ鍙ｆ帴鍏ヤ笂娓革紙濡傚寮哄櫒 RECOMMENDED_STEPS/CFG 鏅鸿兘鑱斿姩锛夛紱"
+        "鏂板鍙€?guider / sigmas 杈撳叆绔彛锛岀洿杩?BasicGuider / ViggleTurboSigmas 绛夎捀棣忛噰鏍蜂笂娓搞€俓n"
+        "姝ユ暟瑙勫垯锛歴teps 濮嬬粓涓轰富鎺р€斺€斿閮?sigmas 浠呭湪姝ユ暟涓?steps 涓€鑷存椂鐢熸晥锛?
+        "涓嶄竴鑷存椂蹇界暐澶栭儴 sigmas銆佹寜 steps 閲嶆柊鐢熸垚骞舵彁绀猴紙钂搁 LoRA 璇蜂繚鎸?steps 涓?LoRA/蟽 搴忓垪姝ユ暟涓€鑷达級銆?
     )
 
     def sample(self, model, positive, negative, latent_image,
                seed=0, steps=20, cfg=1.0, sampler_name="euler", scheduler="simple",
                denoise=1.0, guider=None, sigmas=None):
         if _comfy_samplers is None:
-            raise RuntimeError("[BSAI_Qwen_Image21_Sampler] ComfyUI 采样模块不可用")
-        # 1) guider：优先外部 guider（BasicGuider / CFGGuider），否则内置 CFGGuider
+            raise RuntimeError("[BSAI_Qwen_Image21_Sampler] ComfyUI 閲囨牱妯″潡涓嶅彲鐢?)
+        # 1) guider锛氫紭鍏堝閮?guider锛圔asicGuider / CFGGuider锛夛紝鍚﹀垯鍐呯疆 CFGGuider
         if guider is None:
             guider = _comfy_samplers.CFGGuider(model)
             guider.set_conds(positive, negative)
             guider.set_cfg(cfg)
-        # 2) sigmas：steps 为主控。外部 sigmas（ViggleTurboSigmas / ManualSigmas）仅在
-        #    其步数与 steps 一致时生效；不一致时视为用户主动改步数，按 scheduler+steps+denoise
-        #    重新生成并提示（保证「改 steps 必生效」）。
+        # 2) sigmas锛歴teps 涓轰富鎺с€傚閮?sigmas锛圴iggleTurboSigmas / ManualSigmas锛変粎鍦?
+        #    鍏舵鏁颁笌 steps 涓€鑷存椂鐢熸晥锛涗笉涓€鑷存椂瑙嗕负鐢ㄦ埛涓诲姩鏀规鏁帮紝鎸?scheduler+steps+denoise
+        #    閲嶆柊鐢熸垚骞舵彁绀猴紙淇濊瘉銆屾敼 steps 蹇呯敓鏁堛€嶏級銆?
         if sigmas is not None:
             sigma_steps = int(sigmas.shape[-1]) - 1
             if sigma_steps != int(steps):
                 print(
-                    f"[BSAI_Qwen_Image21_Sampler] 警告: steps={int(steps)} 与外部 sigmas 步数 "
-                    f"({sigma_steps}) 不一致，已忽略外部 sigmas 按 steps 重新生成。"
-                    f"蒸馏 LoRA 请保持 steps 与 LoRA/σ 序列步数一致，否则效果无保证。"
+                    f"[BSAI_Qwen_Image21_Sampler] 璀﹀憡: steps={int(steps)} 涓庡閮?sigmas 姝ユ暟 "
+                    f"({sigma_steps}) 涓嶄竴鑷达紝宸插拷鐣ュ閮?sigmas 鎸?steps 閲嶆柊鐢熸垚銆?
+                    f"钂搁 LoRA 璇蜂繚鎸?steps 涓?LoRA/蟽 搴忓垪姝ユ暟涓€鑷达紝鍚﹀垯鏁堟灉鏃犱繚璇併€?
                 )
                 sigmas = None
         if sigmas is None:
@@ -1817,10 +1883,10 @@ class BSAI_Qwen_Image21_Sampler:
                 sigmas = _comfy_samplers.calculate_sigmas(
                     model.get_model_object("model_sampling"), scheduler, new_steps).cpu()
                 sigmas = sigmas[-(steps + 1):]
-        # 3) 采样器
+        # 3) 閲囨牱鍣?
         sampler = _comfy_samplers.sampler_object(sampler_name)
 
-        # 4) 采样主循环（与官方 SamplerCustomAdvanced 一致）
+        # 4) 閲囨牱涓诲惊鐜紙涓庡畼鏂?SamplerCustomAdvanced 涓€鑷达級
         latent = latent_image
         latent_image_t = latent["samples"]
         latent = latent.copy()
@@ -1860,7 +1926,7 @@ class BSAI_Qwen_Image21_Sampler:
 
 
 class _BSAI_RandomNoise:
-    """与官方 Noise_RandomNoise 等价的最小噪声实现（避免跨模块导入）"""
+    """涓庡畼鏂?Noise_RandomNoise 绛変环鐨勬渶灏忓櫔澹板疄鐜帮紙閬垮厤璺ㄦā鍧楀鍏ワ級"""
 
     def __init__(self, seed):
         self.seed = seed
@@ -1871,12 +1937,12 @@ class _BSAI_RandomNoise:
         return _comfy_sample.prepare_noise(latent_image, self.seed, batch_inds)
 
 
-# 供 __init__.py 注册
+# 渚?__init__.py 娉ㄥ唽
 NODE_CLASS_MAPPINGS = {
     "BSAI_Qwen_Prompt_Enhancer": BSAI_Qwen_Prompt_Enhancer,
     "BSAI_Qwen_Image21_Sampler": BSAI_Qwen_Image21_Sampler,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "BSAI_Qwen_Prompt_Enhancer": "BSAI Qwen Prompt Enhancer",
-    "BSAI_Qwen_Image21_Sampler": "BSAI Qwen image 2.1 采样器",
+    "BSAI_Qwen_Image21_Sampler": "BSAI Qwen image 2.1 閲囨牱鍣?,
 }
