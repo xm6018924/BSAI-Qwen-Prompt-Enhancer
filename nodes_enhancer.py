@@ -1167,6 +1167,11 @@ class BSAI_Qwen_Prompt_Enhancer:
                     "placeholder": "模型名，如 qwen3.5-vl-9b / qwen-plus / 本地部署的模型名",
                 }),
                 "timeout": ("INT", {"default": 120, "min": 10, "max": 600}),
+                # ---- BSAI Strata 专属 ----
+                "strata_quant": (["Auto (自动适配)", "Q2_0 (最快 / fastest)", "IQ2_XS (略好 / better)",
+                                  "IQ3_XXS (更好 / good)", "IQ3_S (最好 / best quality)"],
+                                 {"default": "Auto (自动适配)",
+                                  "tooltip": "Strata 量化选择。Auto 按显存/内存自动选。"}),
                 # ---- 本地HF (Transformers) 专属 ----
                 "hf_model_name": (_hf_model_display_list() or ["<未发现 HF 模型>"],),
                 "hf_task": (["<MORE_DETAILED_CAPTION>", "<DETAILED_CAPTION>", "<CAPTION>", "<OD>", "<REGION_CAPTION>"], {"default": "<MORE_DETAILED_CAPTION>"}),
@@ -1357,6 +1362,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 max_tokens=max_tokens,
                 temperature=temperature, top_p=top_p, seed=seed,
                 timeout=timeout, speed_preset=speed_preset, images=images,
+                quant_label=strata_quant,
             )
         raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] 未知 backend: {backend!r}")
 
@@ -1656,7 +1662,7 @@ class BSAI_Qwen_Prompt_Enhancer:
     # ---------------- BSAI Strata ----------------
     def _enhance_strata(self, prompt_text, system_template, custom_system_prompt,
                         user_requirement, max_tokens, temperature, top_p, seed,
-                        timeout, speed_preset, images):
+                        timeout, speed_preset, images, quant_label="Auto (自动适配)"):
         """Call local Strata (Qwen3.8-Flash-Next @ 127.0.0.1:8080) via blocking socket."""
         import json as _json, socket as _sk, http.client as _hc
         import sys as _sys
@@ -1678,8 +1684,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                     _spec.loader.exec_module(_m)
                     _sp = _m.StrataManager
             if _sp is not None:
-                ok, msg = _sp.ensure_running()
-                print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 自动启动: {ok} ({msg})")
+                ok, msg = _sp.ensure_running(quant_label=quant_label)
+                print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 自动启动 ({quant_label}): {ok} ({msg})")
         except Exception as _e:
             print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 自动启动跳过: {_e}")
 
