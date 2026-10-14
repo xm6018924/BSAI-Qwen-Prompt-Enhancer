@@ -1687,6 +1687,11 @@ class BSAI_Qwen_Prompt_Enhancer:
             if _sp is not None:
                 ok, msg = _sp.ensure_running(quant_label=quant_label)
                 print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 自动启动 ({quant_label}): {ok} ({msg})")
+                if not ok:
+                    raise RuntimeError(
+                        f"[BSAI_Qwen_Prompt_Enhancer] Strata 服务启动失败: {msg}\n"
+                        f"请手动检查 Strata 是否安装完整，或切换到其他后端（llama.cpp / HF / API）。"
+                    )
         except Exception as _e:
             print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 自动启动跳过: {_e}")
 
