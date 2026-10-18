@@ -52,18 +52,18 @@ class QwenImage21_Prompt_Template:
                 "custom_text": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "自定义模板文本（非空时覆盖上方选择）",
+                    "placeholder": "Custom template text (overrides the selection above when non-empty)",
                 }),
                 "variables": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "设计模板专用：每行一个变量，格式 KEY: value\n例:\nTITLE: 夏日新品发布会\nSUBTITLE: 2026 秋季系列\nBRAND: BSAI\nMAIN_SUBJECT: 一个穿红裙的女孩\nCOLOR: 深蓝+橙金\nSTYLE: 商业摄影",
+                    "placeholder": "For design templates only: one variable per line, format KEY: value\ne.g.:\nTITLE: Summer product launch\nSUBTITLE: Fall 2026 collection\nBRAND: BSAI\nMAIN_SUBJECT: A girl in a red dress\nCOLOR: Deep blue + orange-gold\nSTYLE: Commercial photography",
                 }),
-                # ↓↓↓ 新增：用户在两个红框位（界面上的小红框 + 大红框）输入的内容 ↓↓↓
+                # User requirement typed in the extra input boxes; appended to MERGED_TEXT.
                 "user_requirement": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "用户对当前任务的具体要求（与 custom_system_prompt 同源，输出到 MERGED_TEXT）。\n例：封面含主标题+副标题；画面左侧放主视觉，右侧留白放文案；配色用深蓝+橙金。",
+                    "placeholder": "Specific requirements for this task (same source as custom_system_prompt, output to MERGED_TEXT).\ne.g.: Cover has a main title + subtitle; put the hero visual on the left, leave white space for copy on the right; use a deep-blue + orange-gold palette.",
                 }),
                 # 前端 JS / 海报墙点选时会推送该信号；后端据此区分「实时预览」与「真正运行」
                 "_preview_signal": ("STRING", {
@@ -83,10 +83,10 @@ class QwenImage21_Prompt_Template:
     CATEGORY = "BSAI/Qwen Image 2.1"
     OUTPUT_NODE = True
     DESCRIPTION = (
-        "Qwen Image 2.1 官方增强提示词模板库：官方 PE-T2I / PE-I2I 系统规则（逐字原文）"
-        "+ 官方文档与社区搜集的增强模板 + 9 类设计模板（封面/海报/壁纸/广告看板等）。"
-        "设计模板在 variables 里填 KEY: value，自动替换 {{占位符}}。\n"
-        "海报墙选中后第 1 路 SYSTEM_PROMPT 实时输出模板原文；第 5 路 MERGED_TEXT = 模板原文 + user_requirement 拼接，可直接接 KSampler。"
+        "Qwen Image 2.1 official prompt-enhancement template library: official PE-T2I / PE-I2I system rules (verbatim) "
+        "+ official-doc and community enhancement templates + 9 design-template categories (cover/poster/wallpaper/ad billboard, etc.). "
+        "Fill KEY: value in variables to auto-replace {{placeholders}}.\n"
+        "After picking a card on the template wall, port 1 SYSTEM_PROMPT streams the template text live; port 5 MERGED_TEXT = template text + user_requirement, ready to wire into KSampler."
     )
 
     @staticmethod
@@ -117,9 +117,9 @@ class QwenImage21_Prompt_Template:
                 "ui": {
                     "text": [text, merged],
                     "merged_text": [merged],
-                    "user_requirement": [user_requirement or "(空)"],
+                    "user_requirement": [user_requirement or "(empty)"],
                 },
-                "result": (text, "custom", "自定义模板", "", merged),
+                "result": (text, "custom", "custom template", "", merged),
             }
 
         templates = load_templates()
@@ -129,7 +129,7 @@ class QwenImage21_Prompt_Template:
                 tpl = t
                 break
         if tpl is None:
-            raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] 模板不存在: {template_name}")
+            raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] Template not found: {template_name}")
 
         if tpl.get("file"):
             text = load_text(os.path.join(PLUGIN_ROOT, tpl["file"]), "")
@@ -147,7 +147,7 @@ class QwenImage21_Prompt_Template:
             remaining = re.findall(r"\{\{(\w+)\}\}", text)
             used_vars = ", ".join(used_list)
             if remaining:
-                used_vars += "  | 未替换: " + ", ".join(sorted(set(remaining)))
+                used_vars += "  | not substituted: " + ", ".join(sorted(set(remaining)))
 
         merged = self._build_merged_text(text, user_requirement)
 
@@ -155,7 +155,7 @@ class QwenImage21_Prompt_Template:
             "ui": {
                 "text": [text, merged],
                 "merged_text": [merged],
-                "user_requirement": [user_requirement or "(空)"],
+                "user_requirement": [user_requirement or "(empty)"],
             },
             "result": (text, tpl.get("id", "?"), desc, used_vars, merged),
         }
@@ -165,5 +165,5 @@ NODE_CLASS_MAPPINGS = {
     "QwenImage21_Prompt_Template": QwenImage21_Prompt_Template,
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "QwenImage21_Prompt_Template": "Qwen Image 2.1 官方增强提示词模板",
+    "QwenImage21_Prompt_Template": "Qwen Image 2.1 Prompt Template Library",
 }

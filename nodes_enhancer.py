@@ -90,15 +90,16 @@ from .common import (
     resolve_template, template_display_list,
 )
 
-# ---- 后端选项（前端 JS 按这些标签精确匹配显隐分组，勿随意改名）----
-BACKEND_PE = "官方PE (本地 Qwen3.5-9B)"
-BACKEND_LLAMA = "本地LLaMA (GGUF+mmproj)"
-BACKEND_HF = "本地HF (Transformers)"
-BACKEND_API = "API (OpenAI兼容)"
+# ---- Backend options (the front-end JS matches these labels exactly to show/hide
+#      the matching widget groups; keep them in sync with web/prompt_enhancer.js) ----
+BACKEND_PE = "Official PE (local Qwen3.5-9B)"
+BACKEND_LLAMA = "Local LLaMA (GGUF+mmproj)"
+BACKEND_HF = "Local HF (Transformers)"
+BACKEND_API = "API (OpenAI-compatible)"
 BACKEND_STRATA = "BSAI Strata (Qwen3.8-Flash-Next @8080)"
 BACKEND_LABELS = [BACKEND_PE, BACKEND_LLAMA, BACKEND_HF, BACKEND_API, BACKEND_STRATA]
 
-_DEFAULT_SPEED = "官方标准 25步/CFG1 (推荐)"
+_DEFAULT_SPEED = "Standard 25 steps/CFG1 (recommended)"
 
 
 # ============================================================
@@ -246,22 +247,22 @@ def _list_available_handlers():
 
 # 友好模型名标签 -> 实际 handler 类名（用户直观可见的"最新模型"列表）
 _FRIENDLY_HANDLERS = [
-    # 把 mtmd 通用多模态放到第一位：兼容最广（任何带 mtmd-mmproj 的 GGUF 都能跑）
-    ("MTMD 通用多模态 (推荐: Qwen3.5+/Gemma4/GLM 等带 mtmd-mmproj 的模型)", "MTMDChatHandler"),
-    ("Qwen 3.8 / 3.6 / 3.5 视觉 (需更新 llama-cpp-python)", "Qwen35ChatHandler"),
-    ("Qwen 3 / 3-VL 视觉 (需更新 llama-cpp-python)", "Qwen3VLChatHandler"),
-    ("Qwen 2.5-VL / 2-VL 视觉", "Qwen25VLChatHandler"),
-    ("Gemma 4 视觉", "Gemma4ChatHandler"),
-    ("Gemma 3 视觉 (需更新 llama-cpp-python)", "Gemma3ChatHandler"),
-    ("GLM 4.6V 视觉 (需更新 llama-cpp-python)", "GLM46VChatHandler"),
-    ("GLM 4.1V 视觉 (需更新 llama-cpp-python)", "GLM41VChatHandler"),
-    ("MiniCPM-V4.5 (需更新 llama-cpp-python)", "MiniCPMv45ChatHandler"),
+    # mtmd generic multimodal first: broadest compatibility (any GGUF with mtmd-mmproj works)
+    ("MTMD generic multimodal (recommended: Qwen3.5+/Gemma4/GLM with mtmd-mmproj)", "MTMDChatHandler"),
+    ("Qwen 3.8 / 3.6 / 3.5 vision (requires updated llama-cpp-python)", "Qwen35ChatHandler"),
+    ("Qwen 3 / 3-VL vision (requires updated llama-cpp-python)", "Qwen3VLChatHandler"),
+    ("Qwen 2.5-VL / 2-VL vision", "Qwen25VLChatHandler"),
+    ("Gemma 4 vision", "Gemma4ChatHandler"),
+    ("Gemma 3 vision (requires updated llama-cpp-python)", "Gemma3ChatHandler"),
+    ("GLM 4.6V vision (requires updated llama-cpp-python)", "GLM46VChatHandler"),
+    ("GLM 4.1V vision (requires updated llama-cpp-python)", "GLM41VChatHandler"),
+    ("MiniCPM-V4.5 (requires updated llama-cpp-python)", "MiniCPMv45ChatHandler"),
     ("MiniCPM-V2.6", "MiniCPMv26ChatHandler"),
-    ("LFM 2.5-VL (需更新 llama-cpp-python)", "LFM25VLChatHandler"),
-    ("LFM 2-VL (需更新 llama-cpp-python)", "LFM2VLChatHandler"),
-    ("Step 3-VL (需更新 llama-cpp-python)", "Step3VLChatHandler"),
+    ("LFM 2.5-VL (requires updated llama-cpp-python)", "LFM25VLChatHandler"),
+    ("LFM 2-VL (requires updated llama-cpp-python)", "LFM2VLChatHandler"),
+    ("Step 3-VL (requires updated llama-cpp-python)", "Step3VLChatHandler"),
 ]
-_AUTO_LABEL = "auto（按模型名自动识别 Qwen3.8/Gemma4/GLM4.6 等全部支持模型）"
+_AUTO_LABEL = "auto (auto-detect Qwen3.8/Gemma4/GLM4.6 and other supported models from the model name)"
 
 
 def _chat_handler_labels():
@@ -392,8 +393,8 @@ def _load_hf(model_dir_id, device):
         from transformers import AutoProcessor, AutoTokenizer, AutoModelForCausalLM
     except ImportError as e:
         raise RuntimeError(
-            f"[BSAI_Qwen_Prompt_Enhancer] 缺少 transformers/torch: {e}\n"
-            "请在本 ComfyUI 的 python 环境执行: pip install transformers torch")
+            f"[BSAI_Qwen_Prompt_Enhancer] Missing transformers/torch: {e}\n"
+            "Please run inside this ComfyUI python env: pip install transformers torch")
 
     # 定位模型目录
     dirs = []
@@ -409,7 +410,7 @@ def _load_hf(model_dir_id, device):
             model_dir = p
             break
     if model_dir is None:
-        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] 找不到 HF 模型目录: {model_dir_id}")
+        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] HF model directory not found: {model_dir_id}")
 
     # 判定架构
     arch = ""
@@ -455,7 +456,7 @@ def _run_florence2(entry, images, task, max_tokens, temperature, top_p, device):
     model = entry["model"]
     processor = entry["processor"]
     if images is None or len(images.shape) < 3 or images.shape[0] == 0:
-        raise RuntimeError("[BSAI_Qwen_Prompt_Enhancer] Florence-2 需要接入 image_1 输入（视觉模型）")
+        raise RuntimeError("[BSAI_Qwen_Prompt_Enhancer] Florence-2 needs an image_1 input wired in (vision model)")
     # 取第一张图
     arr = images.cpu().numpy()
     if arr.ndim == 4:
@@ -818,8 +819,8 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
     不用 MTMDChatHandler（部分版本缺符号，会导致崩溃）。"""
     if Llama is None:
         raise RuntimeError(
-            "未检测到 llama-cpp-python（llama_cpp）。请先安装该依赖。\n"
-            "安装方法：在 ComfyUI 的 python 环境中执行 pip install llama-cpp-python"
+            "llama-cpp-python (llama_cpp) not found. Please install the dependency first.\n"
+            "Install: run `pip install llama-cpp-python` in the ComfyUI python environment."
         )
 
     key = (model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, load_mtp,
@@ -843,7 +844,7 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
             p = os.path.join(d, name)
             if os.path.isfile(p):
                 return p
-        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] 找不到模型文件: {name}（已扫描 {dirs}）")
+        raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] Model file not found: {name} (searched {dirs})")
 
     model_path = find(model_name)
 
@@ -1020,38 +1021,38 @@ def _load_llm(model_name, mmproj_name, chat_handler_name, n_ctx, n_gpu_layers, l
                     except Exception:
                         pass
                 raise RuntimeError(
-                    "模型加载失败：该 GGUF 文件包含 MTP/NextN 预测层（nextn_predict_layers），\n"
-                    "当前 llama-cpp-python 版本不支持此特性。\n\n"
-                    "解决方案：\n"
-                    "1. 已尝试自动生成去 MTP 版本，请检查同目录下是否有 -noMTP.gguf 文件\n"
-                    "2. 手动使用去 MTP 版本的 GGUF 文件\n"
-                    "3. 或使用不含 MTP 层的 Qwen3.5/3.6/3.8 模型作为替代\n"
-                    f"原始错误：{e}"
+                    "Model load failed: this GGUF contains MTP/NextN prediction layers (nextn_predict_layers),\n"
+                    "which the installed llama-cpp-python does not support.\n\n"
+                    "Fix:\n"
+                    "1. An MTP-stripped version was auto-generated if possible — look for a -noMTP.gguf next to the file\n"
+                    "2. Manually use an MTP-stripped GGUF\n"
+                    "3. Or use a Qwen3.5/3.6/3.8 model without MTP layers\n"
+                    f"Original error: {e}"
                 )
             raise RuntimeError(
-                "模型加载失败：Failed to load model from file\n"
-                "可能的原因：\n"
-                "1. 模型文件损坏或格式不兼容\n"
-                "2. llama-cpp-python 版本不支持该模型架构\n"
-                "3. 模型文件路径错误\n"
-                "建议：\n"
-                "- 检查模型文件完整性\n"
-                "- 更新 llama-cpp-python 到最新版本\n"
-                "- 确保模型路径正确"
+                "Model load failed: Failed to load model from file\n"
+                "Possible causes:\n"
+                "1. The model file is corrupted or the format is unsupported\n"
+                "2. The llama-cpp-python version does not support this model architecture\n"
+                "3. The model file path is wrong\n"
+                "Suggestions:\n"
+                "- Check the model file integrity\n"
+                "- Update llama-cpp-python to the latest version\n"
+                "- Make sure the model path is correct"
             )
         if "Failed to create context with model" in err_str:
             raise RuntimeError(
-                "模型加载失败：Failed to create context with model\n"
-                "可能的原因：\n"
-                "1. 模型文件损坏或格式不兼容\n"
-                "2. llama-cpp-python 版本不支持该模型\n"
-                "3. 显存不足\n"
-                "4. 模型文件路径错误\n"
-                "建议：\n"
-                "- 检查模型文件完整性\n"
-                "- 更新 llama-cpp-python 到最新版本\n"
-                "- 减少 GPU 层数或使用更小的模型\n"
-                "- 确保模型路径正确"
+                "Model load failed: Failed to create context with model\n"
+                "Possible causes:\n"
+                "1. The model file is corrupted or the format is unsupported\n"
+                "2. The llama-cpp-python version does not support this model\n"
+                "3. Out of VRAM\n"
+                "4. The model file path is wrong\n"
+                "Suggestions:\n"
+                "- Check the model file integrity\n"
+                "- Update llama-cpp-python to the latest version\n"
+                "- Reduce GPU layers or use a smaller model\n"
+                "- Make sure the model path is correct"
             )
         raise
 
@@ -1086,42 +1087,59 @@ class BSAI_Qwen_Prompt_Enhancer:
     # 前端 JS（prompt_enhancer.js）还会在加载工作流时自动把非法 combo 值重置为当前列表首项。
     @staticmethod
     def VALIDATE_INPUTS(*args, **kwargs):
-        # v1.01.2: 返回值兼容新旧两代 ComfyUI 校验语义：
-        # - 旧版以位置参调用 VALIDATE_INPUTS(input_name, input_value)，返回 None 表示通过；
-        # - 新版以 **kwargs 传入全部输入调用，要求返回 True（返回 None 会报
-        #   "Custom validation failed for node: X - None"），且 kwargs 形态自动跳过 combo 校验。
-        # 判别：收到 kwargs（新版形态）=> True；仅两个位置参（旧版形态）=> None。
+        # Return-value compatibility across ComfyUI versions:
+        # - Legacy positional call VALIDATE_INPUTS(input_name, input_value): return None = pass.
+        # - Modern call passes all inputs as **kwargs and expects a boolean (None raises
+        #   "Custom validation failed for node: X - None"); kwargs form also skips combo checks.
         if not kwargs and len(args) == 2:
             return None
+        # Security: the Local HF backend loads weights with trust_remote_code=True, so an
+        # attacker-supplied model name must be checked against the actually-scanned model
+        # list instead of resolving to an arbitrary directory. Same for the local GGUF LLM.
+        try:
+            backend = kwargs.get("backend")
+            if backend == BACKEND_HF:
+                sel = kwargs.get("hf_model_name") or ""
+                if sel and not str(sel).startswith("<No "):
+                    available = {m["id"] for m in _scan_hf_models()}
+                    if available and _hf_model_id_from_label(str(sel)) not in available:
+                        return False
+            elif backend == BACKEND_LLAMA:
+                sel = kwargs.get("llm_model_name") or ""
+                models, _mmprojs = _scan_gguf()
+                if models and sel and str(sel) not in set(models):
+                    return False
+        except Exception:
+            # Never hard-block on a scan error; the run path surfaces a clear message.
+            pass
         return True
 
     @classmethod
     def INPUT_TYPES(cls):
         # 每次打开节点都重新递归扫描，新增模型无需重启 ComfyUI
         models, mmprojs = _scan_gguf()
-        no_model = "<未发现 GGUF>"
+        no_model = "<No GGUF model found>"
         return {
             "required": {
-                # ---- 后端切换 ----
+                # ---- backend switch ----
                 "backend": (BACKEND_LABELS, {"default": BACKEND_PE}),
-                # ---- 公共参数（三个后端共用）----
+                # ---- shared parameters (used by all backends) ----
                 "prompt_text": ("STRING", {
                     "multiline": True,
-                    "default": "一个穿红裙的女孩站在樱花树下，手里拿着奶茶，傍晚阳光",
-                    "placeholder": "输入大白话提示词（中文/英文均可）。I2I/多图模式可用 图1/图2… 指代参考图。",
+                    "default": "A girl in a red dress standing under a cherry tree, holding bubble tea, evening light",
+                    "placeholder": "Enter your plain-language prompt (Chinese or English). In I2I / multi-image mode use image_1/image_2... to refer to reference images.",
                 }),
                 "system_template": (template_display_list(), {"default": "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]"}),
                 "custom_system_prompt": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "留空使用上方模板；填写则覆盖模板作为 system prompt",
+                    "placeholder": "Leave empty to use the template above; fill in to override the template as the system prompt",
                 }),
-                # 【v2】用户额外要求（拼到 MERGED_TEXT 输出），不进入 LLM 内部对话。
-                # 海报墙选模板时也会同步触发预览，让 Show Text 立即显示合并文本。
+                # Extra user requirement (appended to the MERGED_TEXT output), not sent into the LLM internal chat.
                 "user_requirement": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "用户对当前任务的额外要求（拼到 MERGED_TEXT 输出，与下方海报墙配合使用）\n例：封面含主标题+副标题；左侧放主视觉，右侧留白放文案；配色用深蓝+橙金。",
+                    "placeholder": "Extra requirements for this task (appended to the MERGED_TEXT output, used together with the template wall below).\ne.g.: Cover has a main title + subtitle; put the hero visual on the left and leave white space for copy on the right; use a deep-blue + orange-gold palette.",
                 }),
                 "temperature": ("FLOAT", {"default": 0.7, "min": 0.0, "max": 2.0, "step": 0.01}),
                 "top_p": ("FLOAT", {"default": 0.95, "min": 0.0, "max": 1.0, "step": 0.01}),
@@ -1131,7 +1149,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 "max_tokens": ("INT", {"default": 4096, "min": 64, "max": 32768}),
                 "speed_preset": (list(cls._SPEED_PRESETS.keys()), {"default": _DEFAULT_SPEED}),
                 # ---- 官方PE 专属 ----
-                "pe_mode": (["auto", "T2I (文生图)", "I2I (图生图/编辑)"], {"default": "auto"}),
+                "pe_mode": (["auto", "T2I (text-to-image)", "I2I (image-to-image / edit)"], {"default": "auto"}),
                 "min_p": ("FLOAT", {"default": 0.0, "min": 0.0, "max": 1.0, "step": 0.01}),
                 "thinking": ("BOOLEAN", {"default": True}),
                 "mtp": (["auto", "off", "2", "3", "4", "5"], {"default": "auto"}),
@@ -1145,42 +1163,42 @@ class BSAI_Qwen_Prompt_Enhancer:
                 # ---- 极限提速参数（视频同款 llama.cpp：显存+内存混合模式）----
                 "n_cmoe": ("INT", {
                     "default": 0, "min": 0, "max": 256, "step": 1,
-                    "tooltip": "MoE专家拆分到CPU/内存层数(-ncmoe)。仅MoE有效，稠密无效。\nQwen-35B-A3B实测约24最稳；0=关闭。当前0.3.36暂未支持，升级后自动生效。",
+                    "tooltip": "Split MoE experts across CPU/RAM layers (-ncmoe). Only effective for MoE models, not dense.\nQwen-35B-A3B is most stable around 24; 0 = off. Current 0.3.36 does not support it yet; it applies automatically after upgrading.",
                 }),
-                "kv_cache_quant": (["auto(f16不量化)", "q8_0", "q4_0"], {
-                    "default": "auto(f16不量化)",
-                    "tooltip": "KV缓存量化(-ctk/-ctv，q4_0=视频效果)。降显存提速，精度略降。",
+                "kv_cache_quant": (["auto (f16, no quant)", "q8_0", "q4_0"], {
+                    "default": "auto (f16, no quant)",
+                    "tooltip": "KV cache quantization (-ctk/-ctv, q4_0 = video effect). Lower VRAM and faster, at a slight quality cost.",
                 }),
-                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap；内存不足/换页可关闭(--no-mmap)。"}),
-                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock(--mlock)锁内存防换出。"}),
-                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa。auto=模型支持即启用。"}),
-                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t 线程数(视频示例14)；0=自动。"}),
+                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap; can disable when RAM is tight / swapping (--no-mmap)."}),
+                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock (--mlock) locks the model in RAM to avoid page-out."}),
+                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa. auto = enable when the model supports it."}),
+                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t thread count (video example: 14); 0 = auto."}),
                 "keep_loaded": ("BOOLEAN", {"default": False}),
                 # ---- API 专属 ----
                 "api_base": ("STRING", {
                     "default": "https://dashscope.aliyuncs.com/compatible-mode/v1",
-                    "placeholder": "OpenAI 兼容接口地址，例如 https://dashscope.aliyuncs.com/compatible-mode/v1 或 http://127.0.0.1:8000/v1",
+                    "placeholder": "OpenAI-compatible endpoint, e.g. https://dashscope.aliyuncs.com/compatible-mode/v1 or http://127.0.0.1:8000/v1",
                 }),
-                "api_key": ("STRING", {"default": "", "placeholder": "API Key（在线服务必填）"}),
+                "api_key": ("STRING", {"default": "", "placeholder": "API Key (required for online services)"}),
                 "api_model_name": ("STRING", {
                     "default": "qwen3.5-vl-9b",
-                    "placeholder": "模型名，如 qwen3.5-vl-9b / qwen-plus / 本地部署的模型名",
+                    "placeholder": "Model name, e.g. qwen3.5-vl-9b / qwen-plus / a locally deployed model name",
                 }),
                 "timeout": ("INT", {"default": 120, "min": 10, "max": 600}),
-                # ---- BSAI Strata 专属 ----
-                "strata_quant": (["Auto (自动适配)", "Q2_0 (最快 / fastest)", "IQ2_XS (略好 / better)",
-                                  "IQ3_XXS (更好 / good)", "IQ3_S (最好 / best quality)"],
-                                 {"default": "Auto (自动适配)",
-                                  "tooltip": "Strata 量化选择。Auto 按显存/内存自动选。"}),
-                # ---- 本地HF (Transformers) 专属 ----
-                "hf_model_name": (_hf_model_display_list() or ["<未发现 HF 模型>"],),
+                # ---- BSAI Strata only ----
+                "strata_quant": (["Auto (auto-adapt)", "Q2_0 (fastest)", "IQ2_XS (slightly better)",
+                                  "IQ3_XXS (better)", "IQ3_S (best quality)"],
+                                 {"default": "Auto (auto-adapt)",
+                                  "tooltip": "Strata quantization. Auto picks based on VRAM/RAM."}),
+                # ---- Local HF (Transformers) only ----
+                "hf_model_name": (_hf_model_display_list() or ["<No HF model found>"],),
                 "hf_task": (["<MORE_DETAILED_CAPTION>", "<DETAILED_CAPTION>", "<CAPTION>", "<OD>", "<REGION_CAPTION>"], {"default": "<MORE_DETAILED_CAPTION>"}),
                 "hf_device": (["auto", "cuda", "cpu"], {"default": "auto"}),
                 "hf_keep_loaded": ("BOOLEAN", {"default": True}),
                 # 【v3】纯预览：勾上后跳过所有模型调用，仅输出 MERGED_TEXT。
                 # 海报墙选模板时会自动勾上 → 触发一次 queuePrompt → 下游 Show Text 立即显示。
                 # 用户后续要 LLM 增强时手动关掉再 Queue Prompt。
-                "preview_only": ("BOOLEAN", {"default": False, "label": "仅预览（跳过 LLM）"}),
+                "preview_only": ("BOOLEAN", {"default": False, "label": "Preview only (skip LLM)"}),
             },
             "optional": {
                 "clip": ("CLIP",),
@@ -1196,20 +1214,20 @@ class BSAI_Qwen_Prompt_Enhancer:
     CATEGORY = "BSAI/Qwen Image 2.1"
     OUTPUT_NODE = True
     DESCRIPTION = (
-        "一个节点、四种增强后端（backend 下拉切换，前端自动显隐对应参数）：\n"
-        "① 官方PE（本地 Qwen3.5-9B）：CLIPLoader 加载 text_encoders 目录下的官方 PE 模型，"
-        "按官方 chat 模板生成，输出 rewritten_prompt / wh_ratio / ratio_follow；"
-        "I2I 模式接 image_1~image_16（最多 16 张），提示词用 图1/图2 描述编辑需求。\n"
-        "② 本地LLaMA（GGUF+mmproj）：llama.cpp 加载本地视觉大模型，自动扫描 models/LLM 与 text_encoders，"
-        "多图识别反推，chat_handler 自动识别全系列最新模型。\n"
-        "③ 本地HF（Transformers）：加载 models/LLM 下的 HuggingFace safetensors 模型，"
-        "覆盖 Florence-2（视觉 caption 反推提示词，需接 image_1）与 Llama/Gemma 等文本 LLM（chat_template 生成）。\n"
-        "④ API（OpenAI兼容）：配置 api_base / api_key / model_name 调在线或本地 API。\n"
-        "公共参数四后端共用；输出统一 10 路。speed_preset 选档后 RECOMMENDED_* 端口输出对应 KSampler 参数，"
-        "在 KSampler 上右键 steps/cfg → Convert to input 接上即可一键套用。"
-        "Qwen Image 2.1 为 CFG-distilled 架构，官方推荐 cfg=1.0；加速档基于官方 day-0 参数（25步/cfg1/euler/simple）。"
-        "v1.08.0 新增蒸馏LoRA档：Viggle Turbo 6步(官方节点) / Pruna 5-8步(社区转换) / 阿里PAI Fun-Acc 4步(实验)，"
-        "蒸馏档必须搭配对应 LoRA 与固定 sigma（Viggle Turbo Sigmas / ManualSigmas / PDD），详见 ACCELERATION_GUIDE.md。"
+        "One node, four enhancement backends (switch via the backend dropdown; the matching widgets are shown/hidden automatically):\n"
+        "(1) Official PE (local Qwen3.5-9B): load the official PE model from text_encoders with CLIPLoader, "
+        "generate via the official chat template, outputting rewritten_prompt / wh_ratio / ratio_follow; "
+        "I2I mode accepts image_1~image_16 (up to 16 images), refer to them as image_1/image_2 in the prompt.\n"
+        "(2) Local LLaMA (GGUF+mmproj): llama.cpp loads a local vision LLM, auto-scanning models/LLM and text_encoders, "
+        "reverse-engineering multi-image prompts; chat_handler auto-detects the latest model families.\n"
+        "(3) Local HF (Transformers): loads HuggingFace safetensors models under models/LLM, "
+        "covering Florence-2 (vision caption-to-prompt, requires image_1) and text LLMs such as Llama/Gemma (chat_template generation).\n"
+        "(4) API (OpenAI-compatible): configure api_base / api_key / model_name to call an online or local API.\n"
+        "Shared parameters apply to all backends; outputs are unified across 10 ports. Pick a speed_preset and the RECOMMENDED_* ports "
+        "output the matching KSampler settings; on a KSampler right-click steps/cfg -> Convert to input to apply them in one click. "
+        "Qwen Image 2.1 is a CFG-distilled architecture; the official recommendation is cfg=1.0. Acceleration presets are based on official day-0 settings (25 steps/cfg1/euler/simple). "
+        "v1.08.0 adds distilled-LoRA presets: Viggle Turbo 6 steps (official node) / Pruna 5-8 steps (community conversion) / Alibaba PAI Fun-Acc 4 steps (experimental). "
+        "Distilled presets require the matching LoRA and fixed sigmas (Viggle Turbo Sigmas / ManualSigmas / PDD); see ACCELERATION_GUIDE.md."
     )
 
     # 加速档位 → (steps, cfg, sampler, scheduler[, hint])
@@ -1219,48 +1237,48 @@ class BSAI_Qwen_Prompt_Enhancer:
     # 蒸馏档必须搭配对应 LoRA + 固定 sigma（Viggle Turbo Sigmas / ManualSigmas / PDD），
     # 不能直接用普通 KSampler 的 scheduler 生成 sigma，否则出噪图；详见 ACCELERATION_GUIDE.md。
     _SPEED_PRESETS = {
-        # ===== 2.1 原生正确参数（基于官方 day-0 联调）=====
+        # ===== Native 2.1 correct settings (based on official day-0 tuning) =====
         _DEFAULT_SPEED: (25, 1.0, "euler", "simple"),
-        "快速 15步/CFG1 (迭代预览)": (15, 1.0, "euler", "simple"),
-        "极速 10步/CFG1 (快速草稿)": (10, 1.0, "euler", "simple"),
-        "高质量 35步/CFG1 (精细出图)": (35, 1.0, "euler", "simple"),
-        # ===== 配合外部加速节点（无LoRA）=====
-        "缓存加速 20步/CFG1 (配合EasyCache节点)": (20, 1.0, "euler", "simple"),
-        # ===== 蒸馏 LoRA 加速档（2.1 专用蒸馏适配器，2026-09~10 已发布）=====
-        "Viggle Turbo 6步/CFG1 (官方节点,推荐)": (
+        "Fast 15 steps/CFG1 (iteration preview)": (15, 1.0, "euler", "simple"),
+        "Turbo 10 steps/CFG1 (quick draft)": (10, 1.0, "euler", "simple"),
+        "High quality 35 steps/CFG1 (detailed output)": (35, 1.0, "euler", "simple"),
+        # ===== With external acceleration nodes (no LoRA) =====
+        "Cached 20 steps/CFG1 (with EasyCache node)": (20, 1.0, "euler", "simple"),
+        # ===== Distilled LoRA presets (2.1-specific distilled adapters, released 2026-09~10) =====
+        "Viggle Turbo 6 steps/CFG1 (official node, recommended)": (
             6, 1.0, "euler", "simple",
-            "Viggle v0.3：模型仓库 comfyui/viggle_turbo.py 提供 Viggle Turbo Sigmas + Viggle Turbo LoRA(unmerged) 两节点，"
-            "接 BasicGuider + SamplerCustomAdvanced，CFG=1.0、负向留空；勿用 KSampler 自带 scheduler。"
-            "原始6步sigma=1.0,0.9375,0.875,0.75,0.5,0.25（节点按分辨率shift）。"
-            "ComfyUI工作流用 r128 版（已下载至 models/loras）；本机另有 v0.1 4步 r64 旧版。",
+            "Viggle v0.3: the comfyui/viggle_turbo.py model repo provides Viggle Turbo Sigmas + Viggle Turbo LoRA (unmerged). "
+            "Wire BasicGuider + SamplerCustomAdvanced, CFG=1.0, leave the negative empty; do not use KSampler's own scheduler. "
+            "Original 6-step sigma = 1.0,0.9375,0.875,0.75,0.5,0.25 (node shifts by resolution). "
+            "The ComfyUI workflow uses the r128 build (downloaded to models/loras); this machine also has an older v0.1 4-step r64 build.",
         ),
-        "Viggle Turbo 9步/CFG1 (仅diffusers)": (
+        "Viggle Turbo 9 steps/CFG1 (diffusers only)": (
             9, 1.0, "euler", "simple",
-            "v0.3 的9步模式=前7步turbo+后2步切回base模型，细节/小字更好（约3.5x于40步）；"
-            "目前仅 diffusers 与演示Space 可用，ComfyUI 暂未提供。",
+            "v0.3 9-step mode = first 7 steps turbo + last 2 steps back to the base model; better detail/small text (about 3.5x faster than 40 steps). "
+            "Currently only available in diffusers and the demo Space; not yet in ComfyUI.",
         ),
-        "Pruna 8步/CFG1 (质量优先,推荐)": (
+        "Pruna 8 steps/CFG1 (quality-first, recommended)": (
             8, 1.0, "euler", "simple",
-            "Pruna 8步（官方推荐默认）：sigma=1.0,0.933333333,0.857142857,0.769230769,0.666666667,"
-            "0.545454545,0.4,0.222222222（末尾0由调度器补）。需用社区转换版LoRA（NidAll/pruna-image-2.1-comfyui-loras，"
-            "自带alpha标量）+ ManualSigmas + SamplerCustom；CFG=1.0、负向留空。",
+            "Pruna 8 steps (official recommended default): sigma=1.0,0.933333333,0.857142857,0.769230769,0.666666667,"
+            "0.545454545,0.4,0.222222222 (trailing 0 filled by the scheduler). Requires the community-converted LoRA (NidAll/pruna-image-2.1-comfyui-loras, "
+            "with built-in alpha scalar) + ManualSigmas + SamplerCustom; CFG=1.0, leave negative empty.",
         ),
-        "Pruna 5步/CFG1 (极速)": (
+        "Pruna 5 steps/CFG1 (turbo)": (
             5, 1.0, "euler", "simple",
-            "Pruna 5步：sigma=1.0,0.94,0.857142857,0.666666667,0.4；H100@1024 约1.06s（提速5.7x），"
-            "画质明显低于8步版；用法同上（转换版LoRA + ManualSigmas + SamplerCustom）。",
+            "Pruna 5 steps: sigma=1.0,0.94,0.857142857,0.666666667,0.4; about 1.06s on H100 @1024 (5.7x faster). "
+            "Quality is noticeably below the 8-step version; usage is the same (converted LoRA + ManualSigmas + SamplerCustom).",
         ),
-        "官方Fun-Acc 4步/CFG1 (PAI,实验)": (
+        "Official Fun-Acc 4 steps/CFG1 (PAI, experimental)": (
             4, 1.0, "euler", "simple",
-            "阿里PAI官方4步蒸馏（PDD）：sigma=1.0,0.9169867,0.7861579,0.549491,0.0；默认2048采样。"
-            "ComfyUI无官方支持：需Kijai的 Qwen-Image-2.1-PDD 分支 + LoRA转换（norm_q/norm_k/text_norm为全参），"
-            "属社区实验路径。",
+            "Alibaba PAI official 4-step distillation (PDD): sigma=1.0,0.9169867,0.7861579,0.549491,0.0; samples at 2048 by default. "
+            "No official ComfyUI support: requires Kijai's Qwen-Image-2.1-PDD branch + LoRA conversion (norm_q/norm_k/text_norm are full-parameter). "
+            "This is a community experimental path.",
         ),
-        # ===== 旧版兼容（保留key防旧工作流失效，值已修正为2.1正确参数）=====
-        "标准质量 20步/CFG3 (推荐, 7B原生)": (25, 1.0, "euler", "simple"),
-        "极速 8步/CFG2": (8, 1.0, "euler", "simple"),
-        "闪电 4步/CFG1 (需2.1 Lightning LoRA)": (4, 1.0, "euler", "simple"),
-        "旧保守 50步/CFG4": (35, 1.0, "euler", "simple"),
+        # ===== Legacy compatibility (keys kept so old workflows keep working; values corrected to 2.1-correct settings) =====
+        "Legacy standard 20 steps/CFG3 (recommended, 7B native)": (25, 1.0, "euler", "simple"),
+        "Legacy turbo 8 steps/CFG2": (8, 1.0, "euler", "simple"),
+        "Legacy lightning 4 steps/CFG1 (requires 2.1 Lightning LoRA)": (4, 1.0, "euler", "simple"),
+        "Legacy conservative 50 steps/CFG4": (35, 1.0, "euler", "simple"),
     }
 
     def enhance(self, backend, prompt_text, system_template, custom_system_prompt="",
@@ -1270,10 +1288,10 @@ class BSAI_Qwen_Prompt_Enhancer:
                 pe_mode="auto", min_p=0.0, thinking=True, mtp="auto",
                 llm_model_name="", mmproj_name="", chat_handler="", n_ctx=8192,
                 n_gpu_layers=-1, load_mtp=False, keep_loaded=False,
-                n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                n_cmoe=0, kv_cache_quant="auto (f16, no quant)", use_mmap=True, use_mlock=False,
                 flash_attn="auto", threads=0,
                 api_base="", api_key="", api_model_name="", timeout=120,
-                strata_quant="Auto (自动适配)",
+                strata_quant="Auto (auto-adapt)",
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
                 preview_only=False,
                 clip=None,
@@ -1298,9 +1316,9 @@ class BSAI_Qwen_Prompt_Enhancer:
             hint_line = f"\n⚠ {extra[0]}" if extra else ""
             ui_text = [
                 merged_text,
-                f"\n── 纯预览模式 ──\n未调用任何模型。MERGED_TEXT 已生成，下游 Show Text / KSampler 可直接使用。\n"
-                f"需要 LLM 增强请关闭「仅预览」后再 Queue Prompt。\n"
-                f"\n── 当前加速档: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──"
+                f"\n── Preview-only mode ──\nNo model was called. MERGED_TEXT is ready and can be used directly by a downstream Show Text / KSampler.\n"
+                f"To run the LLM enhancement, disable 'Preview only' and Queue Prompt again.\n"
+                f"\n── Current speed preset: {speed_preset} → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler} ──"
                 f"{hint_line}",
             ]
             # 【修复 2026-09-23 v2】海报墙选模板后，ENHANCED_PROMPT(第1路) 输出模板拼接 merged_text：
@@ -1365,7 +1383,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                 timeout=timeout, speed_preset=speed_preset, images=images,
                 quant_label=strata_quant,
             )
-        raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] 未知 backend: {backend!r}")
+        raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] Unknown backend: {backend!r}")
 
     # ---------------- 官方PE ----------------
     def _enhance_official(self, clip, prompt_text, pe_mode, system_template, custom_system_prompt,
@@ -1374,9 +1392,9 @@ class BSAI_Qwen_Prompt_Enhancer:
                           seed, thinking, mtp, speed_preset, images):
         if clip is None:
             raise ValueError(
-                "[BSAI_Qwen_Prompt_Enhancer] 官方PE 后端需要接入 clip：\n"
-                "用 CLIPLoader 加载 text_encoders 目录下的官方 PE 模型（qwen3.5_9b_qwen_image_2.1_pe_*.safetensors），"
-                "把 CLIP 输出接到本节点的 clip 输入。"
+                "[BSAI_Qwen_Prompt_Enhancer] The Official PE backend needs a `clip` input:\n"
+                "Use CLIPLoader to load the official PE model from text_encoders/ (qwen3.5_9b_qwen_image_2.1_pe_*.safetensors), "
+                "then wire the CLIP output into this node's `clip` input."
             )
         # 1) 模式判定: auto -> 有图即 I2I
         has_images = images is not None and len(images.shape) > 1 and images.shape[0] > 0
@@ -1444,7 +1462,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                        custom_system_prompt, user_requirement,
                        max_tokens, temperature, top_p, top_k, repeat_penalty,
                        seed, n_ctx, n_gpu_layers, load_mtp, keep_loaded, speed_preset, images,
-                       n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                       n_cmoe=0, kv_cache_quant="auto (f16, no quant)", use_mmap=True, use_mlock=False,
                        flash_attn="auto", threads=0):
         resolved = _resolve_handler_label(chat_handler)
         if resolved == "__auto__":
@@ -1506,27 +1524,27 @@ class BSAI_Qwen_Prompt_Enhancer:
             resp = _call_chat_completion(llm, messages=messages, params=params)
         except RuntimeError as e:
             if "Context Shift is explicitly disabled" in str(e):
-                current_n_ctx = getattr(llm, "n_ctx", "未知")
+                current_n_ctx = getattr(llm, "n_ctx", "unknown")
                 raise RuntimeError(
-                    "Context Shift 被 C++ 后端禁用（M-RoPE 模型不支持上下文滑动窗口）。\n"
-                    f"当前 n_ctx = {current_n_ctx}，无法容纳完整对话。\n"
-                    "请在节点中增大「n_ctx 上下文长度」：\n"
-                    "  - 纯文本建议 16384\n"
-                    "  - 含图片/视频建议 32768 或更高\n"
-                    f"原始错误：{e}"
+                    "Context Shift is disabled by the C++ backend (M-RoPE models do not support a sliding context window).\n"
+                    f"Current n_ctx = {current_n_ctx}, which cannot hold the whole conversation.\n"
+                    "Increase 'n_ctx (context length)' on the node:\n"
+                    "  - text-only: 16384 recommended\n"
+                    "  - with images/video: 32768 or higher recommended\n"
+                    f"Original error: {e}"
                 ) from e
             raise
         except ValueError as e:
             if "Media evaluation failed" in str(e):
                 raise RuntimeError(
-                    "多模态图像编码失败（Media evaluation failed）。\n"
-                    "可能的原因和解决方案：\n"
-                    "1. 输入图像分辨率过大 — 请尝试减少输入图片数量，或缩小原图。\n"
-                    "2. mmproj 视觉投影模型与主模型不匹配 — 请确保加载了对应版本的 mmproj 文件。\n"
-                    "   例如：Qwen3.8-VL 主模型必须搭配 Qwen3.8-VL 的 mmproj。\n"
-                    "3. 显存不足导致 CLIP 编码失败 — 请尝试减少输入图片数量，或重启 ComfyUI。\n"
-                    "4. 图像文件损坏或格式异常 — 请检查输入图像能否正常打开。\n"
-                    f"原始错误：{e}"
+                    "Multimodal image encoding failed (Media evaluation failed).\n"
+                    "Possible causes and fixes:\n"
+                    "1. Input image resolution too large — try fewer input images, or downscale them.\n"
+                    "2. The mmproj vision projector does not match the main model — make sure you load the matching mmproj.\n"
+                    "   e.g. a Qwen3.8-VL main model must use the Qwen3.8-VL mmproj.\n"
+                    "3. Out of VRAM during CLIP encoding — try fewer input images, or restart ComfyUI.\n"
+                    "4. The image file is corrupted or malformed — check it opens normally.\n"
+                    f"Original error: {e}"
                 ) from e
             # 采样参数不兼容时降级重试
             print(f"[BSAI_Qwen_Prompt_Enhancer] 首次调用失败({e})，降级采样参数重试…")
@@ -1566,8 +1584,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                     prompt_text, system_template, custom_system_prompt, user_requirement,
                     max_tokens,
                     temperature, top_p, top_k, seed, speed_preset, images):
-        if not hf_model_name or hf_model_name.startswith("<未发现"):
-            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] 本地HF 后端需要选择一个：models/LLM 下的 HuggingFace 模型（safetensors/bin）")
+        if not hf_model_name or hf_model_name.startswith("<No "):
+            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] The Local HF backend requires a HuggingFace model under models/LLM (safetensors/bin)")
 
         model_dir_id = _hf_model_id_from_label(hf_model_name)
         # 设备选择
@@ -1604,7 +1622,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                      max_tokens, temperature, top_p, top_k, seed,
                      timeout, speed_preset, images):
         if not api_base.strip():
-            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] API 后端需要填写 api_base（OpenAI 兼容接口地址）")
+            raise ValueError("[BSAI_Qwen_Prompt_Enhancer] The API backend requires api_base (OpenAI-compatible endpoint URL)")
 
         system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
 
@@ -1648,7 +1666,7 @@ class BSAI_Qwen_Prompt_Enhancer:
             else:
                 raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] API HTTP {e.code}: {body}")
         except Exception as e:
-            raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] API 调用失败: {e}")
+            raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] API call failed: {e}")
 
         msg = data["choices"][0]["message"]
         raw = msg.get("content") or ""
@@ -1663,7 +1681,7 @@ class BSAI_Qwen_Prompt_Enhancer:
     # ---------------- BSAI Strata ----------------
     def _enhance_strata(self, prompt_text, system_template, custom_system_prompt,
                         user_requirement, max_tokens, temperature, top_p, seed,
-                        timeout, speed_preset, images, quant_label="Auto (自动适配)"):
+                        timeout, speed_preset, images, quant_label="Auto (auto-adapt)"):
         """Call local Strata (Qwen3.8-Flash-Next @ 127.0.0.1:8080) via blocking socket."""
         import json as _json, socket as _sk, http.client as _hc
         import sys as _sys
@@ -1689,8 +1707,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                 print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 自动启动 ({quant_label}): {ok} ({msg})")
                 if not ok:
                     raise RuntimeError(
-                        f"[BSAI_Qwen_Prompt_Enhancer] Strata 服务启动失败: {msg}\n"
-                        f"请手动检查 Strata 是否安装完整，或切换到其他后端（llama.cpp / HF / API）。"
+                        f"[BSAI_Qwen_Prompt_Enhancer] Failed to start the Strata server: {msg}\n"
+                        f"Please check that Strata is installed completely, or switch to another backend (llama.cpp / HF / API)."
                     )
         except Exception as _e:
             print(f"[BSAI_Qwen_Prompt_Enhancer] Strata 自动启动跳过: {_e}")
@@ -1716,21 +1734,38 @@ class BSAI_Qwen_Prompt_Enhancer:
             "seed": int(seed),
         }
         body = _json.dumps(payload).encode("utf-8")
-        s = _sk.socket(_sk.AF_INET, _sk.SOCK_STREAM)
-        s.settimeout(float(timeout) if timeout else 600.0)
-        s.setblocking(True)
-        s.connect(("127.0.0.1", 8080))
-        try:
-            conn = _hc.HTTPConnection("127.0.0.1", 8080, timeout=s.gettimeout())
-            conn.sock = s
-            conn.request("POST", "/v1/chat/completions", body=body,
-                         headers={"Content-Type": "application/json",
-                                  "Authorization": "Bearer strata"})
-            resp = conn.getresponse()
-            data = _json.loads(resp.read().decode("utf-8", "replace"))
-        finally:
-            s.close()
-
+        
+        # Retry loop: wait for model to be fully loaded (IQ3_S takes time)
+        data = None
+        for attempt in range(30):
+            s = _sk.socket(_sk.AF_INET, _sk.SOCK_STREAM)
+            s.settimeout(float(timeout) if timeout else 600.0)
+            s.setblocking(True)
+            try:
+                s.connect(("127.0.0.1", 8080))
+                conn = _hc.HTTPConnection("127.0.0.1", 8080, timeout=s.gettimeout())
+                conn.sock = s
+                conn.request("POST", "/v1/chat/completions", body=body,
+                             headers={"Content-Type": "application/json",
+                                      "Authorization": "Bearer strata"})
+                resp = conn.getresponse()
+                data = _json.loads(resp.read().decode("utf-8", "replace"))
+                
+                # Check if we got a valid response
+                if "choices" in data and data["choices"]:
+                    break
+                else:
+                    print(f"[BSAI Enhancer] Model still loading, retry {attempt+1}/30...")
+                    time.sleep(5)
+            except Exception as e:
+                print(f"[BSAI Enhancer] Waiting for model to start, retry {attempt+1}/30: {e}")
+                time.sleep(5)
+            finally:
+                s.close()
+        
+        if not data or "choices" not in data:
+            raise RuntimeError("Strata model not ready after waiting. Please wait a bit longer and try again.")
+        
         msg = data["choices"][0]["message"]
         raw = msg.get("content") or ""
         if not raw and msg.get("reasoning_content"):
@@ -1876,18 +1911,18 @@ class BSAI_Qwen_Image21_Sampler:
     CATEGORY = "sampling/custom_sampling"
 
     DESCRIPTION = (
-        "BSAI Qwen image 2.1 采样器：KSampler 全部参数（种子/步数/CFG/采样器/调度器/降噪）均保留为 widget，"
-        "且每个参数都可右键「Convert widget to input」转为输入端口接入上游（如增强器 RECOMMENDED_STEPS/CFG 智能联动）；"
-        "新增可选 guider / sigmas 输入端口，直连 BasicGuider / ViggleTurboSigmas 等蒸馏采样上游。\n"
-        "步数规则：steps 始终为主控——外部 sigmas 仅在步数与 steps 一致时生效；"
-        "不一致时忽略外部 sigmas、按 steps 重新生成并提示（蒸馏 LoRA 请保持 steps 与 LoRA/σ 序列步数一致）。"
+        "BSAI Qwen image 2.1 sampler: all KSampler parameters (seed/steps/CFG/sampler/scheduler/denoise) are kept as widgets, "
+        "and each can be right-clicked 'Convert widget to input' to wire an upstream node (e.g. the enhancer's RECOMMENDED_STEPS/CFG). "
+        "Adds optional guider / sigmas input ports to wire distilled-sampling upstreams such as BasicGuider / ViggleTurboSigmas directly.\n"
+        "Steps rule: steps always wins — external sigmas only apply when their step count matches steps; "
+        "when they mismatch, external sigmas are ignored and regenerated from steps (for a distilled LoRA keep steps equal to the LoRA/sigma sequence length)."
     )
 
     def sample(self, model, positive, negative, latent_image,
                seed=0, steps=20, cfg=1.0, sampler_name="euler", scheduler="simple",
                denoise=1.0, guider=None, sigmas=None):
         if _comfy_samplers is None:
-            raise RuntimeError("[BSAI_Qwen_Image21_Sampler] ComfyUI 采样模块不可用")
+            raise RuntimeError("[BSAI_Qwen_Image21_Sampler] ComfyUI sampling module is unavailable")
         # 1) guider：优先外部 guider（BasicGuider / CFGGuider），否则内置 CFGGuider
         if guider is None:
             guider = _comfy_samplers.CFGGuider(model)
@@ -1900,9 +1935,9 @@ class BSAI_Qwen_Image21_Sampler:
             sigma_steps = int(sigmas.shape[-1]) - 1
             if sigma_steps != int(steps):
                 print(
-                    f"[BSAI_Qwen_Image21_Sampler] 警告: steps={int(steps)} 与外部 sigmas 步数 "
-                    f"({sigma_steps}) 不一致，已忽略外部 sigmas 按 steps 重新生成。"
-                    f"蒸馏 LoRA 请保持 steps 与 LoRA/σ 序列步数一致，否则效果无保证。"
+                    f"[BSAI_Qwen_Image21_Sampler] Warning: steps={int(steps)} does not match the external sigmas step count "
+                    f"({sigma_steps}); external sigmas ignored and regenerated from steps. "
+                    f"For a distilled LoRA keep steps equal to the LoRA/sigma sequence length, otherwise quality is not guaranteed."
                 )
                 sigmas = None
         if sigmas is None:
@@ -1975,5 +2010,5 @@ NODE_CLASS_MAPPINGS = {
 }
 NODE_DISPLAY_NAME_MAPPINGS = {
     "BSAI_Qwen_Prompt_Enhancer": "BSAI Qwen Prompt Enhancer",
-    "BSAI_Qwen_Image21_Sampler": "BSAI Qwen image 2.1 采样器",
+    "BSAI_Qwen_Image21_Sampler": "BSAI Qwen image 2.1 Sampler",
 }

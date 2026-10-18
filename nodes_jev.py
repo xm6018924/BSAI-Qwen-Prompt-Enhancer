@@ -27,7 +27,7 @@ from .nodes_enhancer import (
     _load_llm, _clear_cache, _AUTO_LABEL,
 )
 
-NO_MODEL = "<未发现 GGUF>"
+NO_MODEL = "<No GGUF model found>"
 
 
 class BSAI_Jev_Schema:
@@ -41,12 +41,12 @@ class BSAI_Jev_Schema:
                 "schema_text": ("STRING", {
                     "multiline": True,
                     "default": "department: tech|billing|shipping\npriority: low|medium|high\nsentiment: positive|negative|neutral",
-                    "placeholder": "每行一个字段:\n字段名: 选项1|选项2|选项3",
+                    "placeholder": "One field per line:\nfield_name: option1|option2|option3",
                 }),
                 "instruction": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "可选: 给模型的字段判断规则。\n例如: You are a support ticket router. Classify each field strictly based on the context. 只输出合法选项, 不要编造。",
+                    "placeholder": "Optional: field-selection rules for the model.\ne.g.: You are a support ticket router. Classify each field strictly based on the context. Only output valid options, never invent values.",
                 }),
             },
         }
@@ -81,13 +81,13 @@ class BSAI_Jev_Decision:
                 "context": ("STRING", {
                     "multiline": True,
                     "default": "",
-                    "placeholder": "上下文 / 客户信息 / 邮件内容\n(batch_mode 开启时, 每行一条独立记录, 每条记录一次遍历完成全部字段)",
+                    "placeholder": "Context / customer info / email body\n(when batch_mode is on, each line is an independent record; one forward pass decides all fields for each record)",
                 }),
                 "batch_mode": ("BOOLEAN", {
                     "default": False,
-                    "tooltip": "True: 将 context 按行拆分为多条记录, 每条记录一次遍历完成全部字段决策\n(记录间顺序处理, 字段在同一前向中并行)",
+                    "tooltip": "True: split context by line into multiple records; one forward pass decides all fields per record\n(records processed in order; fields are decided in parallel within a single forward pass)",
                 }),
-                # ---- 模型选择 (与主节点 "本地LLaMA" 后端完全一致) ----
+                # ---- model selection (identical to the main node's Local LLaMA backend) ----
                 "llm_model_name": ((models if models else [NO_MODEL]), {
                     "default": models[0] if models else NO_MODEL,
                 }),
@@ -101,16 +101,16 @@ class BSAI_Jev_Decision:
                 # ---- 极限提速参数（视频同款 llama.cpp：显存+内存混合模式）----
                 "n_cmoe": ("INT", {
                     "default": 0, "min": 0, "max": 256, "step": 1,
-                    "tooltip": "MoE专家拆分到CPU/内存层数(-ncmoe)。仅MoE有效，稠密无效。\\nQwen-35B-A3B实测约24最稳；0=关闭。当前0.3.36暂未支持，升级后自动生效。",
+                    "tooltip": "Split MoE experts across CPU/RAM layers (-ncmoe). Only effective for MoE models, not dense.\\nQwen-35B-A3B is most stable around 24; 0 = off. Current 0.3.36 does not support it yet; it applies automatically after upgrading.",
                 }),
-                "kv_cache_quant": (["auto(f16不量化)", "q8_0", "q4_0"], {
-                    "default": "auto(f16不量化)",
-                    "tooltip": "KV缓存量化(-ctk/-ctv)。Jev读logits精度敏感，默认不量化；确需提速再选q8_0/q4_0。",
+                "kv_cache_quant": (["auto (f16, no quant)", "q8_0", "q4_0"], {
+                    "default": "auto (f16, no quant)",
+                    "tooltip": "KV cache quantization (-ctk/-ctv). Jev reads logits and is quality-sensitive, so it defaults to no quantization; pick q8_0/q4_0 only if you need the speedup.",
                 }),
-                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap；内存不足/换页可关闭(--no-mmap)。"}),
-                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock(--mlock)锁内存防换出。"}),
-                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa。auto=模型支持即启用。"}),
-                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t 线程数(视频示例14)；0=自动。"}),
+                "use_mmap": ("BOOLEAN", {"default": True, "tooltip": "use_mmap; can disable when RAM is tight / swapping (--no-mmap)."}),
+                "use_mlock": ("BOOLEAN", {"default": False, "tooltip": "use_mlock (--mlock) locks the model in RAM to avoid page-out."}),
+                "flash_attn": (["auto", "on", "off"], {"default": "auto", "tooltip": "-fa. auto = enable when the model supports it."}),
+                "threads": ("INT", {"default": 0, "min": 0, "max": 256, "step": 1, "tooltip": "-t thread count (video example: 14); 0 = auto."}),
                 "system_prompt": ("STRING", {"multiline": True, "default": ""}),
                 "force_offload": ("BOOLEAN", {
                     "default": False,
@@ -126,12 +126,12 @@ class BSAI_Jev_Decision:
 
     def process(self, jev_schema, context, batch_mode, llm_model_name, mmproj_name,
                 chat_handler, n_ctx, n_gpu_layers, load_mtp,
-                n_cmoe=0, kv_cache_quant="auto(f16不量化)", use_mmap=True, use_mlock=False,
+                n_cmoe=0, kv_cache_quant="auto (f16, no quant)", use_mmap=True, use_mlock=False,
                 flash_attn="auto", threads=0,
                 system_prompt="", force_offload=False):
         if llm_model_name == NO_MODEL:
             raise RuntimeError(
-                "[BSAI_Jev] 未发现 GGUF 模型。请先将 .gguf 模型放入 ComfyUI/models/LLM。"
+                "[BSAI_Jev] No GGUF model found. Please put a .gguf model into ComfyUI/models/LLM first."
             )
 
         llm, _ = _load_llm(

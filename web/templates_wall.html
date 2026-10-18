@@ -1,9 +1,9 @@
 ﻿<!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>BSAI Qwen Image 2.1 · 提示词模板库海报墙</title>
+<title>BSAI Qwen Image 2.1 · Prompt Template Wall</title>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -113,9 +113,10 @@
   .usage li::before { content: "✓"; position: absolute; left: 0; color: #a78bfa; font-weight: bold; }
   .usage .lang-toggle { float: right; font-size: 12px; color: #64748b; cursor: pointer; }
   .usage .lang-toggle:hover { color: #a78bfa; }
-  .usage .en { display: none; }
-  .usage.show-en .zh { display: none; }
-  .usage.show-en .en { display: block; }
+  .usage .zh { display: none; }
+  .usage .en { display: block; }
+  .usage.show-zh .zh { display: block; }
+  .usage.show-zh .en { display: none; }
 
   /* 页脚 */
   .footer { text-align: center; margin-top: 60px; color: #475569; font-size: 13px; }
@@ -146,27 +147,26 @@
 <body>
 
 <div class="hero">
-  <h1>BSAI · Qwen Image 2.1 提示词模板库</h1>
-  <p>内置 <b id="stat-total">150</b> 个系统提示词模板 — 覆盖官方 PE 规则、官方文档、社区实践、<b id="stat-design">9</b> 种设计版式、<b id="stat-cinema">13</b> 种电影资产、<b id="stat-character">16</b> 种角色卡、<b id="stat-poster">12</b> 种电影海报、<b id="stat-style">31</b> 种艺术风格、<b id="stat-pose">16</b> 种人物动作姿势、<b id="stat-typography">16</b> 种文字排版设计、<b id="stat-card">16</b> 种节日祝福贺卡、<b id="stat-inspiration">12</b> 种灵感精选 + <b id="stat-user">动态</b> 用户共享模板。每个模板支持 <code style="color:#a78bfa">{{变量}}</code> 自定义替换。</p>
+  <h1>BSAI · Qwen Image 2.1 Prompt Template Library</h1>
+  <p>Built-in <b id="stat-total">150</b> system-prompt templates — covering official PE rules, official docs, community best practices, <b id="stat-design">9</b> design layouts, <b id="stat-cinema">13</b> cinema assets, <b id="stat-character">16</b> character sheets, <b id="stat-poster">12</b> movie posters, <b id="stat-style">31</b> art styles, <b id="stat-pose">16</b> character poses, <b id="stat-typography">16</b> typography designs, <b id="stat-card">16</b> festival greeting cards, <b id="stat-inspiration">12</b> curated picks + <b id="stat-user">dynamic</b> shared user templates. Every template supports <code style="color:#a78bfa">{{variable}}</code> custom replacement.</p>
   <div class="stats">
-    <span><b id="stat-total-b">102</b> 模板总数</span>
-    <span><b id="stat-cat-b">13</b> 分类</span>
-    <span><b id="stat-design-b">9</b> 设计版式</span>
-    <span><b id="stat-character-b">16</b> 角色卡</span>
-    <span><b id="stat-poster-b">12</b> 电影海报</span>
-    <span><b id="stat-style-b">31</b> 艺术风格</span>
-    <span><b id="stat-pose-b">16</b> 人物姿势</span>
-    <span><b id="stat-typography-b">16</b> 排版设计</span>
-    <span><b id="stat-card-b">16</b> 节日贺卡</span>
-    <span><b id="stat-user-b">0</b> 用户模板</span>
-    <span><b id="stat-inspiration-b">12</b> 灵感精选</span>
+    <span><b id="stat-total-b">102</b> templates</span>
+    <span><b id="stat-cat-b">13</b> categories</span>
+    <span><b id="stat-design-b">9</b> design layouts</span>
+    <span><b id="stat-character-b">16</b> character sheets</span>
+    <span><b id="stat-poster-b">12</b> movie posters</span>
+    <span><b id="stat-style-b">31</b> art styles</span>
+    <span><b id="stat-pose-b">16</b> poses</span>
+    <span><b id="stat-typography-b">16</b> typography</span>
+    <span><b id="stat-card-b">16</b> festival cards</span>
+    <span><b id="stat-user-b">0</b> user templates</span>
+    <span><b id="stat-inspiration-b">12</b> curated</span>
   </div>
 </div>
 
 <!-- 使用说明（中英双语切换） -->
 <div class="usage" id="usage">
-  <span class="lang-toggle" onclick="toggleUsageLang()">🌐 EN / 中文</span>
-  <div class="zh">
+  <span class="lang-toggle" onclick="toggleUsageLang()">🌐 EN / 中文</span>  <div class="zh">
     <h2>📖 使用说明</h2>
     <ul>
       <li>从 ComfyUI 节点上的「🖼 打开模板海报墙」按钮打开本页，可自动回填</li>
@@ -195,28 +195,28 @@
 </div>
 
 <div class="filters" id="filters">
-  <button class="active" data-cat="all">全部</button>
-  <button data-cat="official">官方规则</button>
-  <button data-cat="official-doc">官方文档</button>
-  <button data-cat="community">社区实践</button>
-  <button data-cat="design">设计版式</button>
-  <button data-cat="cinema">电影资产</button>
-  <button data-cat="character">角色卡</button>
-  <button data-cat="poster">电影海报</button>
-  <button data-cat="style">艺术风格</button>
-  <button data-cat="pose">人物姿势</button>
-  <button data-cat="shaolin">少林招式</button>
-  <button data-cat="inspiration">灵感精选</button>
-  <button data-cat="typography">排版设计</button>
-  <button data-cat="card">节日贺卡</button>
-  <button data-cat="user">用户模板</button>
-  <button id="btn-refresh" class="btn-refresh" title="重新加载模板库：新保存/上传的模板立即出现">🔄 刷新</button>
+  <button class="active" data-cat="all">All</button>
+  <button data-cat="official">Official Rules</button>
+  <button data-cat="official-doc">Official Docs</button>
+  <button data-cat="community">Community</button>
+  <button data-cat="design">Design Layouts</button>
+  <button data-cat="cinema">Cinema Assets</button>
+  <button data-cat="character">Character Sheets</button>
+  <button data-cat="poster">Movie Posters</button>
+  <button data-cat="style">Art Styles</button>
+  <button data-cat="pose">Poses</button>
+  <button data-cat="shaolin">Shaolin Moves</button>
+  <button data-cat="inspiration">Curated</button>
+  <button data-cat="typography">Typography</button>
+  <button data-cat="card">Festival Cards</button>
+  <button data-cat="user">User Templates</button>
+  <button id="btn-refresh" class="btn-refresh" title="Reload the template library: newly saved/uploaded templates appear immediately">🔄 Refresh</button>
 </div>
 
 <div class="wall" id="wall"></div>
 
 <div class="footer">
-  <div class="big-logo"><div class="circle">百声</div><div style="text-align:left"><div style="font-weight:700;color:#cbd5e1">百声AI · BSAI</div><div style="font-size:11px;color:#64748b">Qwen Image 2.1 Prompt Enhancer</div></div></div>
+  <div class="big-logo"><div class="circle">BSAI</div><div style="text-align:left"><div style="font-weight:700;color:#cbd5e1">BSAI</div><div style="font-size:11px;color:#64748b">Qwen Image 2.1 Prompt Enhancer</div></div></div>
   <div>ComfyUI custom node · <b id="footer-total">150</b> templates · <b id="footer-cat">13</b> categories · 3 backends</div>
 </div>
 
@@ -286,7 +286,7 @@ function _loadStaticTemplates() {
     })
     .catch(err => {
       document.getElementById("wall").innerHTML =
-        `<div style="grid-column:1/-1;text-align:center;color:#fca5a5;padding:40px">加载模板库失败: ${err}</div>`;
+        `<div style="grid-column:1/-1;text-align:center;color:#fca5a5;padding:40px">Failed to load template library: ${err}</div>`;
       throw err;
     });
 }
@@ -545,8 +545,8 @@ try {
 if (NODE_ID || TNODE_ID || MERGED_ID) {
   const tip = document.createElement("div");
   tip.style.cssText = "max-width:1400px;margin:0 auto 18px;text-align:center;color:#a78bfa;font-size:13px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);padding:8px 16px;border-radius:10px;";
-  const ids = [MERGED_ID ? `合并节点 #${MERGED_ID}` : null, TNODE_ID ? `模板节点 #${TNODE_ID}` : null].filter(Boolean).join(" / ");
-  tip.textContent = `✅ 已连接到 ComfyUI ${ids || NODE_ID} · 点击任意模板卡片即可：① 自动回填下拉 ② 同步推送模板原文给下游 Show Text ③ 关闭本页`;
+  const ids = [MERGED_ID ? `merged node #${MERGED_ID}` : null, TNODE_ID ? `template node #${TNODE_ID}` : null].filter(Boolean).join(" / ");
+  tip.textContent = `✅ Connected to ComfyUI ${ids || NODE_ID} · Click any template card to: (1) auto-fill the dropdown, (2) push the template text to the downstream Show Text, (3) close this page`;
   document.querySelector(".filters").insertAdjacentElement("beforebegin", tip);
 }
 
@@ -557,9 +557,9 @@ function selectTemplate(displayName) {
       let mainNode = null;
       if (NODE_ID) {
         mainNode = openerApp.graph.getNodeById(Number(NODE_ID));
-        if (!mainNode) throw new Error("节点 #" + NODE_ID + " 未找到");
+        if (!mainNode) throw new Error("Node #" + NODE_ID + " not found");
         const w = (mainNode.widgets || []).find(x => x.name === WIDGET_NAME);
-        if (!w) throw new Error("未找到 widget: " + WIDGET_NAME);
+        if (!w) throw new Error("Widget not found: " + WIDGET_NAME);
         w.value = displayName;
         if (typeof w.callback === "function") w.callback();
       }
@@ -668,13 +668,13 @@ function selectTemplate(displayName) {
       setTimeout(() => window.close(), 500);
 
       if (!dispatched && !NODE_ID) {
-        alert("已复制模板名到剪贴板（请粘贴到节点的「系统提醒」下拉）:\n\n" + displayName);
+        alert("Template name copied to clipboard (paste it into the node's system-template dropdown):\n\n" + displayName);
       }
     } catch (e) {
-      alert("回填失败: " + e.message + "\n\n请手动复制模板名填入下拉: " + displayName);
+      alert("Auto-fill failed: " + e.message + "\n\nPlease copy the template name into the dropdown: " + displayName);
     }
   } else {
-    alert("请从 ComfyUI 节点上的「🖼 打开模板海报墙」按钮打开本页，才能自动回填。\n\n模板名: " + displayName);
+    alert("Open this page via the '🖼 Open Template Wall' button on the ComfyUI node to auto-fill.\n\nTemplate name: " + displayName);
   }
 }
 
@@ -685,17 +685,17 @@ function render(cat) {
     const card = document.createElement("div");
     card.className = "card";
     card.style.cursor = "pointer";
-    card.title = NODE_ID ? "点击选用此模板" : "从节点按钮打开可自动回填";
+    card.title = NODE_ID ? "Click to use this template" : "Open from the node button for auto-fill";
     card.innerHTML = `
       <div class="thumb">
         <img src="${WALL_BASE}/thumbnails/${t.id}.png?v=${WALL_VER}" alt="${t.name}" loading="lazy" class="thumb-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div style="display:none;position:absolute;inset:0;align-items:center;justify-content:center">${svgFor(t)}</div>
-        <img src="${WALL_BASE}/logo.png?v=${WALL_VER}" class="logo-badge" alt="百声AI">
+        <img src="${WALL_BASE}/logo.png?v=${WALL_VER}" class="logo-badge" alt="BSAI">
       </div>
       <div class="info">
         <span class="type-tag t-${t.type}">${
-          {official:"官方规则","official-doc":"官方文档",community:"社区实践",design:"设计版式",cinema:"电影资产",character:"角色卡",poster:"电影海报",style:"艺术风格",pose:"人物姿势",shaolin:"少林招式",inspiration:"灵感精选",typography:"排版设计",card:"节日贺卡",user:"用户模板"}[t.type] || t.type
+          {official:"Official Rules","official-doc":"Official Docs",community:"Community",design:"Design Layouts",cinema:"Cinema Assets",character:"Character Sheets",poster:"Movie Posters",style:"Art Styles",pose:"Poses",shaolin:"Shaolin Moves",inspiration:"Curated",typography:"Typography",card:"Festival Cards",user:"User Template"}[t.type] || t.type
         }</span>
         <h3>${t.name}${t.ratio!=="—" ? ` <span style="color:#64748b;font-weight:400;font-size:12px">· ${t.ratio}</span>` : ""}</h3>
         <div class="desc">${t.desc}</div>
@@ -726,7 +726,7 @@ function refreshTemplates() {
     btn.disabled = on;
     btn.style.opacity = on ? "0.7" : "1";
   };
-  busy(true, "⏳ 刷新中…");
+  busy(true, "⏳ Refreshing…");
   fetch("/api/bsai/templates", { cache: "no-store" })
     .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
     .then(data => {
@@ -740,7 +740,7 @@ function refreshTemplates() {
       render(currentCat);
       busy(false);
       const ok = document.createElement("div");
-      ok.textContent = "✅ 已刷新：模板库共 " + TEMPLATES.length + " 个模板";
+      ok.textContent = "✅ Refreshed: " + TEMPLATES.length + " templates in the library";
       ok.style.cssText = "position:fixed;top:16px;right:24px;z-index:99;background:#16a34a;color:#fff;padding:8px 14px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);";
       document.body.appendChild(ok);
       setTimeout(() => ok.remove(), 2500);
@@ -753,7 +753,7 @@ function refreshTemplates() {
         .catch(() => {});
       busy(false);
       const fail = document.createElement("div");
-      fail.textContent = "⚠ 动态模板库暂不可用，已加载内置模板。若想看到新保存/上传的用户模板，请重启 ComfyUI 后再点刷新。";
+      fail.textContent = "⚠ The dynamic template library is temporarily unavailable; built-in templates were loaded. To see newly saved/uploaded user templates, restart ComfyUI and click Refresh again.";
       fail.style.cssText = "position:fixed;top:16px;right:24px;z-index:99;background:#d97706;color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;box-shadow:0 4px 12px rgba(0,0,0,.3);max-width:420px;line-height:1.5;";
       document.body.appendChild(fail);
       setTimeout(() => fail.remove(), 5000);
@@ -762,7 +762,7 @@ function refreshTemplates() {
 
 // 使用说明语言切换
 function toggleUsageLang() {
-  document.getElementById("usage").classList.toggle("show-en");
+  document.getElementById("usage").classList.toggle("show-zh");
 }
 </script>
 </body>

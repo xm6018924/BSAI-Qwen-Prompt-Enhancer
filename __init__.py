@@ -105,14 +105,36 @@ def _bsai_save_thumb_bytes(raw, dest):
         return False
 
 
-def _bsai_save_thumb_from_url(url, dest):
+def _bsai_read_view_image(thumb):
+    """Resolve a ComfyUI ``/view?filename=..&type=..&subfolder=..`` reference to local bytes.
+    Only resolves images that ComfyUI itself serves (input/output/temp); this deliberately
+    does NOT fetch arbitrary remote URLs or read arbitrary local paths."""
     try:
-        import urllib.request as _u
-        with _u.urlopen(url, timeout=20) as r:
-            return _bsai_save_thumb_bytes(r.read(), dest)
+        import urllib.parse as _up
+        import folder_paths
+        q = _up.urlparse(thumb)
+        params = _up.parse_qs(q.query)
+        filename = params.get("filename", [""])[0]
+        ftype = params.get("type", ["output"])[0] or "output"
+        subfolder = params.get("subfolder", [""])[0]
+        if not filename:
+            return None
+        if "/" in filename or "\\" in filename or ".." in filename:
+            return None
+        base = folder_paths.get_directory_by_type(ftype)
+        if not base:
+            return None
+        base = os.path.normpath(base)
+        path = os.path.normpath(os.path.join(base, subfolder, filename))
+        if path != base and not path.startswith(base + os.sep):
+            return None
+        if not os.path.isfile(path):
+            return None
+        with open(path, "rb") as f:
+            return f.read()
     except Exception as e:
-        print("[BSAI_Qwen_Prompt_Enhancer] 缩略图 URL 下载失败: %s -> %s" % (url, e))
-        return False
+        print("[BSAI_Qwen_Prompt_Enhancer] thumbnail /view resolve failed: %s" % e)
+        return None
 
 
 def _bsai_save_thumb_from_b64(b64, dest):
@@ -146,12 +168,12 @@ def _bsai_gen_thumb_placeholder(name, desc, tid):
         f_logo = ImageFont.truetype("C:/Windows/Fonts/msyh.ttc", 18)
     except Exception:
         f_label = f_name = f_desc = f_logo = ImageFont.load_default()
-    d.text((18, 12), "用户模板 · USER TEMPLATE", font=f_label, fill="#ffffff")
-    nm = str(name or tid or "模板")
+    d.text((18, 12), "USER TEMPLATE", font=f_label, fill="#ffffff")
+    nm = str(name or tid or "Template")
     d.text((24, 110), nm[:10], font=f_name, fill="#fbbf24")
-    ds = str(desc or "").strip() or "用户自定义共享模板"
+    ds = str(desc or "").strip() or "Shared user template"
     d.text((24, 200), ds[:30], font=f_desc, fill="#cbd5e1")
-    d.text((W // 2 - 66, H - 48), "百声AI · BSAI", font=f_logo, fill="#94a3b8")
+    d.text((W // 2 - 40, H - 48), "BSAI", font=f_logo, fill="#94a3b8")
     img.save(dest, "PNG")
     return True
 
@@ -167,7 +189,10 @@ def _bsai_ensure_user_thumb(tid, name, desc):
 
 
 def _bsai_apply_thumbnail(tid, thumb, raw_bytes=None):
-    """按优先级落地缩略图：raw_bytes > base64/URL/本地路径 > 程序合成"""
+    """Land the thumbnail, by priority: uploaded multipart bytes > inline base64 >
+    a ComfyUI /view image (already uploaded/generated through ComfyUI).
+    Arbitrary remote URLs and arbitrary local file paths are intentionally NOT fetched or
+    copied — only images that went through ComfyUI's own serving/upload mechanism are accepted."""
     if not tid:
         return False
     dest = _bsai_thumb_path(tid)
@@ -176,14 +201,10 @@ def _bsai_apply_thumbnail(tid, thumb, raw_bytes=None):
     if isinstance(thumb, str) and thumb:
         if thumb.startswith("data:") or thumb.startswith("base64,"):
             return _bsai_save_thumb_from_b64(thumb, dest)
-        if thumb.startswith("http://") or thumb.startswith("https://"):
-            return _bsai_save_thumb_from_url(thumb, dest)
-        if os.path.isfile(thumb):
-            try:
-                with open(thumb, "rb") as f:
-                    return _bsai_save_thumb_bytes(f.read(), dest)
-            except Exception:
-                return False
+        if thumb.startswith("/view"):
+            data = _bsai_read_view_image(thumb)
+            if data:
+                return _bsai_save_thumb_bytes(data, dest)
     return _bsai_gen_thumb_placeholder("", "", tid)
 
 
@@ -209,7 +230,7 @@ def _register_template_api():
         import json as _json
         from server import PromptServer
         from aiohttp import web
-        from .common import PLUGIN_ROOT, load_text, TEMPLATES_JSON, load_user_templates
+        from .common import PLUGIN_ROOT, load_text, TEMPLATES_JSON, load_user_templates, safe_read_template_file
 
         server = PromptServer.instance
 
@@ -224,7 +245,7 @@ def _register_template_api():
             items = []
             for t in templates:
                 if t.get("file"):
-                    txt = load_text(os.path.join(PLUGIN_ROOT, t["file"]), "")
+                    txt = safe_read_template_file(t["file"], "")
                 else:
                     txt = t.get("text", "")
                 if t.get("type") == "user":
@@ -303,26 +324,24 @@ def _register_user_template_api():
             try:
                 data = await request.json()
             except Exception:
-                return web.json_response({"ok": False, "message": "请求体不是有效 JSON"})
+                return web.json_response({"ok": False, "message": "Request body is not valid JSON"})
             name = _safe_name(str(data.get("name") or ""))
             text = str(data.get("text") or "").strip()
-            desc = str(data.get("desc") or "用户自定义共享模板").strip()
+            desc = str(data.get("desc") or "Shared user template").strip()
             if not text:
-                return web.json_response({"ok": False, "message": "模板内容为空，无法保存"})
+                return web.json_response({"ok": False, "message": "Template content is empty, nothing to save"})
             path = _unique_path(name)
             tid = "user_" + os.path.splitext(os.path.basename(path))[0].lower().replace(" ", "_")
             payload = {"id": tid, "name": name, "type": "user", "desc": desc, "text": text}
             with open(path, "w", encoding="utf-8") as f:
                 _json.dump(payload, f, ensure_ascii=False, indent=2)
-            # 【v1.06.0】缩略图自动同步：请求带 thumbnail(URL/base64) 则落地；无则程序合成占位卡
+            # Thumbnail sync: only accept a ComfyUI /view reference or inline base64;
+            # arbitrary remote URLs / local paths are ignored (a placeholder is generated).
             thumb = data.get("thumbnail") or ""
-            if isinstance(thumb, str) and thumb.startswith("/view"):
-                try:
-                    thumb = "http://%s%s" % (request.host or "127.0.0.1:8188", thumb)
-                except Exception:
-                    thumb = ""
+            if isinstance(thumb, str) and not (thumb.startswith("/view") or thumb.startswith("data:")):
+                thumb = ""
             _bsai_apply_thumbnail(tid, thumb)
-            print(f"[BSAI_Qwen_Prompt_Enhancer] 已保存用户模板: {os.path.basename(path)} (缩略图已同步海报墙)")
+            print(f"[BSAI_Qwen_Prompt_Enhancer] saved user template: {os.path.basename(path)} (thumbnail synced)")
             return web.json_response({"ok": True, "name": name, "file": os.path.basename(path), "id": tid})
 
         @server.routes.post("/bsai_upload_user_template")
@@ -331,18 +350,18 @@ def _register_user_template_api():
                 reader = await request.multipart()
                 fld = await reader.next()
                 if not fld or fld.name != "file":
-                    return web.json_response({"ok": False, "message": "未找到上传文件字段 'file'"})
+                    return web.json_response({"ok": False, "message": "No uploaded file field 'file' found"})
                 fn = fld.filename or "template.json"
                 if not str(fn).lower().endswith(".json"):
-                    return web.json_response({"ok": False, "message": "仅支持 .json 模板文件"})
+                    return web.json_response({"ok": False, "message": "Only .json template files are supported"})
                 raw = await fld.read()
                 try:
                     parsed = _json.loads(raw.decode("utf-8"))
                 except Exception:
-                    return web.json_response({"ok": False, "message": "文件不是有效 JSON"})
+                    return web.json_response({"ok": False, "message": "File is not valid JSON"})
                 items = parsed if isinstance(parsed, list) else parsed.get("templates", [parsed] if isinstance(parsed, dict) else [])
                 if not isinstance(items, list) or not items:
-                    return web.json_response({"ok": False, "message": "JSON 中没有模板条目（需含 name 字段）"})
+                    return web.json_response({"ok": False, "message": "No template entries in JSON (must include a 'name' field)"})
                 # 【v1.06.0】multipart 可选 thumbnail 文件字段（单模板场景使用）
                 thumb_bytes = None
                 try:
@@ -361,8 +380,9 @@ def _register_user_template_api():
                     payload = dict(it)
                     payload["id"] = tid
                     payload.setdefault("type", "user")
-                    payload.setdefault("desc", "用户自定义共享模板")
-                    # file 引用字段在共享模板场景不可靠（相对路径可能不存在），一律内联 text
+                    payload.setdefault("desc", "Shared user template")
+                    # `file` references are unreliable for shared templates (the relative path may
+                    # not exist), and could point at arbitrary files — always inline the text instead.
                     payload.pop("file", None)
                     it_thumb = payload.pop("thumbnail", None)
                     with open(path, "w", encoding="utf-8") as f:
@@ -376,18 +396,18 @@ def _register_user_template_api():
                         _bsai_apply_thumbnail(tid, None)
                     saved.append(os.path.basename(path))
                 if not saved:
-                    return web.json_response({"ok": False, "message": "JSON 中无有效模板条目（缺少 name 字段）"})
-                print(f"[BSAI_Qwen_Prompt_Enhancer] 已上传用户模板: {', '.join(saved)}")
+                    return web.json_response({"ok": False, "message": "No valid template entries in JSON (missing 'name' field)"})
+                print(f"[BSAI_Qwen_Prompt_Enhancer] uploaded user templates: {', '.join(saved)}")
                 return web.json_response({"ok": True, "files": saved})
             except Exception as e:
-                return web.json_response({"ok": False, "message": "上传失败: %s" % e})
+                return web.json_response({"ok": False, "message": "Upload failed: %s" % e})
 
         @server.routes.get("/bsai_latest_output")
         def _bsai_latest_output(request):
             """返回 output 目录最新一张生成图（供前端保存模板时自动作为缩略图）"""
             url, fn = _bsai_latest_output_url()
             if not url:
-                return web.json_response({"ok": False, "message": "output 目录暂无生成图片"})
+                return web.json_response({"ok": False, "message": "No generated images in the output directory yet"})
             return web.json_response({"ok": True, "url": url, "filename": fn})
 
         print("[BSAI_Qwen_Prompt_Enhancer] 用户模板写入 API 已注册: POST /bsai_save_user_template / POST /bsai_upload_user_template / GET /bsai_latest_output")

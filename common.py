@@ -36,8 +36,8 @@ def load_official_system_prompt(pe_mode):
     text = load_text(path, "")
     if not text:
         raise RuntimeError(
-            f"[BSAI_Qwen_Prompt_Enhancer] 官方 system_prompt 规则缺失: {path}\n"
-            "请确认插件目录完整（system_prompts/ 下两个 txt 文件存在）。"
+            f"[BSAI_Qwen_Prompt_Enhancer] Official system_prompt rules missing: {path}\n"
+            "Please make sure the plugin directory is intact (the two txt files under system_prompts/ exist)."
         )
     return text
 
@@ -104,7 +104,10 @@ def load_user_templates():
                     continue
                 t = dict(it)
                 t.setdefault("type", "user")
-                t.setdefault("desc", "用户自定义共享模板")
+                t.setdefault("desc", "Shared user template")
+                # User-supplied template entries must inline their text; a `file` field could
+                # point at an arbitrary path under the plugin root, so it is dropped here.
+                t.pop("file", None)
                 tid = str(t.get("id") or t["name"])
                 if tid in used_ids:
                     tid = "user_" + tid
@@ -124,8 +127,8 @@ _LEGACY_ALIAS_MAP = {
     "中文高质量描述技巧 [lightning_zh]": "lightning_zh",
 }
 
-# 无模板选项：显示名以 [none] 结尾时 resolve_template 返回空 system prompt（清空输出）
-NONE_TEMPLATE_DISPLAY = "无模板（清空输出，不使用系统规则）[none]"
+# No-template option: when the display name ends with [none], resolve_template returns an empty system prompt
+NONE_TEMPLATE_DISPLAY = "No template (clear output, no system rules) [none]"
 
 
 def template_display_list():
@@ -141,10 +144,36 @@ def template_display_list():
     return items
 
 
+def safe_read_template_file(file_value, default=""):
+    """Read a template `file` reference with strict path confinement.
+    Only allows relative paths that resolve *inside* PLUGIN_ROOT (no drive letter, no
+    ``..`` traversal), and only .txt/.md (or extension-less files, as used by
+    system_prompts). Anything suspicious returns `default` instead of leaking arbitrary
+    files (defends against template entries pointing outside the fixed templates area).
+    """
+    if not file_value:
+        return default
+    try:
+        rel = str(file_value).replace("\\", "/").lstrip("/")
+        if re.match(r"^[a-zA-Z]:", rel) or ".." in rel.split("/"):
+            return default
+        full = os.path.normpath(os.path.join(PLUGIN_ROOT, rel))
+        if full != PLUGIN_ROOT and not full.startswith(PLUGIN_ROOT + os.sep):
+            return default
+        ext = os.path.splitext(full)[1].lower()
+        if ext not in ("", ".txt", ".md"):
+            return default
+        if not os.path.isfile(full):
+            return default
+        return load_text(full, default)
+    except Exception:
+        return default
+
+
 def _render_template(t):
-    """从模板 dict 取 system prompt 文本：有 file 读文件，否则用内联 text"""
+    """Take the system prompt text from a template dict: read `file` safely, else inline `text`"""
     if t.get("file"):
-        return load_text(os.path.join(PLUGIN_ROOT, t["file"])), t.get("id", "?")
+        return safe_read_template_file(t["file"], ""), t.get("id", "?")
     return t.get("text", "").strip(), t.get("id", "?")
 
 

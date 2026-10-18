@@ -8,9 +8,9 @@ import { app } from "/scripts/app.js";
 
 const MERGED_NODE = "BSAI_Qwen_Prompt_Enhancer";
 const TEMPLATE_NODE = "QwenImage21_Prompt_Template";
-const WALL_BUTTON_LABEL = "🖼 打开模板海报墙";
+const WALL_BUTTON_LABEL = "🖼 Open Template Wall";
 
-// 公共参数：四个后端始终可见
+// Common widgets always visible across all four backends
 const COMMON_WIDGETS = [
   "backend",
   "prompt_text",
@@ -27,17 +27,17 @@ const COMMON_WIDGETS = [
   "speed_preset",
 ];
 
-// backend 值（必须与 nodes_enhancer.py 的 BACKEND_LABELS 完全一致）-> 该后端可见的 widget 名
+// backend values (must match nodes_enhancer.py BACKEND_LABELS exactly) -> widgets visible for that backend
 const BACKEND_WIDGET_GROUPS = {
-  "官方PE (本地 Qwen3.5-9B)": COMMON_WIDGETS.concat(["pe_mode", "min_p", "thinking", "mtp"]),
-  "本地LLaMA (GGUF+mmproj)": COMMON_WIDGETS.concat([
+  "Official PE (local Qwen3.5-9B)": COMMON_WIDGETS.concat(["pe_mode", "min_p", "thinking", "mtp"]),
+  "Local LLaMA (GGUF+mmproj)": COMMON_WIDGETS.concat([
     "llm_model_name", "mmproj_name", "chat_handler",
     "n_ctx", "n_gpu_layers", "load_mtp", "keep_loaded",
   ]),
-  "本地HF (Transformers)": COMMON_WIDGETS.concat([
+  "Local HF (Transformers)": COMMON_WIDGETS.concat([
     "hf_model_name", "hf_task", "hf_device", "hf_keep_loaded",
   ]),
-  "API (OpenAI兼容)": COMMON_WIDGETS.concat(["api_base", "api_key", "api_model_name", "timeout"]),
+  "API (OpenAI-compatible)": COMMON_WIDGETS.concat(["api_base", "api_key", "api_model_name", "timeout"]),
   "BSAI Strata (Qwen3.8-Flash-Next @8080)": COMMON_WIDGETS.concat(["strata_quant", "timeout"]),
 };
 
@@ -85,7 +85,7 @@ function autoFixComboValues(node) {
     fixed++;
   }
   if (fixed > 0) {
-    node.tooltip = `⚠ ${fixed} 个下拉选项已自动重置（旧存档值对应的模型/模板在本机不可用），请重新选择。`;
+    node.tooltip = `⚠ ${fixed} dropdown option(s) were auto-reset (the model/template from the saved workflow is unavailable on this machine); please re-select.`;
     try { node.setDirtyCanvas?.(true, true); } catch (_) {}
   }
   return fixed;
@@ -124,7 +124,7 @@ function autoFixNumericValues(node) {
     fixed++;
   }
   if (fixed > 0) {
-    node.tooltip = `⚠ ${fixed} 个数值参数已自动重置为默认值（旧存档类型异常）。`;
+    node.tooltip = `⚠ ${fixed} numeric parameter(s) were auto-reset to their default values (bad types in the saved workflow).`;
     try { node.setDirtyCanvas?.(true, true); } catch (_) {}
   }
   return fixed;
@@ -157,7 +157,7 @@ function syncPreviewWarning(node) {
   if (on) {
     node.color = NODE_COLOR_PREVIEW;
     node.bgcolor = NODE_BG_PREVIEW;
-    node.tooltip = "⚠ 仅预览模式已开启：所有后端均不调用模型，输出为原文直出。正式出图请关闭「仅预览」。";
+    node.tooltip = "⚠ Preview-only mode is on: no backend calls the model; the output is the input passed through. Turn off Preview-only for real generation.";
   } else {
     node.color = NODE_COLOR_DEFAULT;
     node.bgcolor = NODE_BG_DEFAULT;
@@ -321,7 +321,7 @@ app.registerExtension({
           const sysW = (node.widgets || []).find((w) => w.name === "system_template");
           if (!sysW) return;
           fetch("/api/bsai/templates").then((r) => r.json()).then((j) => {
-            const vals = ["无模板（清空输出，不使用系统规则）[none]"];
+            const vals = ["No template (clear output, no system rules) [none]"];
             for (const t of j.templates || []) vals.push(`${t.name} [${t.id}]`);
             sysW.options.values = vals;
             if (savedName && savedId) {
@@ -342,7 +342,7 @@ app.registerExtension({
         }
       }
       try {
-        node.addWidget("button", "💾 保存为模板", "", async () => {
+        node.addWidget("button", "💾 Save as Template", "", async () => {
           try {
             const gw = (n) => (node.widgets || []).find((x) => x.name === n);
             const sysW = gw("custom_system_prompt");
@@ -352,12 +352,12 @@ app.registerExtension({
             if (sysW && typeof sysW.value === "string" && sysW.value.trim()) text = sysW.value;
             else if (pvW && typeof pvW.value === "string" && pvW.value.trim()) text = pvW.value;
             if (!text.trim()) {
-              alert("[BSAI] 请先在「自定义系统提示词」或「用户提示词」输入内容，再保存为模板。");
+              alert("[BSAI] Please enter content in 'Custom system prompt' or 'User prompt' before saving as a template.");
               return;
             }
-            const name = prompt("模板名称（将保存到用户模板区 user_templates/）：", "");
+            const name = prompt("Template name (saved to the user template area user_templates/):", "");
             if (!name || !name.trim()) return;
-            const desc = prompt("模板描述（可空，将显示在海报墙卡片）：", "用户自定义共享模板");
+            const desc = prompt("Template description (optional, shown on the wall card):", "Shared user template");
             // 【v1.06.0】缩略图自动同步：保存前取最近生成图作为模板缩略图（后端下载落地；无图则后端自动合成占位卡）
             let thumb = "";
             try {
@@ -374,14 +374,14 @@ app.registerExtension({
             });
             const j = await resp.json();
             if (j && j.ok) {
-              alert(`已保存为模板「${j.name}」→ user_templates/${j.file}\n下拉已自动选中，海报墙刷新后可见。`);
+              alert(`Saved as template '${j.name}' -> user_templates/${j.file}\nIt is selected in the dropdown and will appear on the wall after refresh.`);
               refreshTemplateCombo(j.name, j.id);
             } else {
-              alert("保存失败: " + ((j && j.message) || "未知错误"));
+              alert("Save failed: " + ((j && j.message) || "Unknown error"));
             }
           } catch (e) {
-            console.warn("[BSAI.PromptEnhancer] 保存模板失败:", e);
-            alert("保存失败: " + e.message);
+            console.warn("[BSAI.PromptEnhancer] Save template failed:", e);
+            alert("Save failed: " + e.message);
           }
         });
       } catch (e) {
@@ -445,9 +445,9 @@ app.registerExtension({
       try {
         // 【2026-09-23】清除 = 切到「无模板（清空输出）」，resolve_template 返回空 system prompt，
         // 右侧预览/输出随之清空（不再恢复官方默认模板）
-        const NONE_TEMPLATE_DISPLAY = "无模板（清空输出，不使用系统规则）[none]";
-        // LiteGraph 标准按钮 widget：第四个参数是 callback（注意不是第三参数 value）
-        node.addWidget("button", "🧹 清除模板（清空输出）", "", () => {
+        const NONE_TEMPLATE_DISPLAY = "No template (clear output, no system rules) [none]";
+        // LiteGraph standard button widget: the 4th arg is the callback (not the 3rd, value)
+        node.addWidget("button", "🧹 Clear Template (clear output)", "", () => {
           try {
             const sysW = (node.widgets || []).find(w => w.name === "system_template");
             if (!sysW) return;
@@ -495,7 +495,7 @@ app.registerExtension({
       }
       // 【v1.06.0】合并节点底部右侧「⬆ 上传模板」：选择本地 .json 模板，直接写入 user_templates/
       try {
-        node.addWidget("button", "⬆ 上传模板", "", () => {
+        node.addWidget("button", "⬆ Upload Template", "", () => {
           try {
             const input = document.createElement("input");
             input.type = "file";
@@ -511,14 +511,14 @@ app.registerExtension({
                 const resp = await fetch("/bsai_upload_user_template", { method: "POST", body: fd });
                 const j = await resp.json();
                 if (j && j.ok) {
-                  alert(`已上传模板 → user_templates/${(j.files || []).join(", ")}\n下拉已刷新，海报墙刷新后可见。`);
+                  alert(`Templates uploaded -> user_templates/${(j.files || []).join(", ")}\nDropdown refreshed; they appear on the wall after refresh.`);
                   refreshTemplateCombo();
                 } else {
-                  alert("上传失败: " + ((j && j.message) || "未知错误"));
+                  alert("Upload failed: " + ((j && j.message) || "Unknown error"));
                 }
               } catch (e) {
-                console.warn("[BSAI.PromptEnhancer] 上传模板失败:", e);
-                alert("上传失败: " + e.message);
+                console.warn("[BSAI.PromptEnhancer] Upload templates failed:", e);
+                alert("Upload failed: " + e.message);
               } finally {
                 try { document.body.removeChild(input); } catch (_) {}
               }

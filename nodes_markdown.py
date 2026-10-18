@@ -21,7 +21,7 @@ class MarkdownNote:
             "required": {
                 "markdown_text": (
                     "STRING",
-                    {"multiline": True, "default": "", "placeholder": "在此输入 Markdown 说明文字…"},
+                    {"multiline": True, "default": "", "placeholder": "Type your Markdown notes here…"},
                 )
             }
         }

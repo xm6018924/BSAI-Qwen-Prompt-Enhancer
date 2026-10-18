@@ -46,22 +46,22 @@ def parse_schema(schema_text: str):
             continue
         if ":" not in line:
             raise ValueError(
-                f"Jev Schema 行缺少 ':' 分隔符: {line!r}\n"
-                f"正确格式: 字段名: 选项1|选项2|选项3"
+                f"Jev Schema line is missing the ':' separator: {line!r}\n"
+                f"Correct format: field_name: option1|option2|option3"
             )
         name, _, opts = line.partition(":")
         name = name.strip()
         opts = [o.strip() for o in opts.split("|") if o.strip()]
         if not name:
-            raise ValueError(f"Jev Schema 行字段名为空: {line!r}")
+            raise ValueError(f"Jev Schema line has an empty field name: {line!r}")
         if not opts:
             raise ValueError(
-                f"Jev Schema 字段 {name!r} 没有选项 (每个字段至少 1 个选项): {line!r}"
+                f"Jev Schema field {name!r} has no options (each field needs at least 1): {line!r}"
             )
         fields.append({"name": name, "options": opts})
     if not fields:
         raise ValueError(
-            "Jev Schema 为空。每行格式: 字段名: 选项1|选项2|选项3"
+            "Jev Schema is empty. Format per line: field_name: option1|option2|option3"
         )
     return fields
 
@@ -114,7 +114,7 @@ class JevRunner:
         opt_token_lists = [self._tokenize(o) for o in options]
         if any(len(t) == 0 for t in opt_token_lists):
             raise ValueError(
-                f"Jev 字段 {name!r} 存在无法令牌化的选项: {options!r}"
+                f"Jev field {name!r} has an option that cannot be tokenized: {options!r}"
             )
 
         head_tokens = self._tokenize(f"{name}: ")
@@ -182,8 +182,8 @@ class JevRunner:
             seq_len = P + len(ctx_tokens) + sum(len(b) for b in blocks)
             if seq_len > self.n_batch:
                 raise RuntimeError(
-                    f"Jev: 单条记录 token 数 ({seq_len}) 超过 batch 容量 "
-                    f"({self.n_batch})。请增大 Model Loader 的 n_batch 或缩短输入。"
+                    f"Jev: a single record has {seq_len} tokens, exceeding the batch capacity "
+                    f"({self.n_batch}). Increase n_batch in the Model Loader or shorten the input."
                 )
             if verbose:
                 print(
@@ -252,7 +252,7 @@ class JevRunner:
         if status != 0:
             raise RuntimeError(
                 f"Jev decode failed with status {status} "
-                f"(KV cache 不足? 请增大 n_ctx 或缩短输入)"
+                f"(out of KV cache? increase n_ctx or shorten the input)"
             )
 
         # 5) 读取每个字段的 logits (get_logits_ith 索引 = batch 全局 token 位置)
@@ -261,7 +261,7 @@ class JevRunner:
             ptr = self.ctx.get_logits_ith(gpos)
             if not ptr:
                 raise RuntimeError(
-                    f"Jev: get_logits_ith({gpos}) 返回 NULL, logits 未计算。"
+                    f"Jev: get_logits_ith({gpos}) returned NULL; logits were not computed."
                 )
             logits = np.ctypeslib.as_array(ptr, shape=(self.n_vocab,)).copy()
 
