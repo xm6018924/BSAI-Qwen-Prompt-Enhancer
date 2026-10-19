@@ -102,16 +102,19 @@ def load_user_templates():
             for it in items:
                 if not isinstance(it, dict) or not it.get("name"):
                     continue
-                t = dict(it)
-                t.setdefault("type", "user")
-                t.setdefault("desc", "Shared user template")
-                # User-supplied template entries must inline their text; a `file` field could
-                # point at an arbitrary path under the plugin root, so it is dropped here.
-                t.pop("file", None)
-                tid = str(t.get("id") or t["name"])
+                # Keep only plain template fields; drop `file`/`thumbnail` and any nested
+                # fields so a stored entry can never carry a path or a nested id.
+                t = {
+                    "name": it["name"],
+                    "type": it.get("type") or "user",
+                    "desc": it.get("desc") or "Shared user template",
+                    "text": it.get("text", ""),
+                }
+                raw_id = str(it.get("id") or "").strip()
+                tid = raw_id if raw_id and os.path.basename(raw_id) == raw_id else str(it["name"])
                 if tid in used_ids:
                     tid = "user_" + tid
-                    t["id"] = tid
+                t["id"] = tid
                 used_ids.add(tid)
                 out.append(t)
     if out and not _USER_TEMPLATES_LOGGED["done"]:

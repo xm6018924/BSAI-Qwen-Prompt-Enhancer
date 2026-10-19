@@ -377,14 +377,17 @@ def _register_user_template_api():
                     nm = _safe_name(str(it["name"]))
                     path = _unique_path(nm)
                     tid = "user_" + os.path.splitext(os.path.basename(path))[0].lower().replace(" ", "_")
-                    payload = dict(it)
-                    payload["id"] = tid
-                    payload.setdefault("type", "user")
-                    payload.setdefault("desc", "Shared user template")
-                    # `file` references are unreliable for shared templates (the relative path may
-                    # not exist), and could point at arbitrary files — always inline the text instead.
-                    payload.pop("file", None)
-                    it_thumb = payload.pop("thumbnail", None)
+                    # Store only plain template fields (name/desc/text) with a generated id;
+                    # drop `file`/`thumbnail` and any nested fields so an uploaded entry can
+                    # never carry a path or an id that is later used as a file name.
+                    it_thumb = it.get("thumbnail")
+                    payload = {
+                        "id": tid,
+                        "name": str(it["name"]),
+                        "type": "user",
+                        "desc": it.get("desc") or "Shared user template",
+                        "text": it.get("text", ""),
+                    }
                     with open(path, "w", encoding="utf-8") as f:
                         _json.dump(payload, f, ensure_ascii=False, indent=2)
                     # 【v1.06.0】缩略图自动同步：multipart文件 > JSON内thumbnail(URL/base64/本地路径) > 程序合成占位卡

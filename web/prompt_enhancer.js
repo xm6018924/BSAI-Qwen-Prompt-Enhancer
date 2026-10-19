@@ -39,6 +39,8 @@ const BACKEND_WIDGET_GROUPS = {
   ]),
   "API (OpenAI-compatible)": COMMON_WIDGETS.concat(["api_base", "api_key", "api_model_name", "timeout"]),
   "BSAI Strata (Qwen3.8-Flash-Next @8080)": COMMON_WIDGETS.concat(["strata_quant", "timeout"]),
+  "BSAI Nemotron (llama.cpp @8085)": COMMON_WIDGETS.concat(["nemotron_model", "timeout"]),
+  "BSAI NInfer (本地反推 @808x)": COMMON_WIDGETS.concat(["ninfer_model", "timeout"]),
 };
 
 function isMergedNode(node) {

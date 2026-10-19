@@ -32,6 +32,7 @@ import inspect
 import json
 import os
 import re
+import time
 import struct as _struct
 import urllib.request
 
@@ -97,7 +98,9 @@ BACKEND_LLAMA = "Local LLaMA (GGUF+mmproj)"
 BACKEND_HF = "Local HF (Transformers)"
 BACKEND_API = "API (OpenAI-compatible)"
 BACKEND_STRATA = "BSAI Strata (Qwen3.8-Flash-Next @8080)"
-BACKEND_LABELS = [BACKEND_PE, BACKEND_LLAMA, BACKEND_HF, BACKEND_API, BACKEND_STRATA]
+BACKEND_NEMOTRON = "BSAI Nemotron (llama.cpp @8085)"
+BACKEND_NINFER = "BSAI NInfer (local reverse-engineer @808x)"
+BACKEND_LABELS = [BACKEND_PE, BACKEND_LLAMA, BACKEND_HF, BACKEND_API, BACKEND_STRATA, BACKEND_NEMOTRON, BACKEND_NINFER]
 
 _DEFAULT_SPEED = "Standard 25 steps/CFG1 (recommended)"
 
@@ -368,6 +371,40 @@ def _hf_model_display_list():
             label = f"{m['id']} [{m['arch']}]"
         items.append(label)
     return items
+
+
+def _ninfer_model_display_list():
+    """NInfer 模型下拉：所有 models/LLM 下的 *.ninfer（相对路径）。"""
+    try:
+        import importlib.util as _ilu, os as _os
+        _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                           "..", "BSAI-LLM-Strata", "strata_manager.py")
+        if not _os.path.exists(_p):
+            return []
+        _spec = _ilu.spec_from_file_location("bsai_strata_manager", _p)
+        _m = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_m)
+        return ["(Auto — first model found)"] + [rel for rel, _abs in _m.NInferManager.list_models()]
+    except Exception:
+        return []
+
+
+def _nemotron_model_display_list():
+    """Nemotron 模型下拉：所有 models/LLM/Nemotron 下的 *.gguf（排除 mmproj）。"""
+    try:
+        import importlib.util as _ilu, os as _os
+        _p = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)),
+                           "..", "BSAI-LLM-Strata", "strata_manager.py")
+        if not _os.path.exists(_p):
+            return []
+        _spec = _ilu.spec_from_file_location("bsai_strata_manager", _p)
+        _m = _ilu.module_from_spec(_spec)
+        _spec.loader.exec_module(_m)
+        return ["(Auto — first model found)"] + [
+            rel for rel, _abs, kind in _m.NemotronManager.list_models() if kind == "model"
+        ]
+    except Exception:
+        return []
 
 
 def _hf_model_id_from_label(label):
@@ -1096,22 +1133,28 @@ class BSAI_Qwen_Prompt_Enhancer:
         # Security: the Local HF backend loads weights with trust_remote_code=True, so an
         # attacker-supplied model name must be checked against the actually-scanned model
         # list instead of resolving to an arbitrary directory. Same for the local GGUF LLM.
+        # Reject even when the scanned list is empty (no models available => no model name valid).
         try:
             backend = kwargs.get("backend")
             if backend == BACKEND_HF:
                 sel = kwargs.get("hf_model_name") or ""
                 if sel and not str(sel).startswith("<No "):
                     available = {m["id"] for m in _scan_hf_models()}
-                    if available and _hf_model_id_from_label(str(sel)) not in available:
+                    if _hf_model_id_from_label(str(sel)) not in available:
                         return False
             elif backend == BACKEND_LLAMA:
                 sel = kwargs.get("llm_model_name") or ""
-                models, _mmprojs = _scan_gguf()
-                if models and sel and str(sel) not in set(models):
+                models, mmprojs = _scan_gguf()
+                if sel and str(sel) not in set(models):
+                    return False
+                # Also validate mmproj_name against the scanned list
+                mmproj_sel = kwargs.get("mmproj_name") or ""
+                if mmproj_sel and mmproj_sel not in set(mmprojs):
                     return False
         except Exception:
-            # Never hard-block on a scan error; the run path surfaces a clear message.
-            pass
+            # On scan error, reject rather than pass through — an unverified model name
+            # must not reach the trust_remote_code loader.
+            return False
         return True
 
     @classmethod
@@ -1159,7 +1202,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                 "chat_handler": (_chat_handler_labels(), {"default": _AUTO_LABEL}),
                 "n_ctx": ("INT", {"default": 8192, "min": 512, "max": 65536}),
                 "n_gpu_layers": ("INT", {"default": -1, "min": -1, "max": 200}),
-                "load_mtp": ("BOOLEAN", {"default": False}),
+                "load_mtp": ("BOOLEAN", {"default": False,
+                    "tooltip": "MTP (Multi-Token Prediction) 层保留开关。官方 ComfyUI v0.42 / 新版 llama.cpp 已支持 Qwen 3.x/3.5 MTP（含图像场景，含 MTP embedding offload 修复）；模型带 nextn_predict 元数据且关闭本开关时自动剥离 MTP 层。追求吞吐加速可开启（需底层 llama.cpp 支持，开启失败时模型加载会报错，回退关闭即可）。"}),
                 # ---- 极限提速参数（视频同款 llama.cpp：显存+内存混合模式）----
                 "n_cmoe": ("INT", {
                     "default": 0, "min": 0, "max": 256, "step": 1,
@@ -1190,6 +1234,14 @@ class BSAI_Qwen_Prompt_Enhancer:
                                   "IQ3_XXS (better)", "IQ3_S (best quality)"],
                                  {"default": "Auto (auto-adapt)",
                                   "tooltip": "Strata quantization. Auto picks based on VRAM/RAM."}),
+                # ---- BSAI NInfer only: which *.ninfer model to load ----
+                "ninfer_model": (_ninfer_model_display_list() or ["(Auto — first model found)"],
+                                 {"default": "(Auto — first model found)",
+                                  "tooltip": "NInfer model to load (models/LLM/*.ninfer). Changing it restarts the NInfer engine on the next run."}),
+                # ---- BSAI Nemotron only: which GGUF model to load ----
+                "nemotron_model": (_nemotron_model_display_list() or ["(Auto — first model found)"],
+                                  {"default": "(Auto — first model found)",
+                                   "tooltip": "Nemotron GGUF model to load (models/LLM/Nemotron/*.gguf, excludes mmproj). Changing it restarts the llama.cpp server on the next run."}),
                 # ---- Local HF (Transformers) only ----
                 "hf_model_name": (_hf_model_display_list() or ["<No HF model found>"],),
                 "hf_task": (["<MORE_DETAILED_CAPTION>", "<DETAILED_CAPTION>", "<CAPTION>", "<OD>", "<REGION_CAPTION>"], {"default": "<MORE_DETAILED_CAPTION>"}),
@@ -1292,6 +1344,8 @@ class BSAI_Qwen_Prompt_Enhancer:
                 flash_attn="auto", threads=0,
                 api_base="", api_key="", api_model_name="", timeout=120,
                 strata_quant="Auto (auto-adapt)",
+                ninfer_model="(Auto — first model found)",
+                nemotron_model="(Auto — first model found)",
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
                 preview_only=False,
                 clip=None,
@@ -1382,6 +1436,24 @@ class BSAI_Qwen_Prompt_Enhancer:
                 temperature=temperature, top_p=top_p, seed=seed,
                 timeout=timeout, speed_preset=speed_preset, images=images,
                 quant_label=strata_quant,
+            )
+        if backend == BACKEND_NEMOTRON:
+            return self._enhance_nemotron(
+                prompt_text=prompt_text, system_template=system_template,
+                custom_system_prompt=custom_system_prompt, user_requirement=user_requirement,
+                max_tokens=max_tokens,
+                temperature=temperature, top_p=top_p, seed=seed,
+                timeout=timeout, speed_preset=speed_preset, images=images,
+                model_path=nemotron_model,
+            )
+        if backend == BACKEND_NINFER:
+            return self._enhance_ninfer(
+                prompt_text=prompt_text, system_template=system_template,
+                custom_system_prompt=custom_system_prompt, user_requirement=user_requirement,
+                max_tokens=max_tokens,
+                temperature=temperature, top_p=top_p, seed=seed,
+                timeout=timeout, speed_preset=speed_preset, images=images,
+                model_path=ninfer_model,
             )
         raise ValueError(f"[BSAI_Qwen_Prompt_Enhancer] Unknown backend: {backend!r}")
 
@@ -1776,6 +1848,198 @@ class BSAI_Qwen_Prompt_Enhancer:
                               custom_system_prompt=custom_system_prompt,
                               user_requirement=user_requirement)
 
+    # ---------------- BSAI Nemotron (llama.cpp) ----------------
+    def _enhance_nemotron(self, prompt_text, system_template, custom_system_prompt,
+                          user_requirement, max_tokens, temperature, top_p, seed,
+                          timeout, speed_preset, images, model_path="(Auto — first model found)"):
+        """Call local Nemotron 3.5 Bolt (llama.cpp @ 127.0.0.1:8085) via NemotronManager."""
+        import json as _json, socket as _sk, http.client as _hc
+        import sys as _sys
+        # Auto-start Nemotron if not running (reuse NemotronManager from BSAI-LLM-Strata)
+        try:
+            _nm = None
+            for mod_name, mod in list(_sys.modules.items()):
+                if mod_name.endswith("strata_manager") and hasattr(mod, "NemotronManager"):
+                    _nm = mod.NemotronManager
+                    break
+            if _nm is None:
+                import importlib.util as _ilu
+                _p = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  "..", "BSAI-LLM-Strata", "strata_manager.py")
+                if os.path.exists(_p):
+                    _spec = _ilu.spec_from_file_location("bsai_strata_manager", _p)
+                    _m = _ilu.module_from_spec(_spec)
+                    _spec.loader.exec_module(_m)
+                    _nm = _m.NemotronManager
+            if _nm is not None:
+                _mp = None if str(model_path).startswith("(Auto") else str(model_path)
+                ok, msg = _nm.ensure_running(model_path=_mp)
+                print(f"[BSAI_Qwen_Prompt_Enhancer] Nemotron 自动启动: {ok} ({msg})")
+                if not ok:
+                    raise RuntimeError(
+                        f"[BSAI_Qwen_Prompt_Enhancer] Failed to start the Nemotron server: {msg}\n"
+                        f"请确认 llama.cpp 已放入 BSAI-LLM-Strata/Nemotron/llama.cpp/，"
+                        f"且模型已下载到 models/LLM/Nemotron/。"
+                    )
+        except Exception as _e:
+            print(f"[BSAI_Qwen_Prompt_Enhancer] Nemotron 自动启动跳过: {_e}")
+
+        system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
+
+        user_content = []
+        if images is not None:
+            urls = image_tensor_to_data_urls(images)
+            for u in urls:
+                user_content.append({"type": "image_url", "image_url": {"url": u}})
+        user_content.append({"type": "text", "text": prompt_text})
+
+        payload = {
+            "model": "Nemotron-3.5-Bolt-74B-A9B",
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content},
+            ],
+            "temperature": float(temperature),
+            "max_tokens": int(max_tokens),
+            "top_p": float(top_p),
+            "seed": int(seed),
+        }
+        body = _json.dumps(payload).encode("utf-8")
+
+        # Retry loop: wait for model to be fully loaded
+        data = None
+        for attempt in range(30):
+            s = _sk.socket(_sk.AF_INET, _sk.SOCK_STREAM)
+            s.settimeout(float(timeout) if timeout else 600.0)
+            s.setblocking(True)
+            try:
+                s.connect(("127.0.0.1", 8085))
+                conn = _hc.HTTPConnection("127.0.0.1", 8085, timeout=s.gettimeout())
+                conn.sock = s
+                conn.request("POST", "/v1/chat/completions", body=body,
+                             headers={"Content-Type": "application/json",
+                                      "Authorization": "Bearer strata"})
+                resp = conn.getresponse()
+                data = _json.loads(resp.read().decode("utf-8", "replace"))
+                if "choices" in data and data["choices"]:
+                    break
+                else:
+                    print(f"[BSAI Enhancer] Nemotron still loading, retry {attempt+1}/30...")
+                    time.sleep(5)
+            except Exception as e:
+                print(f"[BSAI Enhancer] Waiting for Nemotron to start, retry {attempt+1}/30: {e}")
+                time.sleep(5)
+            finally:
+                s.close()
+
+        if not data or "choices" not in data:
+            raise RuntimeError("Nemotron model not ready after waiting. Please wait a bit longer and try again.")
+
+        msg = data["choices"][0]["message"]
+        raw = msg.get("content") or ""
+        if not raw and msg.get("reasoning_content"):
+            raw = msg["reasoning_content"]
+
+        return self._finalize(raw, speed_preset, f"后端=BSAI Nemotron 模板={template_id}",
+                              system_template=system_template,
+                              custom_system_prompt=custom_system_prompt,
+                              user_requirement=user_requirement)
+
+    # ---------------- BSAI NInfer ----------------
+    def _enhance_ninfer(self, prompt_text, system_template, custom_system_prompt,
+                        user_requirement, max_tokens, temperature, top_p, seed,
+                        timeout, speed_preset, images, model_path="(Auto — first model found)"):
+        """Call local NInfer (AI蛮子 ninfer engine, dynamic port via NInferManager)."""
+        import json as _json, socket as _sk, http.client as _hc
+        from urllib.parse import urlparse as _up
+        import sys as _sys
+
+        # Auto-start NInfer if not running (reuse NInferManager from BSAI-LLM-Strata)
+        _nm = None
+        for mod_name, mod in list(_sys.modules.items()):
+            if mod_name.endswith("strata_manager") and hasattr(mod, "NInferManager"):
+                _nm = mod.NInferManager
+                break
+        if _nm is None:
+            import importlib.util as _ilu
+            _p = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              "..", "BSAI-LLM-Strata", "strata_manager.py")
+            if not os.path.exists(_p):
+                raise RuntimeError("[BSAI_Qwen_Prompt_Enhancer] BSAI-LLM-Strata 插件缺失，无法启动 NInfer")
+            _spec = _ilu.spec_from_file_location("bsai_strata_manager", _p)
+            _m = _ilu.module_from_spec(_spec)
+            _spec.loader.exec_module(_m)
+            _nm = _m.NInferManager
+        _model_path = None if str(model_path).startswith("(Auto") else str(model_path)
+        ok, msg = _nm.ensure_running(model_path=_model_path)
+        print(f"[BSAI_Qwen_Prompt_Enhancer] NInfer 自动启动: {ok} ({msg})")
+        if not ok:
+            raise RuntimeError(f"[BSAI_Qwen_Prompt_Enhancer] Failed to start the NInfer engine: {msg}\n"
+                               f"请确认 BSAI-FLUX3-ComfyUI/engine/ 完整、models/LLM 下有 .ninfer 模型。")
+
+        system_prompt, template_id = resolve_template(system_template, custom_system_prompt)
+
+        user_content = []
+        if images is not None:
+            urls = image_tensor_to_data_urls(images)
+            for u in urls:
+                user_content.append({"type": "image_url", "image_url": {"url": u}})
+        user_content.append({"type": "text", "text": prompt_text})
+
+        payload = {
+            "model": "default",
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": user_content},
+            ],
+            "temperature": float(temperature),
+            "max_tokens": int(max_tokens),
+            "top_p": float(top_p),
+            "seed": int(seed),
+        }
+        mids = _nm.models()
+        if mids:
+            payload["model"] = mids[0]
+        body = _json.dumps(payload).encode("utf-8")
+        u = _up(_nm.base_url())
+
+        data = None
+        for attempt in range(30):
+            s = _sk.socket(_sk.AF_INET, _sk.SOCK_STREAM)
+            s.settimeout(float(timeout) if timeout else 600.0)
+            s.setblocking(True)
+            try:
+                s.connect((u.hostname, u.port or 80))
+                conn = _hc.HTTPConnection(u.hostname, u.port or 80, timeout=s.gettimeout())
+                conn.sock = s
+                conn.request("POST", u.path + "/chat/completions", body=body,
+                             headers={"Content-Type": "application/json"})
+                resp = conn.getresponse()
+                data = _json.loads(resp.read().decode("utf-8", "replace"))
+                if "choices" in data and data["choices"]:
+                    break
+                else:
+                    print(f"[BSAI Enhancer] Model still loading, retry {attempt+1}/30...")
+                    time.sleep(5)
+            except Exception as e:
+                print(f"[BSAI Enhancer] Waiting for model to start, retry {attempt+1}/30: {e}")
+                time.sleep(5)
+            finally:
+                s.close()
+
+        if not data or "choices" not in data:
+            raise RuntimeError("NInfer model not ready after waiting. Please wait a bit longer and try again.")
+
+        msg = data["choices"][0]["message"]
+        raw = msg.get("content") or ""
+        if not raw and msg.get("reasoning_content"):
+            raw = msg["reasoning_content"]
+
+        return self._finalize(raw, speed_preset, f"后端=BSAI NInfer 模板={template_id}",
+                              system_template=system_template,
+                              custom_system_prompt=custom_system_prompt,
+                              user_requirement=user_requirement)
+
     # ---------------- 统一收尾 ----------------
     def _finalize(self, raw, speed_preset, tag,
                   system_template=None, custom_system_prompt="", user_requirement=""):
@@ -1804,17 +2068,17 @@ class BSAI_Qwen_Prompt_Enhancer:
             f"KSampler → steps={steps}, cfg={cfg}, sampler={sampler}, scheduler={scheduler}\n"
             f"接线: KSampler 右键 steps/cfg → Convert to input，接入 RECOMMENDED_* 端口\n"
             f"{hint_line}"
-            f"\n── Qwen Image 2.1 加速要点 ──\n"
-            f"1. cfg=1.0 是正确值（2.1 为 CFG-distilled 架构，无需高CFG；负向提示词在cfg=1时无效）\n"
-            f"2. 官方默认 int8 模型: qwen_image_2.1_int8_convrot.safetensors（显存减半）\n"
-            f"3. 编辑工作流: 添加「Qwen Image 2.1 Cache」节点(device=auto,dtype=int8)复用前缀KV\n"
-            f"4. 通用提速: model→EasyCache节点→KSampler (ComfyUI核心内置,约1.2-1.5x)\n"
-            f"5. 注意力加速: 启动参数加 --use-sage-attention (采样阶段快20-40%)\n"
-            f"6. 蒸馏LoRA（2026-09~10已发布）: Viggle Turbo 6步官方节点 / Pruna 5-8步(社区转换) / 阿里PAI Fun-Acc 4步(实验)，"
-            f"均需固定sigma，详见 ACCELERATION_GUIDE.md\n"
-            f"7. lightx2v 的 2.1 专用 Lightning LoRA 尚未发布（勿选 Lightning 档）；勿用 TeaCache（已冻结不兼容2.1）；"
-            f"勿用旧版20B Lightning LoRA（架构不同）",
-            f"\n── 合并文本预览（MERGED_TEXT 输出）──\n{merged_text}",
+            f"\n── Qwen Image 2.1 Acceleration Tips ──\n"
+            f"1. cfg=1.0 is correct (2.1 is CFG-distilled architecture; negative prompts have no effect at cfg=1)\n"
+            f"2. Official int8 model: qwen_image_2.1_int8_convrot.safetensors (halves VRAM usage)\n"
+            f"3. Edit workflow: add a 'Qwen Image 2.1 Cache' node (device=auto, dtype=int8) to reuse prefix KV\n"
+            f"4. General speedup: model -> EasyCache node -> KSampler (built-in, ~1.2-1.5x)\n"
+            f"5. Attention acceleration: add --use-sage-attention to launch args (20-40% faster sampling)\n"
+            f"6. Distilled LoRAs (released 2026-09~10): Viggle Turbo 6-step official node / Pruna 5-8 steps (community) / Alibaba PAI Fun-Acc 4 steps (experimental),"
+            f"all require fixed sigma; see ACCELERATION_GUIDE.md for details\n"
+            f"7. lightx2v 2.1-specific Lightning LoRA not yet released (do not select Lightning preset); do not use TeaCache (frozen, incompatible with 2.1);"
+            f"do not use old 20B Lightning LoRA (different architecture)",
+            f"\n── Merged text preview (MERGED_TEXT output) ──\n{merged_text}",
         ]
         return {"ui": {"text": ui_text, "merged_text": [merged_text]},
                 "result": (enhanced, wh_ratio, ratio_follow, raw, thinking_text,
