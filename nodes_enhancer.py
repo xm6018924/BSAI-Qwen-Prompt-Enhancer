@@ -1185,7 +1185,10 @@ class BSAI_Qwen_Prompt_Enhancer:
                     "placeholder": "Extra requirements for this task (appended to the MERGED_TEXT output, used together with the template wall below).\ne.g.: Cover has a main title + subtitle; put the hero visual on the left and leave white space for copy on the right; use a deep-blue + orange-gold palette.",
                 }),
                 "temperature": ("FLOAT", {"default": 0.7, "min": 0.0, "max": 2.0, "step": 0.01}),
-                "top_p": ("FLOAT", {"default": 0.95, "min": 0.0, "max": 1.0, "step": 0.01}),
+                "top_p": ("FLOAT", {"default": 0.95, "min": 0.0, "max": 1.0, "step": 0.01,
+                                    "tooltip": "核采样阈值。注意：ComfyUI v0.42+（#17221）修正了 top-p 边界语义"
+                                               "（>= 判定 + 右移一位），同一 seed 的输出与旧核心不保证一致；"
+                                               "本地 LLaMA (llama.cpp) 后端不受影响。"}),
                 "top_k": ("INT", {"default": 40, "min": 0, "max": 1000}),
                 "repeat_penalty": ("FLOAT", {"default": 1.1, "min": 0.0, "max": 5.0, "step": 0.01}),
                 "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
