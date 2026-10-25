@@ -1172,7 +1172,7 @@ class BSAI_Qwen_Prompt_Enhancer:
                     "default": "A girl in a red dress standing under a cherry tree, holding bubble tea, evening light",
                     "placeholder": "Enter your plain-language prompt (Chinese or English). In I2I / multi-image mode use image_1/image_2... to refer to reference images.",
                 }),
-                "system_template": (template_display_list(), {"default": "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]"}),
+                "system_template": (template_display_list(), {"default": "Qwen-Image-2.1 Official PE-T2I System Rules [official_t2i]"}),
                 "custom_system_prompt": ("STRING", {
                     "multiline": True,
                     "default": "",

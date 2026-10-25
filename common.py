@@ -106,6 +106,7 @@ def load_user_templates():
                 # fields so a stored entry can never carry a path or a nested id.
                 t = {
                     "name": it["name"],
+                    "name_en": it.get("name_en") or "",
                     "type": it.get("type") or "user",
                     "desc": it.get("desc") or "Shared user template",
                     "text": it.get("text", ""),
@@ -123,28 +124,22 @@ def load_user_templates():
     return out
 
 
-# 历史重命名别名表：旧显示名 -> 模板 id
-# 当 templates.json 里某模板的 name 被修改后，旧工作流 / 旧存档里仍存着旧显示名，
-# 这里维护别名映射，保证旧值既能通过 ComfyUI enum 校验、又能在运行时解析到正确模板。
-_LEGACY_ALIAS_MAP = {
-    "中文高质量描述技巧 [lightning_zh]": "lightning_zh",
-}
-
 # No-template option: when the display name ends with [none], resolve_template returns an empty system prompt
 NONE_TEMPLATE_DISPLAY = "No template (clear output, no system rules) [none]"
 
 
+def template_display_name(t):
+    """English display name for a template; user templates may only carry `name`."""
+    return t.get("name_en") or t.get("name", "?")
+
+
 def template_display_list():
-    """模板库下拉列表: ['模板名 [id]', ...] + 历史别名（向后兼容旧工作流）
-    首项为「无模板（清空输出）」：选中后 resolve_template 返回空 system prompt。
+    """Template combo options: '<English name> [id]' (user templates fall back to their own name).
+    The first item clears the system prompt when selected.
     """
-    items = [NONE_TEMPLATE_DISPLAY]
-    items += [f"{t.get('name', '?')} [{t.get('id', '?')}]" for t in load_templates()]
-    # 追加历史别名（若不在标准列表中），保证旧工作流里存的旧显示名能通过 enum 校验
-    for alias in _LEGACY_ALIAS_MAP:
-        if alias not in items:
-            items.append(alias)
-    return items
+    return [NONE_TEMPLATE_DISPLAY] + [
+        f"{template_display_name(t)} [{t.get('id', '?')}]" for t in load_templates()
+    ]
 
 
 def safe_read_template_file(file_value, default=""):
@@ -183,7 +178,7 @@ def _render_template(t):
 def resolve_template(template_display, custom_system_prompt=""):
     """根据下拉值 + 自定义文本 解析出最终的 system prompt 文本。
     返回 (system_prompt, template_id)
-    匹配优先级: 自定义 > 无模板[none] > 标准 name 前缀 > 历史别名 > [id] 后缀 > 兜底官方 T2I
+    匹配优先级: 自定义 > 无模板[none] > 标准显示名前缀 > [id] 后缀 > 兜底官方 T2I
     """
     if custom_system_prompt and custom_system_prompt.strip():
         return custom_system_prompt.strip(), "custom"
@@ -191,17 +186,11 @@ def resolve_template(template_display, custom_system_prompt=""):
     if template_display and template_display.strip().endswith("[none]"):
         return "", "none"
     templates = load_templates()
-    # 1) 标准 name 前缀匹配
+    # 1) 标准显示名前缀匹配
     for t in templates:
-        if template_display.startswith(t.get("name", "$$$NOMATCH$$$")):
+        if template_display.startswith(template_display_name(t)):
             return _render_template(t)
-    # 2) 历史别名映射到 id（name 重命名后旧值走这里）
-    legacy_id = _LEGACY_ALIAS_MAP.get(template_display)
-    if legacy_id:
-        for t in templates:
-            if t.get("id") == legacy_id:
-                return _render_template(t)
-    # 3) 按尾部 [id] 后缀匹配（name 改过后仍能通过 id 定位到模板）
+    # 2) 按尾部 [id] 后缀匹配（旧存档存的是中文显示名，仍能通过 id 定位到模板）
     m = re.search(r"\[([^\[\]]+)\]\s*$", template_display.strip())
     if m:
         tail_id = m.group(1).strip()

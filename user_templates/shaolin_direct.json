@@ -3,6 +3,7 @@
     {
       "id": "shaolin_direct_001",
       "name": "少林直出 · 1. 马步冲拳",
+      "name_en": "Shaolin Direct · 1. Horse Stance Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步冲拳 — 双腿半蹲成马步，一手收于腰间，另一手向前冲拳，力达拳面",
       "type": "user",
       "category": "少林直出",
@@ -19,6 +20,7 @@
     {
       "id": "shaolin_direct_002",
       "name": "少林直出 · 2. 马步架打",
+      "name_en": "Shaolin Direct · 2. Horse Stance Block & Strike",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步架打 — 马步站立，一手屈肘上架于头顶，另一手向前冲拳",
       "type": "user",
       "category": "少林直出",
@@ -35,6 +37,7 @@
     {
       "id": "shaolin_direct_003",
       "name": "少林直出 · 3. 马步双劈拳",
+      "name_en": "Shaolin Direct · 3. Horse Stance Double Chop",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步双劈拳 — 马步，双臂由上向下同时劈打，力达拳轮",
       "type": "user",
       "category": "少林直出",
@@ -51,6 +54,7 @@
     {
       "id": "shaolin_direct_004",
       "name": "少林直出 · 4. 马步勾拳",
+      "name_en": "Shaolin Direct · 4. Horse Stance Hook Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步勾拳 — 马步，由下向上勾拳击打，拳心向内",
       "type": "user",
       "category": "少林直出",
@@ -67,6 +71,7 @@
     {
       "id": "shaolin_direct_005",
       "name": "少林直出 · 5. 马步贯耳",
+      "name_en": "Shaolin Direct · 5. Horse Stance Ear Strike",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步贯耳 — 马步，双臂弯曲由两侧向前弧形摆动，拳面相对击打",
       "type": "user",
       "category": "少林直出",
@@ -83,6 +88,7 @@
     {
       "id": "shaolin_direct_006",
       "name": "少林直出 · 6. 马步推掌",
+      "name_en": "Shaolin Direct · 6. Horse Stance Push Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步推掌 — 马步，双掌向前平推，掌心向前，力达掌根",
       "type": "user",
       "category": "少林直出",
@@ -99,6 +105,7 @@
     {
       "id": "shaolin_direct_007",
       "name": "少林直出 · 7. 马步双亮掌",
+      "name_en": "Shaolin Direct · 7. Horse Stance Double Palm Raise",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步双亮掌 — 马步，双掌向两侧上方弧形托起，掌心斜向上",
       "type": "user",
       "category": "少林直出",
@@ -115,6 +122,7 @@
     {
       "id": "shaolin_direct_008",
       "name": "少林直出 · 8. 马步架掌",
+      "name_en": "Shaolin Direct · 8. Horse Stance Palm Block",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步架掌 — 马步，一手上架掌，另一手收于腰间",
       "type": "user",
       "category": "少林直出",
@@ -131,6 +139,7 @@
     {
       "id": "shaolin_direct_009",
       "name": "少林直出 · 9. 马步砸拳",
+      "name_en": "Shaolin Direct · 9. Horse Stance Smash Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步砸拳 — 马步，一臂由上向下砸拳，力达拳背",
       "type": "user",
       "category": "少林直出",
@@ -147,6 +156,7 @@
     {
       "id": "shaolin_direct_010",
       "name": "少林直出 · 10. 马步分掌",
+      "name_en": "Shaolin Direct · 10. Horse Stance Split Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 马步分掌 — 马步，双掌由胸前向两侧分开推出",
       "type": "user",
       "category": "少林直出",
@@ -163,6 +173,7 @@
     {
       "id": "shaolin_direct_011",
       "name": "少林直出 · 11. 弓步冲拳",
+      "name_en": "Shaolin Direct · 11. Bow Stance Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步冲拳 — 前腿屈膝半蹲，后腿蹬直成弓步，一手向前冲拳",
       "type": "user",
       "category": "少林直出",
@@ -179,6 +190,7 @@
     {
       "id": "shaolin_direct_012",
       "name": "少林直出 · 12. 弓步推掌",
+      "name_en": "Shaolin Direct · 12. Bow Stance Push Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步推掌 — 弓步，掌根向前推出，指尖向上",
       "type": "user",
       "category": "少林直出",
@@ -195,6 +207,7 @@
     {
       "id": "shaolin_direct_013",
       "name": "少林直出 · 13. 弓步劈拳",
+      "name_en": "Shaolin Direct · 13. Bow Stance Chop Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步劈拳 — 弓步，臂由上向下劈打，力达拳轮",
       "type": "user",
       "category": "少林直出",
@@ -211,6 +224,7 @@
     {
       "id": "shaolin_direct_014",
       "name": "少林直出 · 14. 弓步架打",
+      "name_en": "Shaolin Direct · 14. Bow Stance Block & Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步架打 — 弓步，一手屈肘上架，另一手向前冲拳",
       "type": "user",
       "category": "少林直出",
@@ -227,6 +241,7 @@
     {
       "id": "shaolin_direct_015",
       "name": "少林直出 · 15. 弓步双冲拳",
+      "name_en": "Shaolin Direct · 15. Bow Stance Double Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步双冲拳 — 弓步，双拳同时向前冲击",
       "type": "user",
       "category": "少林直出",
@@ -243,6 +258,7 @@
     {
       "id": "shaolin_direct_016",
       "name": "少林直出 · 16. 弓步顶肘",
+      "name_en": "Shaolin Direct · 16. Bow Stance Elbow Strike",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步顶肘 — 弓步，屈肘由后向前横顶，力达肘尖",
       "type": "user",
       "category": "少林直出",
@@ -259,6 +275,7 @@
     {
       "id": "shaolin_direct_017",
       "name": "少林直出 · 17. 弓步插掌",
+      "name_en": "Shaolin Direct · 17. Bow Stance Thrust Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步插掌 — 弓步，直臂向前插掌，指尖向前",
       "type": "user",
       "category": "少林直出",
@@ -275,6 +292,7 @@
     {
       "id": "shaolin_direct_018",
       "name": "少林直出 · 18. 弓步搂手冲拳",
+      "name_en": "Shaolin Direct · 18. Bow Stance Hook & Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步搂手冲拳 — 弓步，一手由外向内搂手，另一手冲拳",
       "type": "user",
       "category": "少林直出",
@@ -291,6 +309,7 @@
     {
       "id": "shaolin_direct_019",
       "name": "少林直出 · 19. 弓步砸拳",
+      "name_en": "Shaolin Direct · 19. Bow Stance Smash Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步砸拳 — 弓步，一臂由上向下砸拳",
       "type": "user",
       "category": "少林直出",
@@ -307,6 +326,7 @@
     {
       "id": "shaolin_direct_020",
       "name": "少林直出 · 20. 弓步勾踢",
+      "name_en": "Shaolin Direct · 20. Bow Stance Hook Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步勾踢 — 前腿屈膝支撑，另一腿勾脚向前踢",
       "type": "user",
       "category": "少林直出",
@@ -323,6 +343,7 @@
     {
       "id": "shaolin_direct_021",
       "name": "少林直出 · 21. 弓步单鞭",
+      "name_en": "Shaolin Direct · 21. Bow Stance Single Whip",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步单鞭 — 弓步，一臂立掌前推，另一臂斜下方伸掌",
       "type": "user",
       "category": "少林直出",
@@ -339,6 +360,7 @@
     {
       "id": "shaolin_direct_022",
       "name": "少林直出 · 22. 弓步推窗",
+      "name_en": "Shaolin Direct · 22. Bow Stance Window Push",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步推窗 — 弓步，双掌向前推窗式推出",
       "type": "user",
       "category": "少林直出",
@@ -355,6 +377,7 @@
     {
       "id": "shaolin_direct_023",
       "name": "少林直出 · 23. 弓步压肘",
+      "name_en": "Shaolin Direct · 23. Bow Stance Elbow Press",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步压肘 — 弓步，屈肘向下压击",
       "type": "user",
       "category": "少林直出",
@@ -371,6 +394,7 @@
     {
       "id": "shaolin_direct_024",
       "name": "少林直出 · 24. 弓步栽拳",
+      "name_en": "Shaolin Direct · 24. Bow Stance Plant Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步栽拳 — 弓步，拳由上向下栽打，力达拳面",
       "type": "user",
       "category": "少林直出",
@@ -387,6 +411,7 @@
     {
       "id": "shaolin_direct_025",
       "name": "少林直出 · 25. 弓步撑掌",
+      "name_en": "Shaolin Direct · 25. Bow Stance Support Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弓步撑掌 — 弓步，双掌向两侧撑开展臂",
       "type": "user",
       "category": "少林直出",
@@ -403,6 +428,7 @@
     {
       "id": "shaolin_direct_026",
       "name": "少林直出 · 26. 仆步穿掌",
+      "name_en": "Shaolin Direct · 26. Crouch Stance Palm Threading",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步穿掌 — 一腿全蹲，另一腿伸直铺平，掌沿腿内侧穿出",
       "type": "user",
       "category": "少林直出",
@@ -419,6 +445,7 @@
     {
       "id": "shaolin_direct_027",
       "name": "少林直出 · 27. 仆步亮掌",
+      "name_en": "Shaolin Direct · 27. Crouch Stance Palm Display",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步亮掌 — 仆步，一手在头侧亮掌，另一手按于腿侧",
       "type": "user",
       "category": "少林直出",
@@ -435,6 +462,7 @@
     {
       "id": "shaolin_direct_028",
       "name": "少林直出 · 28. 仆步拍脚",
+      "name_en": "Shaolin Direct · 28. Crouch Stance Slap Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步拍脚 — 仆步支撑，另一腿伸直抬起，手拍脚面",
       "type": "user",
       "category": "少林直出",
@@ -451,6 +479,7 @@
     {
       "id": "shaolin_direct_029",
       "name": "少林直出 · 29. 仆步抡拍",
+      "name_en": "Shaolin Direct · 29. Crouch Stance Wheel & Slap",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步抡拍 — 仆步，臂轮臂一周后拍击地面",
       "type": "user",
       "category": "少林直出",
@@ -467,6 +496,7 @@
     {
       "id": "shaolin_direct_030",
       "name": "少林直出 · 30. 仆步压腿",
+      "name_en": "Shaolin Direct · 30. Crouch Stance Leg Press",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步压腿 — 仆步，上身前倾下压前腿",
       "type": "user",
       "category": "少林直出",
@@ -483,6 +513,7 @@
     {
       "id": "shaolin_direct_031",
       "name": "少林直出 · 31. 仆步穿掌反撩",
+      "name_en": "Shaolin Direct · 31. Crouch Palm Thread & Backslash",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步穿掌反撩 — 仆步穿掌后，臂由下向上反撩",
       "type": "user",
       "category": "少林直出",
@@ -499,6 +530,7 @@
     {
       "id": "shaolin_direct_032",
       "name": "少林直出 · 32. 仆步劈拳",
+      "name_en": "Shaolin Direct · 32. Crouch Stance Chop Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步劈拳 — 仆步，一臂由上向下劈拳",
       "type": "user",
       "category": "少林直出",
@@ -515,6 +547,7 @@
     {
       "id": "shaolin_direct_033",
       "name": "少林直出 · 33. 仆步架打",
+      "name_en": "Shaolin Direct · 33. Crouch Stance Block & Strike",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 仆步架打 — 仆步，一手上架，另一手向下冲拳",
       "type": "user",
       "category": "少林直出",
@@ -531,6 +564,7 @@
     {
       "id": "shaolin_direct_034",
       "name": "少林直出 · 34. 虚步栽拳",
+      "name_en": "Shaolin Direct · 34. Empty Stance Plant Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步栽拳 — 后腿半蹲支撑，前腿虚点地，拳向下栽打",
       "type": "user",
       "category": "少林直出",
@@ -547,6 +581,7 @@
     {
       "id": "shaolin_direct_035",
       "name": "少林直出 · 35. 虚步架打",
+      "name_en": "Shaolin Direct · 35. Empty Stance Block & Strike",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步架打 — 虚步，一手上架，另一手向前冲拳",
       "type": "user",
       "category": "少林直出",
@@ -563,6 +598,7 @@
     {
       "id": "shaolin_direct_036",
       "name": "少林直出 · 36. 虚步推掌",
+      "name_en": "Shaolin Direct · 36. Empty Stance Push Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步推掌 — 虚步，掌向前轻推",
       "type": "user",
       "category": "少林直出",
@@ -579,6 +615,7 @@
     {
       "id": "shaolin_direct_037",
       "name": "少林直出 · 37. 虚步亮掌",
+      "name_en": "Shaolin Direct · 37. Empty Stance Palm Display",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步亮掌 — 虚步，一手在头侧亮掌，另一手叉腰",
       "type": "user",
       "category": "少林直出",
@@ -595,6 +632,7 @@
     {
       "id": "shaolin_direct_038",
       "name": "少林直出 · 38. 虚步勾手",
+      "name_en": "Shaolin Direct · 38. Empty Stance Hook Hand",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步勾手 — 虚步，手成勾手向后下方伸出",
       "type": "user",
       "category": "少林直出",
@@ -611,6 +649,7 @@
     {
       "id": "shaolin_direct_039",
       "name": "少林直出 · 39. 虚步栽拳反臂",
+      "name_en": "Shaolin Direct · 39. Empty Punch Reverse Arm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步栽拳反臂 — 虚步栽拳后反臂撩打",
       "type": "user",
       "category": "少林直出",
@@ -627,6 +666,7 @@
     {
       "id": "shaolin_direct_040",
       "name": "少林直出 · 40. 虚步穿心掌",
+      "name_en": "Shaolin Direct · 40. Empty Stance Heart-Piercing Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步穿心掌 — 虚步，掌向前直刺如穿心",
       "type": "user",
       "category": "少林直出",
@@ -643,6 +683,7 @@
     {
       "id": "shaolin_direct_041",
       "name": "少林直出 · 41. 虚步挑掌",
+      "name_en": "Shaolin Direct · 41. Empty Stance Palm Lift",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 虚步挑掌 — 虚步，掌由下向上挑起",
       "type": "user",
       "category": "少林直出",
@@ -659,6 +700,7 @@
     {
       "id": "shaolin_direct_042",
       "name": "少林直出 · 42. 歇步压腿",
+      "name_en": "Shaolin Direct · 42. Rest Stance Leg Press",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步压腿 — 两腿交叉全蹲，臀部坐于小腿上",
       "type": "user",
       "category": "少林直出",
@@ -675,6 +717,7 @@
     {
       "id": "shaolin_direct_043",
       "name": "少林直出 · 43. 歇步冲拳",
+      "name_en": "Shaolin Direct · 43. Rest Stance Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步冲拳 — 歇步，一臂向前冲拳",
       "type": "user",
       "category": "少林直出",
@@ -691,6 +734,7 @@
     {
       "id": "shaolin_direct_044",
       "name": "少林直出 · 44. 歇步盖打",
+      "name_en": "Shaolin Direct · 44. Rest Stance Cover & Strike",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步盖打 — 歇步，一手由上向下盖打，另一手冲拳",
       "type": "user",
       "category": "少林直出",
@@ -707,6 +751,7 @@
     {
       "id": "shaolin_direct_045",
       "name": "少林直出 · 45. 歇步抡砸",
+      "name_en": "Shaolin Direct · 45. Rest Stance Wheel Smash",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步抡砸 — 歇步，臂轮一周后向下砸拳",
       "type": "user",
       "category": "少林直出",
@@ -723,6 +768,7 @@
     {
       "id": "shaolin_direct_046",
       "name": "少林直出 · 46. 歇步挑拳",
+      "name_en": "Shaolin Direct · 46. Rest Stance Hook Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 歇步挑拳 — 歇步，拳由下向上挑起",
       "type": "user",
       "category": "少林直出",
@@ -739,6 +785,7 @@
     {
       "id": "shaolin_direct_047",
       "name": "少林直出 · 47. 腾空飞脚",
+      "name_en": "Shaolin Direct · 47. Flying Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空飞脚 — 起跳后，右腿向前踢出，右手拍击右脚面",
       "type": "user",
       "category": "少林直出",
@@ -755,6 +802,7 @@
     {
       "id": "shaolin_direct_048",
       "name": "少林直出 · 48. 旋风脚",
+      "name_en": "Shaolin Direct · 48. Whirlwind Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 旋风脚 — 起跳后空中转体180度，里合腿击响",
       "type": "user",
       "category": "少林直出",
@@ -771,6 +819,7 @@
     {
       "id": "shaolin_direct_049",
       "name": "少林直出 · 49. 腾空摆莲",
+      "name_en": "Shaolin Direct · 49. Flying Lotus Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空摆莲 — 起跳后右腿外摆，两手依次拍击脚面",
       "type": "user",
       "category": "少林直出",
@@ -787,6 +836,7 @@
     {
       "id": "shaolin_direct_050",
       "name": "少林直出 · 50. 腾空蹬踢",
+      "name_en": "Shaolin Direct · 50. Flying Push Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空蹬踢 — 起跳后双脚向前蹬踢",
       "type": "user",
       "category": "少林直出",
@@ -803,6 +853,7 @@
     {
       "id": "shaolin_direct_051",
       "name": "少林直出 · 51. 大跃步前穿",
+      "name_en": "Shaolin Direct · 51. Long Leap Forward Thread",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 大跃步前穿 — 大跨步跳跃落地成仆步穿掌",
       "type": "user",
       "category": "少林直出",
@@ -819,6 +870,7 @@
     {
       "id": "shaolin_direct_052",
       "name": "少林直出 · 52. 二起脚",
+      "name_en": "Shaolin Direct · 52. Double Jump Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 二起脚 — 左脚起跳，右脚先踢，左脚再踢，右手拍右脚",
       "type": "user",
       "category": "少林直出",
@@ -835,6 +887,7 @@
     {
       "id": "shaolin_direct_053",
       "name": "少林直出 · 53. 跺子脚",
+      "name_en": "Shaolin Direct · 53. Stamping Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 跺子脚 — 起跳后一脚在空中跺击",
       "type": "user",
       "category": "少林直出",
@@ -851,6 +904,7 @@
     {
       "id": "shaolin_direct_054",
       "name": "少林直出 · 54. 旋风脚接跌叉",
+      "name_en": "Shaolin Direct · 54. Whirlwind to Split Fall",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 旋风脚接跌叉 — 旋风脚后落地成劈叉",
       "type": "user",
       "category": "少林直出",
@@ -867,6 +921,7 @@
     {
       "id": "shaolin_direct_055",
       "name": "少林直出 · 55. 腾空双飞脚",
+      "name_en": "Shaolin Direct · 55. Flying Double Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 腾空双飞脚 — 起跳后双脚同时向前踢出",
       "type": "user",
       "category": "少林直出",
@@ -883,6 +938,7 @@
     {
       "id": "shaolin_direct_056",
       "name": "少林直出 · 56. 踩脚",
+      "name_en": "Shaolin Direct · 56. Step Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 踩脚 — 一脚支撑，另一脚屈膝抬起前踩",
       "type": "user",
       "category": "少林直出",
@@ -899,6 +955,7 @@
     {
       "id": "shaolin_direct_057",
       "name": "少林直出 · 57. 燕式平衡",
+      "name_en": "Shaolin Direct · 57. Swallow Balance",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 燕式平衡 — 一腿后抬水平，上身前倾，两臂侧平举如燕展翅",
       "type": "user",
       "category": "少林直出",
@@ -915,6 +972,7 @@
     {
       "id": "shaolin_direct_058",
       "name": "少林直出 · 58. 提膝平衡",
+      "name_en": "Shaolin Direct · 58. Knee Raise Balance",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 提膝平衡 — 一腿直立支撑，另一腿屈膝提起，掌前推",
       "type": "user",
       "category": "少林直出",
@@ -931,6 +989,7 @@
     {
       "id": "shaolin_direct_059",
       "name": "少林直出 · 59. 望月平衡",
+      "name_en": "Shaolin Direct · 59. Moon-Gazing Balance",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 望月平衡 — 一腿后抬，上身侧倾转头后视如望月",
       "type": "user",
       "category": "少林直出",
@@ -947,6 +1006,7 @@
     {
       "id": "shaolin_direct_060",
       "name": "少林直出 · 60. 扣腿平衡",
+      "name_en": "Shaolin Direct · 60. Hooked Leg Balance",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 扣腿平衡 — 一腿直立，另一脚扣于支撑腿腘窝处",
       "type": "user",
       "category": "少林直出",
@@ -963,6 +1023,7 @@
     {
       "id": "shaolin_direct_061",
       "name": "少林直出 · 61. 盘腿平衡",
+      "name_en": "Shaolin Direct · 61. Cross-Leg Balance",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 盘腿平衡 — 一腿屈膝盘腿于支撑腿大腿上",
       "type": "user",
       "category": "少林直出",
@@ -979,6 +1040,7 @@
     {
       "id": "shaolin_direct_062",
       "name": "少林直出 · 62. 探海平衡",
+      "name_en": "Shaolin Direct · 62. Sea-Reaching Balance",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 探海平衡 — 燕式平衡基础上上身前俯如探海",
       "type": "user",
       "category": "少林直出",
@@ -995,6 +1057,7 @@
     {
       "id": "shaolin_direct_063",
       "name": "少林直出 · 63. 提膝亮掌",
+      "name_en": "Shaolin Direct · 63. Knee Raise Palm Display",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 提膝亮掌 — 提膝平衡同时一手亮掌于头侧",
       "type": "user",
       "category": "少林直出",
@@ -1011,6 +1074,7 @@
     {
       "id": "shaolin_direct_064",
       "name": "少林直出 · 64. 跪步抱掌",
+      "name_en": "Shaolin Direct · 64. Kneeling Palm Hold",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 跪步抱掌 — 单膝跪地，双掌抱于胸前",
       "type": "user",
       "category": "少林直出",
@@ -1027,6 +1091,7 @@
     {
       "id": "shaolin_direct_065",
       "name": "少林直出 · 65. 冲拳",
+      "name_en": "Shaolin Direct · 65. Straight Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 冲拳 — 直臂向前冲拳，力达拳面",
       "type": "user",
       "category": "少林直出",
@@ -1043,6 +1108,7 @@
     {
       "id": "shaolin_direct_066",
       "name": "少林直出 · 66. 贯拳",
+      "name_en": "Shaolin Direct · 66. Swing Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 贯拳 — 拳由侧向前弧形摆动击打",
       "type": "user",
       "category": "少林直出",
@@ -1059,6 +1125,7 @@
     {
       "id": "shaolin_direct_067",
       "name": "少林直出 · 67. 抄拳",
+      "name_en": "Shaolin Direct · 67. Uppercut",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 抄拳 — 拳由下向上勾打，如抄物",
       "type": "user",
       "category": "少林直出",
@@ -1075,6 +1142,7 @@
     {
       "id": "shaolin_direct_068",
       "name": "少林直出 · 68. 劈拳",
+      "name_en": "Shaolin Direct · 68. Chopping Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 劈拳 — 拳由上向下劈打",
       "type": "user",
       "category": "少林直出",
@@ -1091,6 +1159,7 @@
     {
       "id": "shaolin_direct_069",
       "name": "少林直出 · 69. 栽拳",
+      "name_en": "Shaolin Direct · 69. Plant Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 栽拳 — 拳由上向下栽打",
       "type": "user",
       "category": "少林直出",
@@ -1107,6 +1176,7 @@
     {
       "id": "shaolin_direct_070",
       "name": "少林直出 · 70. 砸拳",
+      "name_en": "Shaolin Direct · 70. Smash Punch",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 砸拳 — 拳由上向下猛砸",
       "type": "user",
       "category": "少林直出",
@@ -1123,6 +1193,7 @@
     {
       "id": "shaolin_direct_071",
       "name": "少林直出 · 71. 推掌",
+      "name_en": "Shaolin Direct · 71. Push Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 推掌 — 掌根向前推出",
       "type": "user",
       "category": "少林直出",
@@ -1139,6 +1210,7 @@
     {
       "id": "shaolin_direct_072",
       "name": "少林直出 · 72. 挑掌",
+      "name_en": "Shaolin Direct · 72. Lift Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 挑掌 — 掌由下向上挑起",
       "type": "user",
       "category": "少林直出",
@@ -1155,6 +1227,7 @@
     {
       "id": "shaolin_direct_073",
       "name": "少林直出 · 73. 劈掌",
+      "name_en": "Shaolin Direct · 73. Chopping Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 劈掌 — 掌由上向下劈打",
       "type": "user",
       "category": "少林直出",
@@ -1171,6 +1244,7 @@
     {
       "id": "shaolin_direct_074",
       "name": "少林直出 · 74. 按掌",
+      "name_en": "Shaolin Direct · 74. Press Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 按掌 — 掌向下按",
       "type": "user",
       "category": "少林直出",
@@ -1187,6 +1261,7 @@
     {
       "id": "shaolin_direct_075",
       "name": "少林直出 · 75. 穿掌",
+      "name_en": "Shaolin Direct · 75. Threading Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 穿掌 — 掌沿直线向前穿出",
       "type": "user",
       "category": "少林直出",
@@ -1203,6 +1278,7 @@
     {
       "id": "shaolin_direct_076",
       "name": "少林直出 · 76. 插掌",
+      "name_en": "Shaolin Direct · 76. Thrust Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 插掌 — 指尖向前直插",
       "type": "user",
       "category": "少林直出",
@@ -1219,6 +1295,7 @@
     {
       "id": "shaolin_direct_077",
       "name": "少林直出 · 77. 撩掌",
+      "name_en": "Shaolin Direct · 77. Backslash Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 撩掌 — 掌由下向前上方撩打",
       "type": "user",
       "category": "少林直出",
@@ -1235,6 +1312,7 @@
     {
       "id": "shaolin_direct_078",
       "name": "少林直出 · 78. 掼掌",
+      "name_en": "Shaolin Direct · 78. Swinging Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 掼掌 — 掌由侧向前弧形掼打",
       "type": "user",
       "category": "少林直出",
@@ -1251,6 +1329,7 @@
     {
       "id": "shaolin_direct_079",
       "name": "少林直出 · 79. 拍掌",
+      "name_en": "Shaolin Direct · 79. Slap Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 拍掌 — 掌向前拍击",
       "type": "user",
       "category": "少林直出",
@@ -1267,6 +1346,7 @@
     {
       "id": "shaolin_direct_080",
       "name": "少林直出 · 80. 勾手",
+      "name_en": "Shaolin Direct · 80. Hook Hand",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 勾手 — 五指捏拢成勾，屈腕",
       "type": "user",
       "category": "少林直出",
@@ -1283,6 +1363,7 @@
     {
       "id": "shaolin_direct_081",
       "name": "少林直出 · 81. 刁手",
+      "name_en": "Shaolin Direct · 81. Hooking Hand",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 刁手 — 手成勾手，腕部内扣",
       "type": "user",
       "category": "少林直出",
@@ -1299,6 +1380,7 @@
     {
       "id": "shaolin_direct_082",
       "name": "少林直出 · 82. 缠手",
+      "name_en": "Shaolin Direct · 82. Wrapping Hand",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 缠手 — 臂弧形缠绕划圈",
       "type": "user",
       "category": "少林直出",
@@ -1315,6 +1397,7 @@
     {
       "id": "shaolin_direct_083",
       "name": "少林直出 · 83. 云手",
+      "name_en": "Shaolin Direct · 83. Cloud Hand",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 云手 — 双臂在身前交替划云圈",
       "type": "user",
       "category": "少林直出",
@@ -1331,6 +1414,7 @@
     {
       "id": "shaolin_direct_084",
       "name": "少林直出 · 84. 扇掌",
+      "name_en": "Shaolin Direct · 84. Fan Palm",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 扇掌 — 掌如扇面打开推出",
       "type": "user",
       "category": "少林直出",
@@ -1347,6 +1431,7 @@
     {
       "id": "shaolin_direct_085",
       "name": "少林直出 · 85. 正踢腿",
+      "name_en": "Shaolin Direct · 85. Front Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 正踢腿 — 支撑腿直立，另一腿脚尖勾起向前额踢",
       "type": "user",
       "category": "少林直出",
@@ -1363,6 +1448,7 @@
     {
       "id": "shaolin_direct_086",
       "name": "少林直出 · 86. 侧踢腿",
+      "name_en": "Shaolin Direct · 86. Side Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 侧踢腿 — 一腿支撑，另一腿脚尖勾起向体侧踢",
       "type": "user",
       "category": "少林直出",
@@ -1379,6 +1465,7 @@
     {
       "id": "shaolin_direct_087",
       "name": "少林直出 · 87. 里合腿",
+      "name_en": "Shaolin Direct · 87. Inside Crescent Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 里合腿 — 腿由外向内弧形摆踢",
       "type": "user",
       "category": "少林直出",
@@ -1395,6 +1482,7 @@
     {
       "id": "shaolin_direct_088",
       "name": "少林直出 · 88. 外摆腿",
+      "name_en": "Shaolin Direct · 88. Outside Crescent Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 外摆腿 — 腿由内向外弧形摆踢",
       "type": "user",
       "category": "少林直出",
@@ -1411,6 +1499,7 @@
     {
       "id": "shaolin_direct_089",
       "name": "少林直出 · 89. 弹腿",
+      "name_en": "Shaolin Direct · 89. Snap Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 弹腿 — 大腿抬起，小腿快速向前弹出",
       "type": "user",
       "category": "少林直出",
@@ -1427,6 +1516,7 @@
     {
       "id": "shaolin_direct_090",
       "name": "少林直出 · 90. 蹬腿",
+      "name_en": "Shaolin Direct · 90. Push Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 蹬腿 — 腿屈膝抬起，然后脚跟向前蹬出",
       "type": "user",
       "category": "少林直出",
@@ -1443,6 +1533,7 @@
     {
       "id": "shaolin_direct_091",
       "name": "少林直出 · 91. 踩腿",
+      "name_en": "Shaolin Direct · 91. Stomp Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 踩腿 — 腿屈膝抬起，脚底向下踩击",
       "type": "user",
       "category": "少林直出",
@@ -1459,6 +1550,7 @@
     {
       "id": "shaolin_direct_092",
       "name": "少林直出 · 92. 铲腿",
+      "name_en": "Shaolin Direct · 92. Side Scoop Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 铲腿 — 腿由内向外弧形铲出",
       "type": "user",
       "category": "少林直出",
@@ -1475,6 +1567,7 @@
     {
       "id": "shaolin_direct_093",
       "name": "少林直出 · 93. 勾踢腿",
+      "name_en": "Shaolin Direct · 93. Hook Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 勾踢腿 — 脚勾起由外向内勾踢",
       "type": "user",
       "category": "少林直出",
@@ -1491,6 +1584,7 @@
     {
       "id": "shaolin_direct_094",
       "name": "少林直出 · 94. 撩腿",
+      "name_en": "Shaolin Direct · 94. Backslash Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 撩腿 — 腿由下向前上方撩踢",
       "type": "user",
       "category": "少林直出",
@@ -1507,6 +1601,7 @@
     {
       "id": "shaolin_direct_095",
       "name": "少林直出 · 95. 拍脚",
+      "name_en": "Shaolin Direct · 95. Slap Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 拍脚 — 一腿伸直抬起，手拍脚面",
       "type": "user",
       "category": "少林直出",
@@ -1523,6 +1618,7 @@
     {
       "id": "shaolin_direct_096",
       "name": "少林直出 · 96. 斜踢腿",
+      "name_en": "Shaolin Direct · 96. Diagonal Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 斜踢腿 — 腿向斜上方踢击",
       "type": "user",
       "category": "少林直出",
@@ -1539,6 +1635,7 @@
     {
       "id": "shaolin_direct_097",
       "name": "少林直出 · 97. 后撩腿",
+      "name_en": "Shaolin Direct · 97. Back Kick",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 后撩腿 — 腿向后上方撩踢",
       "type": "user",
       "category": "少林直出",
@@ -1555,6 +1652,7 @@
     {
       "id": "shaolin_direct_098",
       "name": "少林直出 · 98. 前扫腿",
+      "name_en": "Shaolin Direct · 98. Front Sweep",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 前扫腿 — 仆步，支撑腿为轴，另一腿向前扫一周",
       "type": "user",
       "category": "少林直出",
@@ -1571,6 +1669,7 @@
     {
       "id": "shaolin_direct_099",
       "name": "少林直出 · 99. 后扫腿",
+      "name_en": "Shaolin Direct · 99. Back Sweep",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 后扫腿 — 仆步，支撑腿为轴，另一腿向后扫一周",
       "type": "user",
       "category": "少林直出",
@@ -1587,6 +1686,7 @@
     {
       "id": "shaolin_direct_100",
       "name": "少林直出 · 100. 跌叉",
+      "name_en": "Shaolin Direct · 100. Split Fall",
       "desc": "成品直出提示词（API/本地LLM后端用）：少林武术招式 跌叉 — 两腿前后分开落地成竖叉",
       "type": "user",
       "category": "少林直出",

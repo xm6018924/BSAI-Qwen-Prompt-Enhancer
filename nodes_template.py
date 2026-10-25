@@ -17,15 +17,18 @@ BSAI Qwen Prompt Enhancer — 官方增强提示词模板库节点
 """
 import os
 
-from .common import PLUGIN_ROOT, load_templates, load_text, parse_variables, apply_variables
+from .common import (
+    PLUGIN_ROOT, load_templates, load_text, parse_variables, apply_variables,
+    template_display_name,
+)
 
 
 # 拼接「模板原文 + 用户要求」时的默认分隔符
-DEFAULT_MERGED_SEPARATOR = "\n\n【用户要求】\n"
+DEFAULT_MERGED_SEPARATOR = "\n\n[User Requirements]\n"
 
 # 拼接「模板原文 + 用户要求」时，给用户要求再加一层包装前缀（避免直接拼接到 system prompt 末尾被误读）
-DEFAULT_MERGED_HEADER = "用户对当前任务的额外要求：\n"
-DEFAULT_MERGED_FOOTER = "\n（请务必在生成时满足以上用户要求。）"
+DEFAULT_MERGED_HEADER = "Additional requirements for the current task:\n"
+DEFAULT_MERGED_FOOTER = "\n(Please make sure the generated result satisfies the requirements above.)"
 
 
 class QwenImage21_Prompt_Template:
@@ -46,7 +49,7 @@ class QwenImage21_Prompt_Template:
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "template_name": (cls.template_names(), {"default": "Qwen-Image-2.1 官方 PE-T2I 系统规则 [official_t2i]"}),
+                "template_name": (cls.template_names(), {"default": "Qwen-Image-2.1 Official PE-T2I System Rules [official_t2i]"}),
             },
             "optional": {
                 "custom_text": ("STRING", {
@@ -75,7 +78,7 @@ class QwenImage21_Prompt_Template:
 
     @staticmethod
     def template_names():
-        return [f"{t.get('name', '?')} [{t.get('id', '?')}]" for t in load_templates()]
+        return [f"{template_display_name(t)} [{t.get('id', '?')}]" for t in load_templates()]
 
     RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING")
     RETURN_NAMES = ("SYSTEM_PROMPT", "TEMPLATE_ID", "DESCRIPTION", "USED_VARS", "MERGED_TEXT")

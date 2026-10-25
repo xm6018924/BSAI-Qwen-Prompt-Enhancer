@@ -253,6 +253,7 @@ def _register_template_api():
                 items.append({
                     "id": t.get("id"),
                     "name": t.get("name"),
+                    "name_en": t.get("name_en", ""),
                     "type": t.get("type", "?"),
                     "desc": t.get("desc", ""),
                     "text": txt,

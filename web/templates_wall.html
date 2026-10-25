@@ -277,7 +277,7 @@ function _loadStaticTemplates() {
     .then(r => r.json())
     .then(data => {
       TEMPLATES = (data.templates || []).map(t => ({
-        id: t.id, name: t.name, type: t.type,
+        id: t.id, name: t.name_en || t.name, type: t.type,
         desc: t.desc || "", desc_en: t.desc_en || "", vars: t.vars || [],
         ratio: ratioFor(t.id),
       }));
@@ -295,7 +295,7 @@ fetch("/api/bsai/templates")
   .then(r => r.ok ? r.json() : Promise.reject(new Error("HTTP " + r.status)))
   .then(data => {
     TEMPLATES = (data.templates || []).map(t => ({
-      id: t.id, name: t.name, type: t.type,
+      id: t.id, name: t.name_en || t.name, type: t.type,
       desc: t.desc || "", desc_en: t.desc_en || "", vars: t.vars || [],
       ratio: ratioFor(t.id),
     }));

@@ -1,6 +1,7 @@
 {
-  "id": "user_古风人物",
+  "id": "user_ancient_chinese",
   "name": "古风人物",
+  "name_en": "Ancient Chinese Character",
   "type": "user",
   "desc": "用户自定义共享模板",
   "text": "一个穿红裙的女孩站在樱花树下，手里拿着奶茶，傍晚阳光"

@@ -324,7 +324,7 @@ app.registerExtension({
           if (!sysW) return;
           fetch("/api/bsai/templates").then((r) => r.json()).then((j) => {
             const vals = ["No template (clear output, no system rules) [none]"];
-            for (const t of j.templates || []) vals.push(`${t.name} [${t.id}]`);
+            for (const t of j.templates || []) vals.push(`${t.name_en || t.name} [${t.id}]`);
             sysW.options.values = vals;
             if (savedName && savedId) {
               const target = `${savedName} [${savedId}]`;
