@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSAI Qwen Image 2.1 · AI Pose Reference Wall</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background: #0a0e1a;
+    background-image:
+      radial-gradient(circle at 15% 10%, rgba(120, 80, 255, 0.18), transparent 40%),
+      radial-gradient(circle at 85% 30%, rgba(0, 180, 255, 0.14), transparent 45%),
+      radial-gradient(circle at 50% 90%, rgba(255, 80, 150, 0.10), transparent 50%);
+    color: #e6e9f2;
+    min-height: 100vh;
+    padding: 32px 20px 70px;
+  }
+
+  /* ── 顶部 ─────────────────────────────────────────── */
+  .hero { max-width: 1400px; margin: 0 auto 26px; text-align: center; }
+  .hero h1 {
+    font-size: 34px; font-weight: 800; letter-spacing: 1px;
+    background: linear-gradient(90deg, #a78bfa, #60a5fa, #f472b6);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    margin-bottom: 10px;
+  }
+  .hero p { color: #94a3b8; font-size: 14px; line-height: 1.8; max-width: 860px; margin: 0 auto; }
+  .hero .stats { margin-top: 14px; display: inline-flex; flex-wrap: wrap; gap: 22px; color: #64748b; font-size: 13px; }
+  .hero .stats b { color: #a78bfa; font-size: 17px; }
+  .hero .path { margin-top: 8px; color: #475569; font-size: 12px; font-family: Consolas, monospace; word-break: break-all; }
+
+  /* ── 使用说明 ─────────────────────────────────────── */
+  .usage {
+    max-width: 1400px; margin: 0 auto 22px;
+    background: rgba(167,139,250,0.08); border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 14px; padding: 16px 20px;
+  }
+  .usage h2 { font-size: 15px; font-weight: 700; color: #c4b5fd; margin-bottom: 9px; }
+  .usage ul { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 6px 22px; }
+  .usage li { font-size: 13px; color: #94a3b8; line-height: 1.75; padding-left: 19px; position: relative; }
+  .usage li::before { content: "✓"; position: absolute; left: 0; color: #a78bfa; font-weight: bold; }
+  .usage .lang-toggle { float: right; font-size: 12px; color: #64748b; cursor: pointer; }
+  .usage .lang-toggle:hover { color: #a78bfa; }
+  .usage .zh { display: none; }
+  .usage .en { display: block; }
+  .usage.show-zh .zh { display: block; }
+  .usage.show-zh .en { display: none; }
+
+  /* ── 工具条 ───────────────────────────────────────── */
+  .toolbar {
+    max-width: 1700px; margin: 0 auto 18px; padding: 16px 18px;
+    background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+  }
+  .toolrow { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-bottom: 10px; }
+  .toolrow:last-child { margin-bottom: 0; }
+  .toolrow .label { font-size: 12px; color: #64748b; min-width: 54px; letter-spacing: .5px; }
+  .pill {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: #cbd5e1; padding: 6px 15px; border-radius: 999px; cursor: pointer;
+    font-size: 12.5px; transition: all .2s; white-space: nowrap;
+  }
+  .pill:hover { background: rgba(255,255,255,0.12); }
+  .pill.active { background: linear-gradient(90deg, #7c3aed, #2563eb); border-color: transparent; color: #fff; }
+  .pill .cnt { opacity: .6; font-size: 11px; margin-left: 4px; }
+
+  .field {
+    background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+    color: #e6e9f2; padding: 6px 11px; border-radius: 8px; font-size: 12.5px;
+    font-family: "PingFang SC", "Microsoft YaHei", sans-serif; outline: none;
+  }
+  .field:focus { border-color: rgba(167,139,250,0.6); }
+  input.field { width: 96px; font-family: Consolas, monospace; }
+  #f-query { width: 190px; }
+  .spacer { flex: 1; }
+  .result-info { font-size: 12.5px; color: #64748b; }
+  .result-info b { color: #a78bfa; }
+
+  .btn {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+    color: #cbd5e1; padding: 6px 14px; border-radius: 8px; cursor: pointer;
+    font-size: 12.5px; transition: all .2s; font-family: inherit;
+  }
+  .btn:hover { background: rgba(255,255,255,0.13); color: #fff; }
+  .btn.primary { background: linear-gradient(135deg, #7c3aed, #2563eb); border-color: transparent; color: #fff; font-weight: 600; }
+  .btn.primary:hover { filter: brightness(1.15); }
+  .btn.green { background: linear-gradient(135deg, #16a34a, #059669); border-color: transparent; color: #fff; font-weight: 600; }
+  .btn.green:hover { filter: brightness(1.15); }
+  .btn.amber { background: linear-gradient(135deg, #d97706, #b45309); border-color: transparent; color: #fff; font-weight: 600; }
+  .btn.amber:hover { filter: brightness(1.15); }
+  .btn:disabled { opacity: .45; cursor: not-allowed; }
+  .btn.sm { padding: 3px 9px; font-size: 11.5px; }
+
+  /* ── 主体布局 ─────────────────────────────────────── */
+  .layout {
+    max-width: 1700px; margin: 0 auto;
+    display: grid; grid-template-columns: minmax(0, 1fr) 330px; gap: 22px; align-items: start;
+  }
+  @media (max-width: 1100px) { .layout { grid-template-columns: minmax(0, 1fr); } .side { order: -1; } }
+
+  /* ── 海报墙 ───────────────────────────────────────── */
+  .wall { display: grid; grid-template-columns: repeat(auto-fill, minmax(var(--cardw, 190px), 1fr)); gap: 14px; }
+  .wall.dense { --cardw: 148px; }
+  .wall.normal { --cardw: 190px; }
+  .wall.large { --cardw: 248px; }
+
+  .card {
+    position: relative; background: rgba(255,255,255,0.035);
+    border: 1px solid rgba(255,255,255,0.08); border-radius: 13px;
+    overflow: hidden; transition: transform .2s, box-shadow .2s, border-color .2s;
+    cursor: pointer; display: flex; flex-direction: column;
+  }
+  .card:hover { transform: translateY(-4px); border-color: rgba(167,139,250,0.55); box-shadow: 0 14px 30px rgba(124,58,237,0.22); }
+  .card.sel { border-color: #a78bfa; box-shadow: 0 0 0 2px rgba(167,139,250,0.55), 0 12px 26px rgba(124,58,237,0.3); }
+  .card .thumb { position: relative; width: 100%; background: #0d1220; aspect-ratio: 3 / 4; overflow: hidden; }
+  .card .thumb img { width: 100%; height: 100%; object-fit: contain; display: block; background: #fff; }
+  .card .zoom {
+    position: absolute; right: 7px; top: 7px; width: 26px; height: 26px; border-radius: 8px;
+    background: rgba(0,0,0,0.55); border: 1px solid rgba(255,255,255,0.22); color: #fff;
+    font-size: 13px; line-height: 1; cursor: zoom-in; display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity .18s;
+  }
+  .card:hover .zoom { opacity: 1; }
+  .card .badge {
+    position: absolute; left: 7px; top: 7px; min-width: 24px; height: 24px; padding: 0 6px;
+    border-radius: 8px; background: linear-gradient(135deg, #7c3aed, #2563eb); color: #fff;
+    font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.45);
+  }
+  .card .info { padding: 8px 9px 10px; }
+  .card .info .nm { font-size: 11px; color: #cbd5e1; font-family: Consolas, monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card .info .meta { display: flex; gap: 5px; margin-top: 5px; flex-wrap: wrap; }
+  .tag { font-size: 10px; padding: 2px 7px; border-radius: 999px; font-weight: 600; }
+  .t-pose { background: rgba(99,102,241,0.2); color: #a5b4fc; }
+  .t-view { background: rgba(34,211,238,0.16); color: #67e8f9; }
+  .t-grp { background: rgba(251,146,60,0.16); color: #fdba74; }
+
+  /* ── 同组对照视图 ─────────────────────────────────── */
+  .pose-group { margin-bottom: 26px; }
+  .pose-group > h3 {
+    font-size: 13px; color: #a78bfa; font-weight: 700; margin-bottom: 9px;
+    display: flex; align-items: center; gap: 9px;
+  }
+  .pose-group > h3::after { content: ""; flex: 1; height: 1px; background: rgba(167,139,250,0.18); }
+  .pose-row { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+  .pose-cell {
+    position: relative; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 11px; overflow: hidden; cursor: pointer; transition: all .2s;
+  }
+  .pose-cell:hover { border-color: rgba(167,139,250,0.55); transform: translateY(-3px); }
+  .pose-cell.sel { border-color: #a78bfa; box-shadow: 0 0 0 2px rgba(167,139,250,0.5); }
+  .pose-cell .ph { aspect-ratio: 3 / 4; background: #0d1220; display: flex; align-items: center; justify-content: center; color: #334155; font-size: 11px; }
+  .pose-cell img { width: 100%; height: 100%; object-fit: contain; background: #fff; display: block; }
+  .pose-cell .cap { font-size: 10.5px; color: #94a3b8; padding: 5px 7px; text-align: center; }
+
+  /* ── 右侧参考图清单 ───────────────────────────────── */
+  .side { position: sticky; top: 16px; }
+  .panel {
+    background: rgba(255,255,255,0.035); border: 1px solid rgba(255,255,255,0.09);
+    border-radius: 16px; padding: 16px; max-height: calc(100vh - 40px); display: flex; flex-direction: column;
+  }
+  .panel h2 { font-size: 14px; font-weight: 700; color: #e6e9f2; display: flex; align-items: center; gap: 8px; }
+  .panel h2 .badge-n {
+    background: linear-gradient(135deg, #7c3aed, #2563eb); color: #fff; font-size: 11px;
+    min-width: 22px; height: 22px; border-radius: 7px; display: inline-flex; align-items: center; justify-content: center; padding: 0 6px;
+  }
+  .panel .hint { font-size: 11.5px; color: #64748b; line-height: 1.7; margin: 7px 0 11px; }
+  .sel-list { overflow-y: auto; flex: 1 1 auto; min-height: 60px; margin-bottom: 11px; }
+  .sel-item {
+    display: flex; align-items: center; gap: 9px; padding: 6px 7px; border-radius: 10px;
+    background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); margin-bottom: 6px;
+  }
+  .sel-item .no {
+    width: 24px; height: 24px; flex: 0 0 24px; border-radius: 7px;
+    background: linear-gradient(135deg, #7c3aed, #2563eb); color: #fff;
+    font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+  }
+  .sel-item img { width: 34px; height: 45px; object-fit: contain; background: #fff; border-radius: 5px; flex: 0 0 34px; }
+  .sel-item .t { flex: 1 1 auto; min-width: 0; }
+  .sel-item .t .n { font-size: 11px; font-family: Consolas, monospace; color: #cbd5e1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sel-item .t .d { font-size: 10.5px; color: #64748b; margin-top: 2px; }
+  .sel-item .ops { display: flex; gap: 3px; flex: 0 0 auto; }
+  .icon-btn {
+    width: 22px; height: 22px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.12);
+    background: rgba(255,255,255,0.05); color: #cbd5e1; cursor: pointer; font-size: 11px; line-height: 1;
+    display: flex; align-items: center; justify-content: center; padding: 0;
+  }
+  .icon-btn:hover { background: rgba(255,255,255,0.16); color: #fff; }
+  .sel-empty { text-align: center; color: #475569; font-size: 12px; padding: 26px 8px; line-height: 1.8; }
+  .panel .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+  .panel .acts .btn { width: 100%; text-align: center; }
+  .panel .acts .wide { grid-column: 1 / -1; }
+
+  .ref-preview {
+    margin-top: 11px; background: rgba(99,102,241,0.1); border: 1px solid rgba(99,102,241,0.28);
+    border-radius: 11px; padding: 10px 11px;
+  }
+  .ref-preview h3 { font-size: 11.5px; color: #a5b4fc; margin-bottom: 6px; font-weight: 700; }
+  .ref-preview pre {
+    font-size: 10.5px; color: #cbd5e1; font-family: Consolas, monospace; line-height: 1.65;
+    white-space: pre-wrap; word-break: break-all; max-height: 170px; overflow-y: auto;
+  }
+
+  /* ── 灯箱 ─────────────────────────────────────────── */
+  .lightbox {
+    position: fixed; inset: 0; z-index: 200; background: rgba(4,7,15,0.94);
+    display: none; flex-direction: column; align-items: center; justify-content: center; padding: 24px;
+  }
+  .lightbox.on { display: flex; }
+  .lightbox img { max-width: 84vw; max-height: 74vh; object-fit: contain; background: #fff; border-radius: 8px; }
+  .lightbox .lb-bar { display: flex; gap: 10px; align-items: center; margin-top: 16px; flex-wrap: wrap; justify-content: center; }
+  .lightbox .lb-info { color: #94a3b8; font-size: 12.5px; font-family: Consolas, monospace; }
+  .lightbox .lb-close { position: absolute; right: 26px; top: 20px; }
+  .lightbox .lb-nav {
+    position: absolute; top: 50%; transform: translateY(-50%); width: 46px; height: 46px; border-radius: 50%;
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.18); color: #fff;
+    font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+  .lightbox .lb-nav:hover { background: rgba(255,255,255,0.2); }
+  .lightbox .lb-prev { left: 24px; } .lightbox .lb-next { right: 24px; }
+
+  .toast {
+    position: fixed; top: 18px; right: 24px; z-index: 300; background: #16a34a; color: #fff;
+    padding: 9px 16px; border-radius: 9px; font-size: 13px; box-shadow: 0 5px 16px rgba(0,0,0,.35);
+  }
+  .toast.err { background: #dc2626; }
+  .toast.warn { background: #d97706; }
+
+  .footer { text-align: center; margin-top: 46px; color: #475569; font-size: 12.5px; }
+  .footer .big-logo { display: inline-flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+  .footer .big-logo .circle {
+    width: 50px; height: 50px; border-radius: 50%;
+    background: linear-gradient(135deg, #7c3aed, #2563eb, #06b6d4);
+    display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 800; font-size: 14px;
+    box-shadow: 0 6px 20px rgba(124,58,237,0.4);
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>BSAI · Qwen Image 2.1 · AI Pose Reference Wall</h1>
+  <p>Local pose reference library — <b id="stat-total">0</b> 3D mannequin pose sheets across <b id="stat-groups">0</b> groups × <b id="stat-views">0</b> camera angles.<br>
+     Click cards to build a reference list; the right panel numbers them <b>@img1 / @img2 …</b> — this order maps directly to Qwen-Image 2.1's <code style="color:#a78bfa">image_1 … image_N</code> input slots.</p>
+  <div class="stats">
+    <span><b id="stat-total-b">0</b> poses</span>
+    <span><b id="stat-groups-b">0</b> groups</span>
+    <span><b id="stat-views-b">0</b> views</span>
+    <span><b id="stat-poses-b">0</b> pose IDs</span>
+    <span><b id="stat-sel-b">0</b> selected</span>
+  </div>
+  <div class="path" id="lib-path">Loading library…</div>
+</div>
+
+<!-- Usage -->
+<div class="usage" id="usage">
+  <span class="lang-toggle" onclick="toggleUsageLang()">🌐 EN / 中文</span>
+  <div class="en">
+    <h2>📖 How to Use (pose → reference numbering)</h2>
+    <ul>
+      <li>Click any card to add / remove it from the reference list — the badge shows its @imgN number</li>
+      <li>Order in the right panel = input order = the model's image_1, image_2 … slots (use ↑↓ to reorder)</li>
+      <li>"📋 Copy prompt snippet" copies an English prompt snippet with the numbered image order</li>
+      <li>"📤 Upload &amp; wire image_1..N" uploads selected poses to ComfyUI and wires them to the reference slots, then auto-runs</li>
+      <li>"🚀 Write prompt &amp; run" writes the snippet to the enhancer node's user_requirement, pushes to Show Text, triggers preview, and closes</li>
+      <li>Switch to "Compare" view to compare all 5 camera angles of one pose side by side</li>
+      <li>Filter by pose group / camera view / number range / keyword</li>
+      <li>The selection is saved locally (browser + plugin folder) and survives closing the page</li>
+    </ul>
+  </div>
+  <div class="zh">
+    <h2>📖 使用说明（姿势 → 参考图编号）</h2>
+    <ul>
+      <li>点击任意卡片加入/移出参考图清单，卡片左上角角标即它的 @图N 编号</li>
+      <li>右侧清单顺序 = 输入顺序 = 模型的 image_1、image_2 …，可用 ↑↓ 调整</li>
+      <li>「🚀 Write prompt &amp; run」一键写入提示词、推送 Show Text、触发预览并关窗</li>
+      <li>「📤 Upload &amp; wire」上传姿势图并连线 image_1..N，完成后自动运行</li>
+    </ul>
+  </div>
+</div>
+
+<!-- Toolbar -->
+<div class="toolbar">
+  <div class="toolrow">
+    <span class="label">Group</span>
+    <div id="f-groups" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+  </div>
+  <div class="toolrow">
+    <span class="label">View</span>
+    <div id="f-views" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+    <span class="spacer"></span>
+    <span class="label">Pose #</span>
+    <input class="field" id="f-from" type="number" min="1" max="999" placeholder="From">
+    <span style="color:#475569">—</span>
+    <input class="field" id="f-to" type="number" min="1" max="999" placeholder="To">
+    <input class="field" id="f-query" type="search" placeholder="Search filename / P#">
+    <span class="spacer"></span>
+    <button class="pill active" id="v-wall">Grid</button>
+    <button class="pill" id="v-compare">Compare</button>
+    <button class="pill" id="v-dense">Density</button>
+    <button class="btn" id="btn-rescan">🔄 Rescan</button>
+  </div>
+  <div class="toolrow">
+    <span class="result-info">Showing <b id="res-count">0</b> / <b id="res-total">0</b></span>
+    <span class="spacer"></span>
+    <span class="result-info" id="sel-hint">0 selected</span>
+    <button class="btn sm" id="btn-clear-all">Clear all</button>
+  </div>
+</div>
+
+<div class="layout">
+  <!-- Wall -->
+  <div>
+    <div class="wall normal" id="wall"></div>
+    <div id="compare"></div>
+  </div>
+
+  <!-- Selection panel -->
+  <div class="side">
+    <div class="panel">
+      <h2>🧩 Reference List <span class="badge-n" id="sel-count">0</span></h2>
+      <div class="hint">Order = input order — item 1 → <b>image_1</b>, item 2 → <b>image_2</b>…</div>
+      <div class="sel-list" id="sel-list"></div>
+      <div class="acts">
+        <button class="btn" id="btn-copy-num">📋 Copy numbered list</button>
+        <button class="btn" id="btn-copy-name">📋 Copy filenames</button>
+        <button class="btn primary wide" id="btn-copy-prompt">📋 Copy prompt snippet</button>
+        <button class="btn amber" id="btn-upload">📤 Upload &amp; wire image_1..N</button>
+        <button class="btn green" id="btn-write-req">🚀 Write prompt &amp; run</button>
+      </div>
+      <div class="ref-preview">
+        <h3>Prompt snippet preview</h3>
+        <pre id="ref-preview-text">(no poses selected)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="btn lb-close" id="lb-close">✕ Close</button>
+  <button class="lb-nav lb-prev" id="lb-prev">‹</button>
+  <img id="lb-img" alt="pose">
+  <button class="lb-nav lb-next" id="lb-next">›</button>
+  <div class="lb-bar">
+    <span class="lb-info" id="lb-info"></span>
+    <button class="btn primary" id="lb-toggle">Add to reference list</button>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="big-logo">
+    <div class="circle">BSAI</div>
+    <div style="text-align:left">
+      <div style="font-weight:700;color:#cbd5e1">BSAI</div>
+      <div style="font-size:11px;color:#64748b">Qwen Image 2.1 Prompt Enhancer</div>
+    </div>
+  </div>
+  <div>ComfyUI custom node · AI pose reference wall · originals are read-only, never copied or modified</div>
+</div>
+
+<script>
+/* ─────────────────────────────────────────────────────────────
+   BSAI Pose Reference Wall
+   数据源：GET /api/bsai/poses          （manifest：分组/机位/编号/元数据）
+   缩略图：GET /bsai_pose_thumb?id=…    （缺失时后端实时补生成）
+   原图  ：GET /bsai_pose_image?id=…    （只读，按需从素材库流式返回）
+   ───────────────────────────────────────────────────────────── */
+const WALL_VER = "20261030-v3-en";
+const LS_KEY = "bsai_pose_selection_v1";
+
+let MANIFEST = { entries: [], groups: [], views: [], poses: [], count: 0, root: "" };
+let SELECTED = [];               // entry id 数组，顺序 = 输入顺序
+let FILTER = { group: "all", view: "all", from: null, to: null, query: "" };
+let MODE = "wall";               // wall | compare
+let DENSITY = "normal";          // dense | normal | large
+let VIEW_ENTRIES = [];           // 当前筛选后的条目（灯箱翻页用）
+
+const params = new URLSearchParams(location.search);
+const NODE_ID = params.get("node_id") || "";        // 增强节点（写 user_requirement）
+const POSE_NODE_ID = params.get("pose_node_id") || ""; // 姿势节点
+
+const $ = id => document.getElementById(id);
+const wallEl = $("wall");
+const cmpEl = $("compare");
+
+/* ── 工具 ───────────────────────────────────────────── */
+function toast(msg, kind) {
+  const el = document.createElement("div");
+  el.className = "toast" + (kind ? " " + kind : "");
+  el.textContent = msg;
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 2600);
+}
+async function copyText(text) {
+  try {
+    await navigator.clipboard.writeText(text);
+    return true;
+  } catch (e) {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.style.cssText = "position:fixed;left:-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand("copy"); } catch (_) {}
+    ta.remove();
+    return ok;
+  }
+}
+function thumbUrl(id) { return "/bsai_pose_thumb?id=" + encodeURIComponent(id) + "&v=" + WALL_VER; }
+function imageUrl(id) { return "/bsai_pose_image?id=" + encodeURIComponent(id); }
+function entryById(id) { return MANIFEST.entries.find(e => e.id === id); }
+function selIndex(id) { return SELECTED.indexOf(id); }
+
+/* ── 清单文本生成 ───────────────────────────────────── */
+function buildNumberList() {
+  return SELECTED.map((id, i) => {
+    const e = entryById(id);
+    if (!e) return "";
+    return "img" + (i + 1) + " = " + e.file + "（" + e.group_label + " · P" + e.pose + " · " + e.view_label + "）";
+  }).filter(Boolean).join("\n");
+}
+function buildNameList() {
+  return SELECTED.map(id => { const e = entryById(id); return e ? e.file : ""; }).filter(Boolean).join("\n");
+}
+function buildPromptSnippet() {
+  if (!SELECTED.length) return "";
+  const lines = SELECTED.map((id, i) => {
+    const e = entryById(id);
+    if (!e) return "";
+    return "Image " + (i + 1) + " - " + e.file + " (" + e.group_label + ", pose " + e.pose +
+           ", " + e.view_label + " view, 3D mannequin pose reference, white background)";
+  }).filter(Boolean);
+  return "Reference images (use them in exactly this order):\n" + lines.join("\n") +
+    "\nFollow the body pose and camera angle of each reference image exactly. " +
+    "Keep the same character, outfit, hairstyle and lighting across all images. " +
+    "The reference images are pose and camera-angle guides only; render them as the final artwork.";
+}
+
+/* ── 选择状态 ───────────────────────────────────────── */
+function loadSelectionLocal() {
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if (!raw) return [];
+    const arr = JSON.parse(raw);
+    return Array.isArray(arr) ? arr : [];
+  } catch (e) { return []; }
+}
+function saveSelectionLocal() {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(SELECTED)); } catch (e) {}
+}
+async function persistSelection() {
+  saveSelectionLocal();
+  try {
+    await fetch("/bsai_pose_selection", {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: SELECTED })
+    });
+  } catch (e) { /* 后端不可用时不影响本地使用 */ }
+}
+function toggleSelect(id) {
+  const i = selIndex(id);
+  if (i >= 0) SELECTED.splice(i, 1);
+  else SELECTED.push(id);
+  saveSelectionLocal();
+  persistSelection();
+  renderSelection();
+  renderCards();
+  updateStats();
+}
+
+/* ── 渲染：筛选条 ───────────────────────────────────── */
+function renderFilters() {
+  const gbox = $("f-groups");
+  gbox.innerHTML = "";
+  const mk = (id, label, cnt, onPick) => {
+    const b = document.createElement("button");
+    b.className = "pill" + (FILTER.group === id || FILTER.view === id ? " active" : "");
+    b.innerHTML = label + (cnt != null ? '<span class="cnt">' + cnt + "</span>" : "");
+    b.onclick = () => { onPick(); renderFilters(); render(); };
+    return b;
+  };
+  gbox.appendChild(mk("all", "All", MANIFEST.count, () => { FILTER.group = "all"; }));
+  (MANIFEST.groups || []).forEach(g => {
+    gbox.appendChild(mk(g.id, g.label, g.count, () => { FILTER.group = g.id; }));
+  });
+
+  const vbox = $("f-views");
+  vbox.innerHTML = "";
+  const mkv = (id, label, cnt) => {
+    const b = document.createElement("button");
+    b.className = "pill" + (FILTER.view === id ? " active" : "");
+    b.innerHTML = label + (cnt != null ? '<span class="cnt">' + cnt + "</span>" : "");
+    b.onclick = () => { FILTER.view = id; renderFilters(); render(); };
+    return b;
+  };
+  vbox.appendChild(mkv("all", "All", null));
+  (MANIFEST.views || []).forEach(v => {
+    vbox.appendChild(mkv(v.id, v.label, v.count));
+  });
+}
+
+/* ── 渲染：筛选 ─────────────────────────────────────── */
+function applyFilter() {
+  const q = FILTER.query.trim().toLowerCase();
+  return MANIFEST.entries.filter(e => {
+    if (FILTER.group !== "all" && e.group !== FILTER.group) return false;
+    if (FILTER.view !== "all" && e.view !== FILTER.view) return false;
+    if (FILTER.from != null && Number(e.pose) < FILTER.from) return false;
+    if (FILTER.to != null && Number(e.pose) > FILTER.to) return false;
+    if (q) {
+      const hay = (e.file + " " + e.id + " p" + e.pose + " " + e.group_label + " " + e.view_label).toLowerCase();
+      if (hay.indexOf(q) < 0) return false;
+    }
+    return true;
+  });
+}
+
+/* ── 渲染：卡片墙 ───────────────────────────────────── */
+function renderCards() {
+  if (MODE !== "wall") { wallEl.style.display = "none"; return; }
+  wallEl.style.display = "";
+  wallEl.className = "wall " + DENSITY;
+  wallEl.innerHTML = "";
+  const frag = document.createDocumentFragment();
+  VIEW_ENTRIES.forEach(e => {
+    const idx = selIndex(e.id);
+    const card = document.createElement("div");
+    card.className = "card" + (idx >= 0 ? " sel" : "");
+    card.title = e.file + "\nClick to add to reference list";
+    card.innerHTML =
+      '<div class="thumb">' +
+        '<img src="' + thumbUrl(e.id) + '" alt="' + e.file + '" loading="lazy">' +
+        (idx >= 0 ? '<div class="badge">' + (idx + 1) + "</div>" : "") +
+        '<div class="zoom" title="Zoom">🔍</div>' +
+      "</div>" +
+      '<div class="info">' +
+        '<div class="nm">' + e.file + "</div>" +
+        '<div class="meta">' +
+          '<span class="tag t-pose">P' + e.pose + "</span>" +
+          '<span class="tag t-view">' + e.view_label + "</span>" +
+          '<span class="tag t-grp">' + e.group_label + "</span>" +
+        "</div>" +
+      "</div>";
+    card.addEventListener("click", ev => {
+      if (ev.target.classList.contains("zoom")) { ev.stopPropagation(); openLightbox(e.id); return; }
+      toggleSelect(e.id);
+    });
+    frag.appendChild(card);
+  });
+  wallEl.appendChild(frag);
+}
+
+/* ── 渲染：同组对照 ─────────────────────────────────── */
+function renderCompare() {
+  if (MODE !== "compare") { cmpEl.innerHTML = ""; return; }
+  cmpEl.innerHTML = "";
+  // 按 编号 分组，组内按机位顺序
+  const byPose = new Map();
+  VIEW_ENTRIES.forEach(e => {
+    const k = e.pose;
+    if (!byPose.has(k)) byPose.set(k, []);
+    byPose.get(k).push(e);
+  });
+  const viewOrder = (MANIFEST.views || []).map(v => v.id);
+  const keys = Array.from(byPose.keys()).sort((a, b) => Number(a) - Number(b));
+  keys.forEach(k => {
+    const items = byPose.get(k);
+    const box = document.createElement("div");
+    box.className = "pose-group";
+    const label = items[0].group_label;
+    box.innerHTML = "<h3>P" + k + " · " + label + "</h3>";
+    const row = document.createElement("div");
+    row.className = "pose-row";
+    viewOrder.forEach(vid => {
+      const e = items.find(x => x.view === vid);
+      const cell = document.createElement("div");
+      cell.className = "pose-cell" + (e && selIndex(e.id) >= 0 ? " sel" : "");
+      if (e) {
+        const idx = selIndex(e.id);
+        cell.innerHTML =
+          '<div class="ph"><img src="' + thumbUrl(e.id) + '" alt="' + e.file + '" loading="lazy"></div>' +
+          '<div class="cap">' + e.view_label + (idx >= 0 ? " · @img" + (idx + 1) : "") + "</div>";
+        cell.addEventListener("click", () => toggleSelect(e.id));
+        cell.addEventListener("dblclick", () => openLightbox(e.id));
+      } else {
+        cell.innerHTML = '<div class="ph">—</div><div class="cap">' + (MANIFEST.views.find(v => v.id === vid) || {}).label + "</div>";
+      }
+      row.appendChild(cell);
+    });
+    box.appendChild(row);
+    cmpEl.appendChild(box);
+  });
+}
+
+/* ── 渲染：参考图清单面板 ───────────────────────────── */
+function renderSelection() {
+  const list = $("sel-list");
+  list.innerHTML = "";
+  if (!SELECTED.length) {
+    list.innerHTML = '<div class="sel-empty">No poses selected yet.<br>Click any pose card to add it.</div>';
+  } else {
+    SELECTED.forEach((id, i) => {
+      const e = entryById(id);
+      if (!e) return;
+      const item = document.createElement("div");
+      item.className = "sel-item";
+      item.innerHTML =
+        '<div class="no">' + (i + 1) + "</div>" +
+        '<img src="' + thumbUrl(id) + '" alt="">' +
+        '<div class="t"><div class="n">' + e.file + "</div>" +
+        '<div class="d">P' + e.pose + " · " + e.view_label + " · " + e.group_label + "</div></div>" +
+        '<div class="ops">' +
+          '<button class="icon-btn" title="Move up">↑</button>' +
+          '<button class="icon-btn" title="Move down">↓</button>' +
+          '<button class="icon-btn" title="Remove">✕</button>' +
+        "</div>";
+      const ops = item.querySelectorAll(".icon-btn");
+      ops[0].onclick = ev => { ev.stopPropagation(); if (i > 0) { const t = SELECTED[i - 1]; SELECTED[i - 1] = id; SELECTED[i] = t; afterReorder(); } };
+      ops[1].onclick = ev => { ev.stopPropagation(); if (i < SELECTED.length - 1) { const t = SELECTED[i + 1]; SELECTED[i + 1] = id; SELECTED[i] = t; afterReorder(); } };
+      ops[2].onclick = ev => { ev.stopPropagation(); toggleSelect(id); };
+      list.appendChild(item);
+    });
+  }
+  $("sel-count").textContent = SELECTED.length;
+  $("sel-hint").textContent = SELECTED.length + " selected";
+  $("ref-preview-text").textContent = buildPromptSnippet() || "(no poses selected)";
+  $("btn-upload").disabled = !SELECTED.length;
+  $("btn-write-req").disabled = !SELECTED.length;
+}
+function afterReorder() {
+  saveSelectionLocal();
+  persistSelection();
+  renderSelection();
+  renderCards();
+  renderCompare();
+}
+
+/* ── 统计 ───────────────────────────────────────────── */
+function updateStats() {
+  const set = (id, v) => { const el = $(id); if (el) el.textContent = v; };
+  set("stat-total", MANIFEST.count);
+  set("stat-total-b", MANIFEST.count);
+  set("stat-groups", (MANIFEST.groups || []).length);
+  set("stat-groups-b", (MANIFEST.groups || []).length);
+  set("stat-views", (MANIFEST.views || []).length);
+  set("stat-views-b", (MANIFEST.views || []).length);
+  set("stat-poses-b", (MANIFEST.poses || []).length);
+  set("stat-sel-b", SELECTED.length);
+  set("res-total", MANIFEST.count);
+}
+
+/* ── 灯箱 ───────────────────────────────────────────── */
+let LB_INDEX = -1;
+function openLightbox(id) {
+  VIEW_ENTRIES = applyFilter();
+  LB_INDEX = VIEW_ENTRIES.findIndex(e => e.id === id);
+  if (LB_INDEX < 0) LB_INDEX = 0;
+  showLightbox();
+}
+function showLightbox() {
+  const e = VIEW_ENTRIES[LB_INDEX];
+  if (!e) return;
+  $("lb-img").src = imageUrl(e.id);
+  const idx = selIndex(e.id);
+  $("lb-info").textContent = e.file + "  ·  " + e.group_label + "  ·  P" + e.pose + "  ·  " +
+    e.view_label + "  ·  " + e.w + "×" + e.h + "  ·  " + (LB_INDEX + 1) + "/" + VIEW_ENTRIES.length +
+    (idx >= 0 ? "  ·  selected as @img" + (idx + 1) : "");
+  $("lb-toggle").textContent = idx >= 0 ? "Remove from reference list" : "Add to reference list";
+  $("lightbox").classList.add("on");
+}
+function closeLightbox() { $("lightbox").classList.remove("on"); }
+function lbStep(d) {
+  if (!VIEW_ENTRIES.length) return;
+  LB_INDEX = (LB_INDEX + d + VIEW_ENTRIES.length) % VIEW_ENTRIES.length;
+  showLightbox();
+}
+
+/* ── ComfyUI 回填 ───────────────────────────────────── */
+function getOpenerApp() {
+  try {
+    if (window.opener && !window.opener.closed && window.opener.app) return window.opener.app;
+  } catch (e) {}
+  return null;
+}
+function findEnhancerNode(app) {
+  const nodes = (app.graph && app.graph._nodes) || [];
+  if (NODE_ID) {
+    const n = app.graph.getNodeById(Number(NODE_ID));
+    if (n) return n;
+  }
+  return nodes.find(n => (n.comfyClass || n.constructor?.comfyClass) === "BSAI_Qwen_Prompt_Enhancer") || null;
+}
+function writeToShowText(app, text) {
+  /* 像模板墙一样：把提示词写到所有 Show Text 节点，浏览器侧即时刷新 */
+  try {
+    const allNodes = (app.graph && app.graph._nodes) || [];
+    const stNodes = allNodes.filter(n => {
+      const cls = n.comfyClass || (n.constructor && n.constructor.comfyClass);
+      return cls === "ShowText" || cls === "ShowText|pysssss";
+    });
+    for (const sn of stNodes) {
+      const txtW = (sn.widgets || []).find(w => w.name === "text");
+      if (txtW) {
+        txtW.value = text;
+        if (typeof txtW.callback === "function") txtW.callback(text);
+        try { sn.setDirtyCanvas?.(true, true); } catch (_) {}
+      }
+    }
+    return stNodes.length;
+  } catch (e) { console.warn("[BSAI.PoseWall] write Show Text failed:", e); return 0; }
+}
+
+function writeUserRequirement(autoRun, autoClose) {
+  const app = getOpenerApp();
+  if (!app) {
+    toast("Not connected to ComfyUI", "err");
+    return;
+  }
+  const node = findEnhancerNode(app);
+  if (!node) { toast("Enhancer node not found", "err"); return; }
+  const w = (node.widgets || []).find(x => x.name === "user_requirement");
+  if (!w) { toast("Node has no user_requirement widget", "err"); return; }
+  const text = buildPromptSnippet();
+  w.value = text;
+  if (typeof w.callback === "function") w.callback(text);
+  try { node.setDirtyCanvas?.(true, true); } catch (_) {}
+
+  /* 同步写 Show Text 节点 */
+  const nShowText = writeToShowText(app, text);
+
+  /* 保存选择到后端 */
+  persistSelection();
+
+  /* 触发预览运行 */
+  if (autoRun !== false) {
+    try {
+      /* 勾上 preview_only 走纯预览路径（不调模型） */
+      const pv = (node.widgets || []).find(x => x.name === "preview_only");
+      if (pv) { pv.value = true; if (typeof pv.callback === "function") pv.callback(true); }
+      if (typeof app.queuePrompt === "function") app.queuePrompt();
+    } catch (e) { console.warn("[BSAI.PoseWall] queuePrompt failed:", e); }
+  }
+
+  toast("Wrote user_requirement + Show Text (" + nShowText + " nodes), preview triggered", "");
+  if (autoClose !== false) {
+    setTimeout(() => window.close(), 900);
+  }
+}
+
+async function uploadAndWire() {
+  const app = getOpenerApp();
+  if (!app) { toast("Not connected to ComfyUI", "err"); return; }
+  const node = findEnhancerNode(app);
+  if (!node) { toast("Enhancer node not found", "err"); return; }
+  if (!SELECTED.length) { toast("Select poses first", "warn"); return; }
+  if (SELECTED.length > 16) { toast("Enhancer node only has image_1..image_16 slots", "warn"); return; }
+  if (!window.LiteGraph) { toast("LiteGraph not found", "err"); return; }
+
+  const btn = $("btn-upload");
+  const old = btn.textContent;
+  btn.disabled = true;
+  let done = 0;
+  try {
+    for (let i = 0; i < SELECTED.length; i++) {
+      const id = SELECTED[i];
+      const e = entryById(id);
+      if (!e) continue;
+      btn.textContent = "⏳ Uploading " + (i + 1) + "/" + SELECTED.length;
+      const blob = await (await fetch(imageUrl(id))).blob();
+      const fd = new FormData();
+      fd.append("image", blob, e.file);
+      fd.append("overwrite", "true");
+      fd.append("type", "input");
+      const resp = await fetch("/upload/image", { method: "POST", body: fd });
+      if (!resp.ok) throw new Error("upload failed HTTP " + resp.status);
+      const up = await resp.json();
+
+      const ln = window.LiteGraph.createNode("LoadImage");
+      if (!ln) throw new Error("Cannot create LoadImage node");
+      ln.pos = [node.pos[0] - 380, node.pos[1] + 60 + i * 290];
+      const iw = (ln.widgets || []).find(w => w.name === "image");
+      if (iw) { iw.value = up.name; if (typeof iw.callback === "function") iw.callback(up.name); }
+      app.graph.add(ln);
+
+      const slotIdx = (node.inputs || []).findIndex(inp => inp.name === "image_" + (i + 1));
+      if (slotIdx >= 0) {
+        try { ln.connect(0, node, slotIdx); } catch (e) { console.warn("[BSAI.PoseWall] wire failed", e); }
+      } else {
+        console.warn("[BSAI.PoseWall] node has no image_" + (i + 1) + " input slot");
+      }
+      done++;
+    }
+    try { app.graph.beforeChange?.(); } catch (_) {}
+    toast("Uploaded & wired " + done + " images", "");
+    /* 连线完成后自动写入提示词 + 触发预览 + 关窗 */
+    setTimeout(() => writeUserRequirement(true, true), 400);
+  } catch (e) {
+    toast("Upload/wire failed: " + e.message, "err");
+  } finally {
+    btn.textContent = old;
+    btn.disabled = !SELECTED.length;
+  }
+}
+
+/* ── 主渲染 ─────────────────────────────────────────── */
+function render() {
+  VIEW_ENTRIES = applyFilter();
+  $("res-count").textContent = VIEW_ENTRIES.length;
+  renderCards();
+  renderCompare();
+  updateStats();
+}
+
+/* ── 加载 ───────────────────────────────────────────── */
+async function loadManifest() {
+  try {
+    const r = await fetch("/api/bsai/poses", { cache: "no-store" });
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    MANIFEST = await r.json();
+  } catch (e) {
+    wallEl.innerHTML = '<div style="grid-column:1/-1;text-align:center;color:#fca5a5;padding:40px">' +
+      "Failed to load manifest: " + e.message + "<br>Make sure ComfyUI is running and the library path is valid.</div>";
+    return;
+  }
+  $("lib-path").textContent = "Library: " + (MANIFEST.root || "unknown") + "  ·  Scanned: " + (MANIFEST.generated_at || "-");
+  // 复原上次的机位/组默认值为全部
+  renderFilters();
+  // 复原本地清单（过滤掉已不存在的 id）
+  const saved = loadSelectionLocal();
+  SELECTED = saved.filter(id => entryById(id));
+  if (!SELECTED.length) {
+    try {
+      const r = await fetch("/api/bsai/pose_selection", { cache: "no-store" });
+      if (r.ok) {
+        const j = await r.json();
+        SELECTED = (j.items || []).filter(id => entryById(id));
+      }
+    } catch (e) {}
+  }
+  renderSelection();
+  render();
+}
+
+/* ── 事件绑定 ───────────────────────────────────────── */
+$("f-from").addEventListener("input", e => { FILTER.from = e.target.value === "" ? null : Number(e.target.value); render(); });
+$("f-to").addEventListener("input", e => { FILTER.to = e.target.value === "" ? null : Number(e.target.value); render(); });
+let qt = null;
+$("f-query").addEventListener("input", e => {
+  clearTimeout(qt);
+  qt = setTimeout(() => { FILTER.query = e.target.value || ""; render(); }, 180);
+});
+$("v-wall").onclick = () => { MODE = "wall"; $("v-wall").classList.add("active"); $("v-compare").classList.remove("active"); render(); };
+$("v-compare").onclick = () => { MODE = "compare"; $("v-compare").classList.add("active"); $("v-wall").classList.remove("active"); render(); };
+$("v-dense").onclick = () => {
+  DENSITY = DENSITY === "dense" ? "normal" : DENSITY === "normal" ? "large" : "dense";
+  wallEl.className = "wall " + DENSITY;
+};
+$("btn-clear-all").onclick = () => { SELECTED = []; afterReorder(); };
+$("btn-copy-num").onclick = async () => {
+  if (!SELECTED.length) { toast("List is empty", "warn"); return; }
+  toast(await copyText(buildNumberList()) ? "Numbered list copied" : "Copy failed", "");
+};
+$("btn-copy-name").onclick = async () => {
+  if (!SELECTED.length) { toast("List is empty", "warn"); return; }
+  toast(await copyText(buildNameList()) ? "Filenames copied" : "Copy failed", "");
+};
+$("btn-copy-prompt").onclick = async () => {
+  if (!SELECTED.length) { toast("List is empty", "warn"); return; }
+  toast(await copyText(buildPromptSnippet()) ? "Prompt snippet copied" : "Copy failed", "");
+};
+$("btn-write-req").onclick = () => writeUserRequirement(true, true);
+$("btn-upload").onclick = uploadAndWire;
+$("btn-rescan").onclick = async () => {
+  const b = $("btn-rescan");
+  b.textContent = "⏳ Scanning…"; b.disabled = true;
+  try {
+    const r = await fetch("/bsai_pose_rescan", { method: "POST" });
+    const j = await r.json();
+    toast("Rescan done: " + j.count + " images", "");
+    await loadManifest();
+  } catch (e) {
+    toast("Rescan failed: " + e.message, "err");
+  } finally {
+    b.textContent = "🔄 Rescan"; b.disabled = false;
+  }
+};
+
+$("lb-close").onclick = closeLightbox;
+$("lb-prev").onclick = () => lbStep(-1);
+$("lb-next").onclick = () => lbStep(1);
+$("lb-toggle").onclick = () => {
+  const e = VIEW_ENTRIES[LB_INDEX];
+  if (e) { toggleSelect(e.id); showLightbox(); }
+};
+$("lightbox").addEventListener("click", ev => { if (ev.target === $("lightbox")) closeLightbox(); });
+document.addEventListener("keydown", ev => {
+  if (!$("lightbox").classList.contains("on")) return;
+  if (ev.key === "Escape") closeLightbox();
+  else if (ev.key === "ArrowLeft") lbStep(-1);
+  else if (ev.key === "ArrowRight") lbStep(1);
+});
+
+function toggleUsageLang() { $("usage").classList.toggle("show-zh"); }
+
+// 顶部提示：已连接 ComfyUI
+if (NODE_ID || POSE_NODE_ID) {
+  const tip = document.createElement("div");
+  tip.style.cssText = "max-width:1400px;margin:0 auto 16px;text-align:center;color:#a78bfa;font-size:13px;" +
+    "background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);padding:8px 16px;border-radius:10px;";
+  tip.textContent = "✅ Connected to ComfyUI — select poses and click Write prompt & run";
+  document.querySelector(".toolbar").insertAdjacentElement("beforebegin", tip);
+}
+
+loadManifest();
+</script>
+</body>
+</html>

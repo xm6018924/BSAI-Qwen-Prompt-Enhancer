@@ -21,12 +21,14 @@ from .nodes_enhancer import NODE_CLASS_MAPPINGS as _ENH, NODE_DISPLAY_NAME_MAPPI
 from .nodes_template import NODE_CLASS_MAPPINGS as _TPL, NODE_DISPLAY_NAME_MAPPINGS as _TPL_D
 from .nodes_jev import NODE_CLASS_MAPPINGS as _JEV, NODE_DISPLAY_NAME_MAPPINGS as _JEV_D
 from .nodes_markdown import NODE_CLASS_MAPPINGS as _MD, NODE_DISPLAY_NAME_MAPPINGS as _MD_D
+from .nodes_pose import NODE_CLASS_MAPPINGS as _POSE, NODE_DISPLAY_NAME_MAPPINGS as _POSE_D
+from .nodes_clothing import NODE_CLASS_MAPPINGS as _CLOTH, NODE_DISPLAY_NAME_MAPPINGS as _CLOTH_D
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
-for m in (_ENH, _TPL, _JEV, _MD):
+for m in (_ENH, _TPL, _JEV, _MD, _POSE, _CLOTH):
     NODE_CLASS_MAPPINGS.update(m)
-for m in (_ENH_D, _TPL_D, _JEV_D, _MD_D):
+for m in (_ENH_D, _TPL_D, _JEV_D, _MD_D, _POSE_D, _CLOTH_D):
     NODE_DISPLAY_NAME_MAPPINGS.update(m)
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
@@ -421,8 +423,22 @@ def _register_user_template_api():
 _register_user_template_api()
 
 
+# 【v1.11.0】AI 姿势海报墙路由：GET /bsai_pose_wall 等
+# 独立的 AI 姿势素材库（AI姿势 目录，{组}_P{编号}_{机位}.png）浏览墙：
+# 挑参考图 → 自动排 @图1/@图2 编号（= image_1..image_N 输入顺序）→ 回填/连线。
+# 原图按需从素材库流式返回，不复制 600MB+ 到插件目录；缩略图在 web/pose_thumbnails/。
+from .pose_library import register_pose_routes as _register_pose_routes
+
+_register_pose_routes()
+
+# AI Clothing Wall routes
+from .clothing_library import register_clothing_routes as _register_clothing_routes
+_register_clothing_routes()
+
+
 # 【v1.10.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
-_PLUGIN_VERSION = "v1.10.0 (2026-10-06)"
+_PLUGIN_VERSION = "v1.11.0 (2026-10-30)"
 print(f"[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 {_PLUGIN_VERSION} | "
-      f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / MarkdownNote兼容 / 潜空间放大示例 / 动态模板API / 海报墙直达路由")
+      f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / "
+      f"MarkdownNote兼容 / 潜空间放大示例 / 动态模板API / 海报墙直达路由 / AI姿势海报墙+参考图编号清单")
 

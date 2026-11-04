@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BSAI Qwen Image 2.1 · AI Clothing Wall</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:#0f0f1a; color:#e2e8f0; font-family:"Segoe UI",system-ui,-apple-system,sans-serif; min-height:100vh; }
+  a { color:#a78bfa; text-decoration:none; }
+
+  /* Hero */
+  .hero { max-width:1400px; margin:0 auto; padding:32px 24px 16px; text-align:center; }
+  .hero h1 { font-size:28px; font-weight:700; background:linear-gradient(135deg,#a78bfa,#f472b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { color:#94a3b8; margin-top:8px; font-size:14px; line-height:1.6; }
+  .hero b { color:#cbd5e1; }
+  .stats { display:flex; justify-content:center; gap:24px; margin-top:16px; flex-wrap:wrap; }
+  .stats span { font-size:13px; color:#64748b; }
+  .stats b { color:#a78bfa; font-size:18px; margin-right:4px; }
+  .path { margin-top:10px; font-size:11px; color:#475569; }
+
+  /* Usage */
+  .usage { max-width:1400px; margin:0 auto 16px; background:rgba(167,139,250,0.05); border:1px solid rgba(167,139,250,0.15); border-radius:12px; padding:16px 20px; position:relative; }
+  .usage h2 { font-size:14px; color:#a78bfa; margin-bottom:8px; }
+  .usage ul { list-style:none; display:grid; grid-template-columns:repeat(auto-fill,minmax(320px,1fr)); gap:6px 24px; }
+  .usage li { font-size:12px; color:#94a3b8; padding-left:16px; position:relative; line-height:1.5; }
+  .usage li::before { content:"✓"; position:absolute; left:0; color:#4ade80; }
+  .usage li b { color:#cbd5e1; }
+  .lang-toggle { position:absolute; top:12px; right:16px; font-size:11px; color:#64748b; cursor:pointer; }
+
+  /* Toolbar */
+  .toolbar { max-width:1400px; margin:0 auto 16px; }
+  .toolrow { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+  .toolrow .label { font-size:12px; color:#64748b; min-width:40px; }
+  .pill { background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.3); color:#a78bfa; padding:4px 12px; border-radius:20px; font-size:12px; cursor:pointer; transition:all .15s; }
+  .pill:hover { background:rgba(167,139,250,0.2); }
+  .pill.active { background:#a78bfa; color:#0f0f1a; font-weight:600; }
+  .field { background:#1a1a2e; border:1px solid #334155; color:#e2e8f0; padding:5px 10px; border-radius:6px; font-size:12px; width:120px; }
+  .field:focus { outline:none; border-color:#a78bfa; }
+  .spacer { flex:1; }
+  .result-info { font-size:12px; color:#64748b; }
+  .result-info b { color:#a78bfa; }
+
+  .btn { background:rgba(167,139,250,0.1); border:1px solid rgba(167,139,250,0.3); color:#a78bfa; padding:6px 14px; border-radius:8px; font-size:12px; cursor:pointer; transition:all .15s; }
+  .btn:hover { background:rgba(167,139,250,0.2); }
+  .btn:disabled { opacity:.4; cursor:not-allowed; }
+  .btn.primary { background:linear-gradient(135deg,#a78bfa,#f472b6); color:#fff; border:none; font-weight:600; }
+  .btn.green { background:rgba(74,222,128,0.15); border-color:#4ade80; color:#4ade80; font-weight:600; }
+  .btn.green:hover { background:rgba(74,222,128,0.25); }
+  .btn.amber { background:rgba(251,191,36,0.15); border-color:#fbbf24; color:#fbbf24; }
+  .btn.sm { padding:3px 10px; font-size:11px; }
+  .wide { width:100%; }
+
+  /* Layout */
+  .layout { max-width:1400px; margin:0 auto; display:grid; grid-template-columns:1fr 340px; gap:16px; padding-bottom:40px; }
+  .wall { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:12px; }
+  .card { background:#1a1a2e; border-radius:10px; overflow:hidden; cursor:pointer; position:relative; transition:transform .15s, box-shadow .15s; border:2px solid transparent; }
+  .card:hover { transform:translateY(-2px); box-shadow:0 4px 20px rgba(0,0,0,.4); }
+  .card.selected { border-color:#4ade80; }
+  .card img { width:100%; height:200px; object-fit:cover; display:block; background:#0f0f1a; }
+  .card .badge { position:absolute; top:6px; left:6px; background:#4ade80; color:#0f0f1a; font-size:11px; font-weight:700; padding:2px 8px; border-radius:10px; }
+  .card .cat-tag { position:absolute; bottom:6px; right:6px; background:rgba(0,0,0,.7); color:#a78bfa; font-size:10px; padding:2px 6px; border-radius:4px; }
+  .card .zoom { position:absolute; top:6px; right:6px; background:rgba(0,0,0,.6); color:#fff; font-size:14px; width:24px; height:24px; border-radius:50%; display:flex; align-items:center; justify-content:center; opacity:0; transition:opacity .15s; }
+  .card:hover .zoom { opacity:1; }
+
+  /* Side panel */
+  .side { position:sticky; top:16px; align-self:start; }
+  .panel { background:#1a1a2e; border-radius:12px; padding:16px; border:1px solid #334155; }
+  .panel h2 { font-size:15px; color:#e2e8f0; margin-bottom:8px; }
+  .badge-n { background:#a78bfa; color:#0f0f1a; font-size:12px; padding:1px 8px; border-radius:10px; margin-left:6px; }
+  .panel .hint { font-size:11px; color:#64748b; margin-bottom:10px; line-height:1.4; }
+  .panel .hint b { color:#cbd5e1; }
+  .sel-list { max-height:300px; overflow-y:auto; margin-bottom:12px; }
+  .sel-empty { text-align:center; color:#475569; font-size:12px; padding:20px; }
+  .sel-item { display:flex; align-items:center; gap:6px; padding:6px; background:#0f0f1a; border-radius:6px; margin-bottom:4px; font-size:11px; }
+  .sel-item img { width:32px; height:40px; object-fit:cover; border-radius:4px; }
+  .sel-item .info { flex:1; min-width:0; }
+  .sel-item .info .name { color:#cbd5e1; font-weight:600; }
+  .sel-item .info .meta { color:#64748b; font-size:10px; }
+  .icon-btn { background:none; border:none; color:#64748b; cursor:pointer; font-size:14px; padding:2px 4px; }
+  .icon-btn:hover { color:#e2e8f0; }
+  .acts { display:flex; flex-direction:column; gap:6px; margin-bottom:12px; }
+
+  .ref-preview { background:#0f0f1a; border-radius:8px; padding:10px; }
+  .ref-preview h3 { font-size:11px; color:#64748b; margin-bottom:6px; }
+  .ref-preview pre { font-size:10px; color:#94a3b8; white-space:pre-wrap; word-break:break-all; max-height:120px; overflow-y:auto; line-height:1.5; }
+
+  /* Lightbox */
+  .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,.9); z-index:100; align-items:center; justify-content:center; flex-direction:column; }
+  .lightbox.open { display:flex; }
+  .lightbox img { max-width:80vw; max-height:80vh; border-radius:8px; }
+  .lb-bar { margin-top:12px; display:flex; align-items:center; gap:16px; }
+  .lb-info { color:#94a3b8; font-size:13px; }
+  .lb-nav { position:absolute; top:50%; transform:translateY(-50%); background:rgba(255,255,255,.1); border:none; color:#fff; font-size:32px; width:48px; height:48px; border-radius:50%; cursor:pointer; }
+  .lb-prev { left:20px; }
+  .lb-next { right:20px; }
+  .lb-close { position:absolute; top:20px; right:20px; }
+
+  /* Toast */
+  .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#1a1a2e; border:1px solid #334155; color:#e2e8f0; padding:10px 20px; border-radius:10px; font-size:13px; z-index:200; opacity:0; transition:opacity .3s; pointer-events:none; }
+  .toast.show { opacity:1; }
+  .toast.err { border-color:#ef4444; color:#fca5a5; }
+  .toast.warn { border-color:#fbbf24; color:#fde68a; }
+
+  .footer { max-width:1400px; margin:0 auto; padding:20px 0; border-top:1px solid #1e293b; display:flex; justify-content:space-between; align-items:center; font-size:11px; color:#475569; }
+  .big-logo { display:flex; align-items:center; gap:10px; }
+  .circle { width:40px; height:40px; border-radius:50%; background:linear-gradient(135deg,#a78bfa,#f472b6); display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; font-size:14px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>BSAI · Qwen Image 2.1 · AI Clothing Wall</h1>
+  <p>Local clothing reference library — <b id="stat-total">0</b> outfit sheets across <b id="stat-cats">0</b> categories.<br>
+     Click cards to build a reference list; the right panel numbers them <b>@img1 / @img2 …</b> — this order maps to Qwen-Image 2.1's <code style="color:#a78bfa">image_1 … image_N</code> slots.</p>
+  <div class="stats">
+    <span><b id="stat-total-b">0</b> outfits</span>
+    <span><b id="stat-cats-b">0</b> categories</span>
+    <span><b id="stat-sel-b">0</b> selected</span>
+  </div>
+  <div class="path" id="lib-path">Loading library…</div>
+</div>
+
+<div class="usage" id="usage">
+  <div>
+    <h2>📖 How to Use</h2>
+    <ul>
+      <li>Click any card to add / remove it from the reference list — the green badge shows its @imgN number</li>
+      <li>Order in the right panel = input order = the model's image_1, image_2 … slots (use ↑↓ to reorder)</li>
+      <li>"🚀 Write prompt & run" writes the snippet to user_requirement, pushes to Show Text, triggers preview, closes</li>
+      <li>"📤 Upload & wire" uploads selected outfits to ComfyUI, wires them to image_1..N, then auto-runs</li>
+      <li>Filter by category or search by filename</li>
+      <li>The selection is saved locally and survives closing the page</li>
+    </ul>
+  </div>
+</div>
+
+<div class="toolbar">
+  <div class="toolrow">
+    <span class="label">Category</span>
+    <div id="f-cats" style="display:flex;flex-wrap:wrap;gap:8px"></div>
+  </div>
+  <div class="toolrow">
+    <input class="field" id="f-query" type="search" placeholder="Search filename" style="width:200px">
+    <span class="spacer"></span>
+    <span class="result-info">Showing <b id="res-count">0</b> / <b id="res-total">0</b></span>
+    <span class="result-info" id="sel-hint">0 selected</span>
+    <button class="btn sm" id="btn-clear-all">Clear all</button>
+    <button class="btn sm" id="btn-rescan">🔄 Rescan</button>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="wall" id="wall"></div>
+  <div class="side">
+    <div class="panel">
+      <h2>🧩 Reference List <span class="badge-n" id="sel-count">0</span></h2>
+      <div class="hint">Order = input order — item 1 → <b>image_1</b>, item 2 → <b>image_2</b>…</div>
+      <div class="sel-list" id="sel-list"></div>
+      <div class="acts">
+        <button class="btn" id="btn-copy-num">📋 Copy numbered list</button>
+        <button class="btn" id="btn-copy-name">📋 Copy filenames</button>
+        <button class="btn primary wide" id="btn-copy-prompt">📋 Copy prompt snippet</button>
+        <button class="btn amber" id="btn-upload">📤 Upload &amp; wire image_1..N</button>
+        <button class="btn green" id="btn-write-req">🚀 Write prompt &amp; run</button>
+      </div>
+      <div class="ref-preview">
+        <h3>Prompt snippet preview</h3>
+        <pre id="ref-preview-text">(no outfits selected)</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="btn lb-close" id="lb-close">✕ Close</button>
+  <button class="lb-nav lb-prev" id="lb-prev">‹</button>
+  <img id="lb-img" alt="clothing">
+  <button class="lb-nav lb-next" id="lb-next">›</button>
+  <div class="lb-bar">
+    <span class="lb-info" id="lb-info"></span>
+    <button class="btn primary" id="lb-toggle">Add to reference list</button>
+  </div>
+</div>
+
+<div class="footer">
+  <div class="big-logo">
+    <div class="circle">BSAI</div>
+    <div>
+      <div style="font-weight:700;color:#cbd5e1">BSAI</div>
+      <div style="font-size:11px;color:#64748b">Qwen Image 2.1 Prompt Enhancer</div>
+    </div>
+  </div>
+  <div>ComfyUI custom node · AI clothing reference wall · originals are read-only</div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const WALL_VER = "20261030-v1-en";
+let MANIFEST = { entries: [], categories: [] };
+let SELECTED = [];
+let FILTER = { cat: "all", query: "" };
+let VIEW_ENTRIES = [];
+let LB_INDEX = -1;
+
+const params = new URLSearchParams(location.search);
+const NODE_ID = params.get("node_id") || "";
+const CLOTHING_NODE_ID = params.get("clothing_node_id") || "";
+
+function $(id) { return document.getElementById(id); }
+function toast(msg, type) {
+  const t = $("toast");
+  t.textContent = msg;
+  t.className = "toast show" + (type ? " " + type : "");
+  setTimeout(() => t.classList.remove("show"), 2500);
+}
+
+function thumbUrl(eid) { return "/bsai_clothing_thumb?id=" + eid + "&v=" + WALL_VER; }
+function imageUrl(eid) { return "/bsai_clothing_image?id=" + eid; }
+
+function buildNumberList() {
+  return SELECTED.map((eid, i) => {
+    const e = MANIFEST.entries.find(x => x.id === eid);
+    return e ? "img" + (i+1) + " = " + e.file + " (" + e.category_label + ")" : "";
+  }).filter(Boolean).join("\n");
+}
+function buildNameList() {
+  return SELECTED.map(eid => {
+    const e = MANIFEST.entries.find(x => x.id === eid);
+    return e ? e.file : "";
+  }).filter(Boolean).join("\n");
+}
+function buildPromptSnippet() {
+  if (!SELECTED.length) return "";
+  const lines = SELECTED.map((eid, i) => {
+    const e = MANIFEST.entries.find(x => x.id === eid);
+    return e ? "Image " + (i+1) + " - " + e.file + " (" + e.category_label + " outfit reference)" : "";
+  }).filter(Boolean);
+  return "Reference images (use them in exactly this order):\n" + lines.join("\n") +
+    "\nFollow the clothing design, fabric, color, and cut of each reference image. Adapt the outfit to the character and scene.";
+}
+
+function renderCats() {
+  const box = $("f-cats");
+  box.innerHTML = "";
+  const mk = (id, label, count) => {
+    const b = document.createElement("button");
+    b.className = "pill" + (FILTER.cat === id ? " active" : "");
+    b.textContent = label + " (" + count + ")";
+    b.onclick = () => { FILTER.cat = id; renderCats(); applyFilter(); };
+    box.appendChild(b);
+  };
+  mk("all", "All", MANIFEST.entries.length);
+  MANIFEST.categories.forEach(c => mk(c.id, c.label, c.count));
+}
+
+function applyFilter() {
+  const q = FILTER.query.toLowerCase();
+  VIEW_ENTRIES = MANIFEST.entries.filter(e => {
+    if (FILTER.cat !== "all" && e.category !== FILTER.cat) return false;
+    if (q && !e.file.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  renderWall();
+}
+
+function renderWall() {
+  const wall = $("wall");
+  wall.innerHTML = "";
+  VIEW_ENTRIES.forEach(e => {
+    const idx = SELECTED.indexOf(e.id);
+    const card = document.createElement("div");
+    card.className = "card" + (idx >= 0 ? " selected" : "");
+    card.title = e.file;
+    card.innerHTML =
+      '<img loading="lazy" src="' + thumbUrl(e.id) + '" alt="' + e.file + '">' +
+      (idx >= 0 ? '<div class="badge">@img' + (idx+1) + '</div>' : '') +
+      '<div class="cat-tag">' + e.category_label + '</div>' +
+      '<div class="zoom" title="Zoom">🔍</div>';
+    card.onclick = (ev) => {
+      if (ev.target.classList.contains("zoom")) { openLightbox(e.id); return; }
+      toggleSelect(e.id);
+    };
+    wall.appendChild(card);
+  });
+  $("res-count").textContent = VIEW_ENTRIES.length;
+  $("res-total").textContent = MANIFEST.entries.length;
+}
+
+function toggleSelect(eid) {
+  const i = SELECTED.indexOf(eid);
+  if (i >= 0) SELECTED.splice(i, 1);
+  else SELECTED.push(eid);
+  persistSelection();
+  renderSelection();
+  renderWall();
+}
+
+function renderSelection() {
+  const list = $("sel-list");
+  if (!SELECTED.length) {
+    list.innerHTML = '<div class="sel-empty">No outfits selected.<br>Click any card to add it.</div>';
+  } else {
+    list.innerHTML = "";
+    SELECTED.forEach((eid, i) => {
+      const e = MANIFEST.entries.find(x => x.id === eid);
+      if (!e) return;
+      const row = document.createElement("div");
+      row.className = "sel-item";
+      row.innerHTML =
+        '<img src="' + thumbUrl(e.id) + '">' +
+        '<div class="info"><div class="name">@img' + (i+1) + ' · ' + e.file + '</div>' +
+        '<div class="meta">' + e.category_label + ' · #' + e.num + '</div></div>' +
+        '<button class="icon-btn" title="Move up">↑</button>' +
+        '<button class="icon-btn" title="Move down">↓</button>' +
+        '<button class="icon-btn" title="Remove">✕</button>';
+      row.querySelectorAll(".icon-btn").forEach((btn, bi) => {
+        btn.onclick = () => {
+          if (bi === 0 && i > 0) { [SELECTED[i-1], SELECTED[i]] = [SELECTED[i], SELECTED[i-1]]; }
+          if (bi === 1 && i < SELECTED.length-1) { [SELECTED[i+1], SELECTED[i]] = [SELECTED[i], SELECTED[i+1]]; }
+          if (bi === 2) SELECTED.splice(i, 1);
+          persistSelection(); renderSelection(); renderWall();
+        };
+      });
+      list.appendChild(row);
+    });
+  }
+  $("sel-count").textContent = SELECTED.length;
+  $("sel-hint").textContent = SELECTED.length + " selected";
+  $("ref-preview-text").textContent = buildPromptSnippet() || "(no outfits selected)";
+  $("btn-upload").disabled = !SELECTED.length;
+  $("btn-write-req").disabled = !SELECTED.length;
+}
+
+function openLightbox(eid) {
+  LB_INDEX = VIEW_ENTRIES.findIndex(e => e.id === eid);
+  showLightbox();
+  $("lightbox").classList.add("open");
+}
+function showLightbox() {
+  if (LB_INDEX < 0) return;
+  const e = VIEW_ENTRIES[LB_INDEX];
+  $("lb-img").src = imageUrl(e.id);
+  const idx = SELECTED.indexOf(e.id);
+  $("lb-info").textContent = e.file + " — " + e.category_label +
+    (idx >= 0 ? "  ·  selected as @img" + (idx+1) : "");
+  $("lb-toggle").textContent = idx >= 0 ? "Remove from list" : "Add to list";
+}
+
+function getOpenerApp() {
+  try { return window.opener && window.opener.app; } catch(e) { return null; }
+}
+function findEnhancerNode(app) {
+  const nodes = (app.graph && app.graph._nodes) || [];
+  return nodes.find(n => {
+    const cls = n.comfyClass || (n.constructor && n.constructor.comfyClass);
+    return cls === "BSAI_Qwen_Prompt_Enhancer";
+  });
+}
+
+function writeToShowText(app, text) {
+  try {
+    const allNodes = (app.graph && app.graph._nodes) || [];
+    const stNodes = allNodes.filter(n => {
+      const cls = n.comfyClass || (n.constructor && n.constructor.comfyClass);
+      return cls === "ShowText" || cls === "ShowText|pysssss";
+    });
+    for (const sn of stNodes) {
+      const txtW = (sn.widgets || []).find(w => w.name === "text");
+      if (txtW) {
+        txtW.value = text;
+        if (typeof txtW.callback === "function") txtW.callback(text);
+        try { sn.setDirtyCanvas?.(true, true); } catch(_) {}
+      }
+    }
+    return stNodes.length;
+  } catch(e) { return 0; }
+}
+
+function writeUserRequirement(autoRun, autoClose) {
+  const app = getOpenerApp();
+  if (!app) { toast("Not connected to ComfyUI", "err"); return; }
+  const node = findEnhancerNode(app);
+  if (!node) { toast("Enhancer node not found", "err"); return; }
+  const w = (node.widgets || []).find(x => x.name === "user_requirement");
+  if (!w) { toast("Node has no user_requirement widget", "err"); return; }
+  const text = buildPromptSnippet();
+  w.value = text;
+  if (typeof w.callback === "function") w.callback(text);
+  try { node.setDirtyCanvas?.(true, true); } catch(_) {}
+  const nST = writeToShowText(app, text);
+  persistSelection();
+  if (autoRun !== false) {
+    try {
+      const pv = (node.widgets || []).find(x => x.name === "preview_only");
+      if (pv) { pv.value = true; if (typeof pv.callback === "function") pv.callback(true); }
+      if (typeof app.queuePrompt === "function") app.queuePrompt();
+    } catch(e) {}
+  }
+  toast("Wrote prompt + Show Text (" + nST + "), preview triggered");
+  if (autoClose !== false) setTimeout(() => window.close(), 900);
+}
+
+async function uploadAndWire() {
+  const app = getOpenerApp();
+  if (!app) { toast("Not connected to ComfyUI", "err"); return; }
+  const node = findEnhancerNode(app);
+  if (!node) { toast("Enhancer node not found", "err"); return; }
+  if (!SELECTED.length) { toast("Select outfits first", "warn"); return; }
+  if (SELECTED.length > 16) { toast("Enhancer node only has image_1..image_16 slots", "warn"); return; }
+  if (!window.LiteGraph) { toast("LiteGraph not found", "err"); return; }
+
+  const btn = $("btn-upload");
+  let done = 0;
+  try {
+    for (let i = 0; i < SELECTED.length; i++) {
+      const eid = SELECTED[i];
+      const e = MANIFEST.entries.find(x => x.id === eid);
+      if (!e) continue;
+      btn.textContent = "⏳ Uploading " + (i+1) + "/" + SELECTED.length;
+      const resp = await fetch(imageUrl(eid));
+      const blob = await resp.blob();
+      const file = new File([blob], e.file, { type: blob.type });
+      const uploadNode = await app.uploadImage(file);
+      const ln = LiteGraph.createNode("LoadImage");
+      ln.filename = uploadNode.name || file.name;
+      ln.image_index = 0;
+      ln.pos = [node.pos[0] - 300, node.pos[1] + i * 80];
+      app.graph.add(ln);
+      try { await ln.loadImage(ln.filename); } catch(_) {}
+      const slotIdx = (node.inputs || []).findIndex(inp => inp.name === "image_" + (i+1));
+      if (slotIdx >= 0) {
+        try { ln.connect(0, node, slotIdx); } catch(e) {}
+      }
+      done++;
+    }
+    try { app.graph.beforeChange?.(); } catch(_) {}
+    toast("Uploaded & wired " + done + " images");
+    setTimeout(() => writeUserRequirement(true, true), 400);
+  } catch(e) {
+    toast("Upload/wire failed: " + e.message, "err");
+  }
+  btn.textContent = "📤 Upload & wire image_1..N";
+}
+
+async function copyText(t) {
+  try { await navigator.clipboard.writeText(t); return true; }
+  catch(e) {
+    const ta = document.createElement("textarea");
+    ta.value = t; document.body.appendChild(ta); ta.select();
+    try { document.execCommand("copy"); return true; } catch(_) { return false; }
+    finally { document.body.removeChild(ta); }
+  }
+}
+
+async function persistSelection() {
+  try {
+    await fetch("/bsai_clothing_selection", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: SELECTED })
+    });
+  } catch(e) {}
+}
+
+async function loadManifest() {
+  try {
+    const r = await fetch("/api/bsai/clothing");
+    MANIFEST = await r.json();
+  } catch(e) {
+    document.querySelector(".wall").innerHTML =
+      '<div style="grid-column:1/-1;text-align:center;color:#fca5a5;padding:40px">' +
+      "Failed to load manifest: " + e.message + "</div>";
+    return;
+  }
+  $("lib-path").textContent = "Library: " + (MANIFEST.root || "unknown") + "  ·  Scanned: " + (MANIFEST.generated_at || "-");
+  $("stat-total").textContent = MANIFEST.count;
+  $("stat-total-b").textContent = MANIFEST.count;
+  $("stat-cats").textContent = MANIFEST.categories.length;
+  $("stat-cats-b").textContent = MANIFEST.categories.length;
+  // Restore saved selection
+  try {
+    const sr = await fetch("/api/bsai/clothing_selection");
+    const sd = await sr.json();
+    SELECTED = (sd.items || []).filter(id => MANIFEST.entries.find(e => e.id === id));
+  } catch(e) {}
+  renderCats();
+  applyFilter();
+  renderSelection();
+}
+
+// Event bindings
+$("f-query").addEventListener("input", e => { FILTER.query = e.target.value; applyFilter(); });
+$("btn-clear-all").onclick = () => { SELECTED = []; persistSelection(); renderSelection(); renderWall(); };
+$("btn-copy-num").onclick = async () => { if (!SELECTED.length) return toast("List is empty", "warn"); toast(await copyText(buildNumberList()) ? "Numbered list copied" : "Copy failed"); };
+$("btn-copy-name").onclick = async () => { if (!SELECTED.length) return toast("List is empty", "warn"); toast(await copyText(buildNameList()) ? "Filenames copied" : "Copy failed"); };
+$("btn-copy-prompt").onclick = async () => { if (!SELECTED.length) return toast("List is empty", "warn"); toast(await copyText(buildPromptSnippet()) ? "Prompt snippet copied" : "Copy failed"); };
+$("btn-upload").onclick = uploadAndWire;
+$("btn-write-req").onclick = () => writeUserRequirement(true, true);
+$("lb-close").onclick = () => { $("lightbox").classList.remove("open"); LB_INDEX = -1; };
+$("lb-prev").onclick = () => { if (LB_INDEX > 0) { LB_INDEX--; showLightbox(); } };
+$("lb-next").onclick = () => { if (LB_INDEX < VIEW_ENTRIES.length-1) { LB_INDEX++; showLightbox(); } };
+$("lb-toggle").onclick = () => { if (LB_INDEX >= 0) { toggleSelect(VIEW_ENTRIES[LB_INDEX].id); showLightbox(); } };
+$("btn-rescan").onclick = async function() {
+  this.textContent = "⏳ Scanning…"; this.disabled = true;
+  try {
+    const r = await fetch("/bsai_clothing_rescan", { method: "POST" });
+    const j = await r.json();
+    toast("Rescan done: " + j.count + " images (thumbs " + j.thumbs_ok + "/" + (j.thumbs_ok + j.thumbs_fail) + ")");
+    MANIFEST = await (await fetch("/api/bsai/clothing")).json();
+    renderCats(); applyFilter(); renderSelection();
+  } catch(e) { toast("Rescan failed: " + e.message, "err"); }
+  this.textContent = "🔄 Rescan"; this.disabled = false;
+};
+
+// Connection banner
+if (NODE_ID || CLOTHING_NODE_ID) {
+  const tip = document.createElement("div");
+  tip.style.cssText = "max-width:1400px;margin:0 auto 16px;text-align:center;color:#a78bfa;font-size:13px;background:rgba(167,139,250,0.1);border:1px solid rgba(167,139,250,0.3);padding:8px 16px;border-radius:10px;";
+  tip.textContent = "✅ Connected to ComfyUI — select outfits, then click Write prompt & run";
+  document.querySelector(".toolbar").insertAdjacentElement("beforebegin", tip);
+}
+
+loadManifest();
+</script>
+</body>
+</html>

@@ -8,7 +8,11 @@ import { app } from "/scripts/app.js";
 
 const MERGED_NODE = "BSAI_Qwen_Prompt_Enhancer";
 const TEMPLATE_NODE = "QwenImage21_Prompt_Template";
+const POSE_NODE = "BSAI_Qwen_Pose_Wall";
+const CLOTHING_NODE = "BSAI_Qwen_Clothing_Wall";
 const WALL_BUTTON_LABEL = "🖼 Open Template Wall";
+const POSE_WALL_BUTTON_LABEL = "🖼 Open Pose Wall";
+const CLOTHING_WALL_BUTTON_LABEL = "🖼 Open Clothing Wall";
 
 // Common widgets always visible across all four backends
 const COMMON_WIDGETS = [
@@ -51,6 +55,16 @@ function isMergedNode(node) {
 function isTemplateNode(node) {
   const cls = node?.comfyClass || node?.constructor?.comfyClass;
   return cls === TEMPLATE_NODE;
+}
+
+function isPoseNode(node) {
+  const cls = node?.comfyClass || node?.constructor?.comfyClass;
+  return cls === POSE_NODE;
+}
+
+function isClothingNode(node) {
+  const cls = node?.comfyClass || node?.constructor?.comfyClass;
+  return cls === CLOTHING_NODE;
 }
 
 function setWidgetHidden(widget, hidden) {
@@ -534,8 +548,103 @@ app.registerExtension({
         console.warn("[BSAI.PromptEnhancer] 注入上传模板按钮失败:", e);
       }
     }
+
+    // 5) AI Pose Wall button (pose node)
+    if (isPoseNode(node)) {
+      try {
+        node.addWidget("button", POSE_WALL_BUTTON_LABEL, null, () => {
+          const eid = findFirstEnhancerNodeId();
+          const url =
+            `/bsai_pose_wall` +
+            `?pose_node_id=${node.id}` +
+            (eid ? `&node_id=${eid}` : "");
+          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] pose wall button inject failed:", e);
+      }
+    }
+
+    // 5b) AI Clothing Wall button (clothing node)
+    if (isClothingNode(node)) {
+      try {
+        node.addWidget("button", CLOTHING_WALL_BUTTON_LABEL, null, () => {
+          const eid = findFirstEnhancerNodeId();
+          const url =
+            `/bsai_clothing_wall` +
+            `?clothing_node_id=${node.id}` +
+            (eid ? `&node_id=${eid}` : "");
+          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] clothing wall button inject failed:", e);
+      }
+    }
+
+    // 6) Merged node: also add Pose Wall and Clothing Wall buttons
+    if (isMergedNode(node)) {
+      try {
+        node.addWidget("button", POSE_WALL_BUTTON_LABEL, null, () => {
+          const pid = findFirstPoseNodeId();
+          const url =
+            `/bsai_pose_wall` +
+            `?node_id=${node.id}` +
+            (pid ? `&pose_node_id=${pid}` : "");
+          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] pose wall button inject failed:", e);
+      }
+      try {
+        node.addWidget("button", CLOTHING_WALL_BUTTON_LABEL, null, () => {
+          const cid = findFirstClothingNodeId();
+          const url =
+            `/bsai_clothing_wall` +
+            `?node_id=${node.id}` +
+            (cid ? `&clothing_node_id=${cid}` : "");
+          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] clothing wall button inject failed:", e);
+      }
+    }
   },
 });
+
+
+/**
+ * 找当前工作流里第一个 AI 姿势节点 id（BSAI_Qwen_Pose_Wall）
+ */
+function findFirstPoseNodeId() {
+  try {
+    const all = app.graph?._nodes || [];
+    return all.find((n) => isPoseNode(n))?.id;
+  } catch (_) {
+    return null;
+  }
+}
+
+function findFirstClothingNodeId() {
+  try {
+    const all = app.graph?._nodes || [];
+    return all.find((n) => isClothingNode(n))?.id;
+  } catch (_) {
+    return null;
+  }
+}
+
+/**
+ * 找当前工作流里第一个增强节点 id（BSAI_Qwen_Prompt_Enhancer）
+ * —— 姿势海报墙用它把参考图清单写进 user_requirement。
+ */
+function findFirstEnhancerNodeId() {
+  try {
+    const all = app.graph?._nodes || [];
+    return all.find((n) => isMergedNode(n))?.id;
+  } catch (_) {
+    return null;
+  }
+}
 
 
 /**
