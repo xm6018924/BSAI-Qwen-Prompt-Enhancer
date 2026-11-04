@@ -10,9 +10,11 @@ const MERGED_NODE = "BSAI_Qwen_Prompt_Enhancer";
 const TEMPLATE_NODE = "QwenImage21_Prompt_Template";
 const POSE_NODE = "BSAI_Qwen_Pose_Wall";
 const CLOTHING_NODE = "BSAI_Qwen_Clothing_Wall";
+const FACE_NODE = "BSAI_Qwen_Face_Wall";
 const WALL_BUTTON_LABEL = "🖼 Open Template Wall";
 const POSE_WALL_BUTTON_LABEL = "🖼 Open Pose Wall";
 const CLOTHING_WALL_BUTTON_LABEL = "🖼 Open Clothing Wall";
+const FACE_WALL_BUTTON_LABEL = "🖼 Open Face Wall";
 
 // Common widgets always visible across all four backends
 const COMMON_WIDGETS = [
@@ -65,6 +67,11 @@ function isPoseNode(node) {
 function isClothingNode(node) {
   const cls = node?.comfyClass || node?.constructor?.comfyClass;
   return cls === CLOTHING_NODE;
+}
+
+function isFaceNode(node) {
+  const cls = node?.comfyClass || node?.constructor?.comfyClass;
+  return cls === FACE_NODE;
 }
 
 function setWidgetHidden(widget, hidden) {
@@ -581,6 +588,22 @@ app.registerExtension({
       }
     }
 
+    // 5c) AI Face Wall button (face node)
+    if (isFaceNode(node)) {
+      try {
+        node.addWidget("button", FACE_WALL_BUTTON_LABEL, null, () => {
+          const eid = findFirstEnhancerNodeId();
+          const url =
+            `/bsai_face_wall` +
+            `?face_node_id=${node.id}` +
+            (eid ? `&node_id=${eid}` : "");
+          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] face wall button inject failed:", e);
+      }
+    }
+
     // 6) Merged node: also add Pose Wall and Clothing Wall buttons
     if (isMergedNode(node)) {
       try {
@@ -607,6 +630,18 @@ app.registerExtension({
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] clothing wall button inject failed:", e);
       }
+      try {
+        node.addWidget("button", FACE_WALL_BUTTON_LABEL, null, () => {
+          const fid = findFirstFaceNodeId();
+          const url =
+            `/bsai_face_wall` +
+            `?node_id=${node.id}` +
+            (fid ? `&face_node_id=${fid}` : "");
+          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+        });
+      } catch (e) {
+        console.warn("[BSAI.PromptEnhancer] face wall button inject failed:", e);
+      }
     }
   },
 });
@@ -628,6 +663,15 @@ function findFirstClothingNodeId() {
   try {
     const all = app.graph?._nodes || [];
     return all.find((n) => isClothingNode(n))?.id;
+  } catch (_) {
+    return null;
+  }
+}
+
+function findFirstFaceNodeId() {
+  try {
+    const all = app.graph?._nodes || [];
+    return all.find((n) => isFaceNode(n))?.id;
   } catch (_) {
     return null;
   }

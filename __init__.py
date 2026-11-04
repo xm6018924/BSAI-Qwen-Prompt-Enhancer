@@ -23,12 +23,13 @@ from .nodes_jev import NODE_CLASS_MAPPINGS as _JEV, NODE_DISPLAY_NAME_MAPPINGS a
 from .nodes_markdown import NODE_CLASS_MAPPINGS as _MD, NODE_DISPLAY_NAME_MAPPINGS as _MD_D
 from .nodes_pose import NODE_CLASS_MAPPINGS as _POSE, NODE_DISPLAY_NAME_MAPPINGS as _POSE_D
 from .nodes_clothing import NODE_CLASS_MAPPINGS as _CLOTH, NODE_DISPLAY_NAME_MAPPINGS as _CLOTH_D
+from .nodes_face import NODE_CLASS_MAPPINGS as _FACE, NODE_DISPLAY_NAME_MAPPINGS as _FACE_D
 
 NODE_CLASS_MAPPINGS = {}
 NODE_DISPLAY_NAME_MAPPINGS = {}
-for m in (_ENH, _TPL, _JEV, _MD, _POSE, _CLOTH):
+for m in (_ENH, _TPL, _JEV, _MD, _POSE, _CLOTH, _FACE):
     NODE_CLASS_MAPPINGS.update(m)
-for m in (_ENH_D, _TPL_D, _JEV_D, _MD_D, _POSE_D, _CLOTH_D):
+for m in (_ENH_D, _TPL_D, _JEV_D, _MD_D, _POSE_D, _CLOTH_D, _FACE_D):
     NODE_DISPLAY_NAME_MAPPINGS.update(m)
 
 __all__ = ["NODE_CLASS_MAPPINGS", "NODE_DISPLAY_NAME_MAPPINGS"]
@@ -435,10 +436,19 @@ _register_pose_routes()
 from .clothing_library import register_clothing_routes as _register_clothing_routes
 _register_clothing_routes()
 
+# 【v1.12.0】AI 肖像海报墙路由：GET /bsai_face_wall 等
+# 独立的 AI 肖像素材库（AI肖像 目录，{12位hex}.png）浏览墙：
+# 挑参考图 → 自动排 @图1/@图2 编号（= image_1..image_N 输入顺序）→ 回填/连线。
+# 元数据（分区 sec=脸部/造型、发型 hair=4 档）来自 web/face_meta.json（PoseAtlas faces.json 精简版）。
+# 原图按需从素材库流式返回；缩略图在 web/face_thumbnails/。
+from .face_library import register_face_routes as _register_face_routes
+_register_face_routes()
+
 
 # 【v1.10.0】启动横幅：ComfyUI 日志第一屏即可确认加载的插件版本。
-_PLUGIN_VERSION = "v1.11.0 (2026-10-30)"
+_PLUGIN_VERSION = "v1.12.0 (2026-11-04)"
 print(f"[BSAI_Qwen_Prompt_Enhancer] 插件已加载 | 版本 {_PLUGIN_VERSION} | "
       f"已含: 新旧版ComfyUI校验兼容 / 前端combo自愈 / Jev并行决策 / 海报墙134模板11分类+用户模板区 / "
-      f"MarkdownNote兼容 / 潜空间放大示例 / 动态模板API / 海报墙直达路由 / AI姿势海报墙+参考图编号清单")
+      f"MarkdownNote兼容 / 潜空间放大示例 / 动态模板API / 海报墙直达路由 / AI姿势海报墙+参考图编号清单 / "
+      f"AI服装海报墙 / AI肖像海报墙(脸部893+造型606,发型4档)")
 
