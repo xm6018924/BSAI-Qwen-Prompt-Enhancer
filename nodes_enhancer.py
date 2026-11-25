@@ -24,8 +24,9 @@ BSAI Qwen Prompt Enhancer — 四合一增强通道节点
   ENHANCED_PROMPT / WH_RATIO / RATIO_FOLLOW / RAW_OUTPUT / THINKING /
   RECOMMENDED_STEPS / RECOMMENDED_CFG / RECOMMENDED_SAMPLER / RECOMMENDED_SCHEDULER /
   MERGED_TEXT / SELECTED_IMAGES
-  · SELECTED_IMAGES：海报墙（姿势→服装→人脸）当前选中的图片直接作为 IMAGE batch 输出给下游，
-    无需另接 LoadImage / 手工保存；未选中时输出 64x64 白色占位并打印提示。
+  · SELECTED_IMAGES：海报墙（姿势→服装→人脸）勾选的图直接作为 IMAGE 输出给下游，
+    由 wall_image_slot 控制输出哪张：0=最近勾选那张（单张，默认）/ N=墙上 @imgN / -1=全部（batch）。
+    每次执行时才读取墙体选择清单，所以墙上一改，重新 Queue 才会更新；未选中时输出 64x64 白色占位。
 
 模型目录（相对路径）：ComfyUI/models/LLM  —  放置所有 GGUF / HF 模型文件
 """
@@ -1146,7 +1147,8 @@ def _load_wall_library(wall_key):
 
 def _collect_wall_selections():
     """读取三面海报墙的已选清单。
-    返回 [(wall_key, wall_label, entry_id, abs_path, label_text)]，按 _WALL_SELECTION_ORDER 排序。
+    返回 [(wall_key, wall_label, entry_id, abs_path, label_text, wall_mtime)]，按 _WALL_SELECTION_ORDER 排序。
+    wall_mtime = 该墙 *_selection.json 的修改时间，用来判断「最近操作的是哪面墙」。
     只接受 manifest 白名单里的 entry，墙外路径一律忽略。"""
     picks = []
     for wall_key, wall_label in _WALL_SELECTION_ORDER:
@@ -1156,6 +1158,7 @@ def _collect_wall_selections():
                 continue
             items = lib.load_selection() or []
             root = lib.get_library_root()
+            mtime = os.path.getmtime(lib.SELECTION_PATH)
         except Exception as e:
             print(f"[BSAI_Qwen_Prompt_Enhancer] 读取{wall_label}选择清单失败: {e}")
             continue
@@ -1170,7 +1173,7 @@ def _collect_wall_selections():
                     print(f"[BSAI_Qwen_Prompt_Enhancer] {wall_label}图片文件缺失，已忽略: {path}")
                     continue
                 desc = entry.get("group_label") or entry.get("sec_label") or entry.get("cat_label") or ""
-                picks.append((wall_key, wall_label, eid, path, f"{wall_label} · {desc}".strip(" ·")))
+                picks.append((wall_key, wall_label, eid, path, f"{wall_label} · {desc}".strip(" ·"), mtime))
             except Exception as e:
                 print(f"[BSAI_Qwen_Prompt_Enhancer] 解析{wall_label}条目失败 ({eid}): {e}")
     return picks
@@ -1180,23 +1183,62 @@ def _placeholder_image(reason=""):
     """占位图：64x64 纯白，保证下游节点不断链（同时打印原因，避免静默出白图）。"""
     print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 输出 {_PLACEHOLDER_SIDE}x{_PLACEHOLDER_SIDE} 白色占位图"
           + (f"（{reason}）" if reason else ""))
+    info = ("── SELECTED_IMAGES ──\n"
+            f"No usable image on the poster walls -> {_PLACEHOLDER_SIDE}x{_PLACEHOLDER_SIDE} white placeholder"
+            + (f" ({reason})" if reason else ""))
     try:
         import torch
-        return torch.ones((1, _PLACEHOLDER_SIDE, _PLACEHOLDER_SIDE, 3), dtype=torch.float32), [], True
+        return torch.ones((1, _PLACEHOLDER_SIDE, _PLACEHOLDER_SIDE, 3), dtype=torch.float32), [], info
     except Exception as e:
         print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: torch 不可用，无法生成占位图: {e}")
-        return None, [], True
+        return None, [], info
 
 
-def _wall_selected_images(max_items=_MAX_SELECTED_WALL_IMAGES):
-    """把海报墙当前选中的图合成一个 IMAGE batch（顺序 = 姿势墙 → 服装墙 → 人脸墙，墙内按勾选顺序）。
-    · 尺寸不一致时按最大画布居中白底 letterbox 补齐（不拉伸、不变形）
-    · 没选中任何图 → 64x64 白色占位 + 打印提示，节点其余输出照常可用
-    · 返回 (image_tensor, [(id, path, label)], used_placeholder)
+def _normalize_wall_slot(slot):
+    """wall_image_slot 取值归一：<0 视为「全部」，0 视为「最近选中」，>0 视为 @imgN。"""
+    try:
+        return int(slot)
+    except Exception:
+        return 0
+
+
+def _newest_pick(picks):
+    """slot=0 的判定：最近操作的那面墙（其 *_selection.json 修改时间最新）里、最后勾选的那一项。
+    返回 (该图在整条清单里的 1-based 序号, [pick])。"""
+    newest_mtime = max(p[5] for p in picks)
+    indexes = [i for i, p in enumerate(picks) if p[5] == newest_mtime]
+    last = indexes[-1]
+    return last + 1, [picks[last]]
+
+
+def _wall_selected_images(max_items=_MAX_SELECTED_WALL_IMAGES, slot=0):
+    """按 wall_image_slot 取海报墙上的图，输出给下游。
+
+    · slot = 0（默认，最近勾选）：只输出你刚在墙上点的那一张（最近改动的墙里最后勾选项）→ 单张 IMAGE，保持原尺寸
+    · slot = N（1..16）：只输出墙上 @imgN 那一张
+    · slot = -1：输出全部已选（batch，≤16 张，尺寸不一致时最大画布居中白底 letterbox）
+    返回 (tensor, [(img_index, path, label)], info_text)
     """
     picks = _collect_wall_selections()
     if not picks:
         return _placeholder_image("海报墙没有选中任何图")
+
+    slot = _normalize_wall_slot(slot)
+    single = slot != -1
+    total = len(picks)
+    if single:
+        if slot > 0:
+            if slot <= total:
+                sel_idx = slot
+                picks = [picks[slot - 1]]
+            else:
+                print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: wall_image_slot={slot} 超出范围"
+                      f"（共 {total} 张），回退为最近勾选那张")
+                sel_idx, picks = _newest_pick(picks)
+        else:
+            sel_idx, picks = _newest_pick(picks)
+    else:
+        sel_idx = None
 
     if len(picks) > max_items:
         print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 已选 {len(picks)} 张，超过上限 {max_items}，只输出前 {max_items} 张")
@@ -1211,16 +1253,24 @@ def _wall_selected_images(max_items=_MAX_SELECTED_WALL_IMAGES):
 
     arrays = []
     kept = []
-    for wall_key, wall_label, eid, path, label in picks:
+    for pos, (wall_key, wall_label, eid, path, label, _mtime) in enumerate(picks):
         try:
             with Image.open(path) as im:
                 arrays.append(np.asarray(im.convert("RGB")))
-            kept.append((eid, path, label))
+            img_index = sel_idx if single else (pos + 1)
+            kept.append((img_index, path, label))
         except Exception as e:
             print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 读取失败，跳过 {path}: {e}")
 
     if not arrays:
         return _placeholder_image("选中的图全部读取失败")
+
+    if single:
+        tensor = torch.from_numpy(arrays[0].astype(np.float32) / 255.0)[None, ...]
+        h, w = arrays[0].shape[0], arrays[0].shape[1]
+        info = "── SELECTED_IMAGES（直出单张 @img%d）──\n%s" % (kept[0][0], kept[0][2])
+        print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 直出 @img{kept[0][0]} · {w}x{h} · {kept[0][1]}")
+        return tensor, kept, info
 
     max_h = max(a.shape[0] for a in arrays)
     max_w = max(a.shape[1] for a in arrays)
@@ -1232,10 +1282,13 @@ def _wall_selected_images(max_items=_MAX_SELECTED_WALL_IMAGES):
         batch[i, y0:y0 + h, x0:x0 + w] = a
 
     tensor = torch.from_numpy(batch.astype(np.float32) / 255.0)
+    info = "── SELECTED_IMAGES（全部已选，batch=%d）──\n" % len(kept) + "\n".join(
+        "@img%d = %s" % (idx, label) for idx, _p, label in kept)
     print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 输出 {len(kept)} 张 · 画布 {max_w}x{max_h}")
-    for i, (eid, path, label) in enumerate(kept, 1):
-        print(f"    img{i} = {label} | {path}")
-    return tensor, kept, False
+    for idx, path, label in kept:
+        print(f"    @img{idx} = {label} | {path}")
+    return tensor, kept, info
+
 
 
 # ============================================================
@@ -1380,6 +1433,16 @@ class BSAI_Qwen_Prompt_Enhancer:
                 # 海报墙选模板时会自动勾上 → 触发一次 queuePrompt → 下游 Show Text 立即显示。
                 # 用户后续要 LLM 增强时手动关掉再 Queue Prompt。
                 "preview_only": ("BOOLEAN", {"default": False, "label": "Preview only (skip LLM)"}),
+                # ---- SELECTED_IMAGES 直出哪一张（海报墙勾选的图）----
+                "wall_image_slot": ("INT", {
+                    "default": 0, "min": -1, "max": 16, "step": 1,
+                    "label": "Wall image (0=last picked, N=@imgN, -1=all)",
+                    "tooltip": "Which poster-wall image SELECTED_IMAGES outputs:\n"
+                               "0 = the one you clicked last (single image, default)\n"
+                               "N = the @imgN card in the wall's Reference List (1..16)\n"
+                               "-1 = all picked images as one IMAGE batch (letterbox-padded to the largest size)\n"
+                               "Selection is read from the wall's *_selection.json when the node runs, so re-queue after picking.",
+                }),
             },
             "optional": {
                 "clip": ("CLIP",),
@@ -1406,9 +1469,10 @@ class BSAI_Qwen_Prompt_Enhancer:
         "(4) API (OpenAI-compatible): configure api_base / api_key / model_name to call an online or local API.\n"
         "Shared parameters apply to all backends; outputs are unified across 11 ports. Pick a speed_preset and the RECOMMENDED_* ports "
         "output the matching KSampler settings; on a KSampler right-click steps/cfg -> Convert to input to apply them in one click. "
-        "SELECTED_IMAGES (IMAGE, last port) directly outputs the images currently picked on the poster walls "
-        "(Pose Wall -> Clothing Wall -> Face Wall, selection order kept; letterbox-padded to one batch; 64x64 white placeholder when nothing is picked), "
-        "so the picked reference image can feed a downstream VAE Encode / edit node without LoadImage. "
+        "SELECTED_IMAGES (IMAGE, last port) directly outputs the image picked on the poster walls, so it can feed a downstream VAE Encode / edit node "
+        "without LoadImage / manual saving. wall_image_slot decides which one: 0 = the card you clicked last (single image, default), "
+        "N = the @imgN card of the wall's reference list, -1 = all picked cards as one batch (letterbox-padded to the largest size). "
+        "The selection is read from the wall's *_selection.json each run, so pick on the wall and re-queue the prompt; no image picked -> 64x64 white placeholder. "
         "Qwen Image 2.1 is a CFG-distilled architecture; the official recommendation is cfg=1.0. Acceleration presets are based on official day-0 settings (25 steps/cfg1/euler/simple). "
         "v1.08.0 adds distilled-LoRA presets: Viggle Turbo 6 steps (official node) / Pruna 5-8 steps (community conversion) / Alibaba PAI Fun-Acc 4 steps (experimental). "
         "Distilled presets require the matching LoRA and fixed sigmas (Viggle Turbo Sigmas / ManualSigmas / PDD); see ACCELERATION_GUIDE.md."
@@ -1479,11 +1543,13 @@ class BSAI_Qwen_Prompt_Enhancer:
                 ninfer_model="(Auto — first model found)",
                 nemotron_model="(Auto — first model found)",
                 hf_model_name="", hf_task="<MORE_DETAILED_CAPTION>", hf_device="auto", hf_keep_loaded=True,
-                preview_only=False,
+                preview_only=False, wall_image_slot=0,
                 clip=None,
                 image_1=None, image_2=None, image_3=None, image_4=None, image_5=None, image_6=None,
                 image_7=None, image_8=None, image_9=None, image_10=None, image_11=None, image_12=None,
                 image_13=None, image_14=None, image_15=None, image_16=None):
+        # SELECTED_IMAGES 取哪一张：0=最近勾选（单张，默认）、N=@imgN、-1=全部（batch）
+        self._wall_slot = _normalize_wall_slot(wall_image_slot)
         # 【v3】纯预览：勾上后跳过所有模型调用，仅输出 MERGED_TEXT。
         # 用于海报墙选模板时让下游 Show Text 立刻显示，无需加载 LLM。
         if preview_only:
@@ -1512,12 +1578,8 @@ class BSAI_Qwen_Prompt_Enhancer:
             # 无模板且无用户要求时 merged_text 为空 → 回退用户原文 prompt_text，防空条件出沙土图。
             enhanced_out = merged_text if (merged_text or "").strip() else (prompt_text or "")
             # 纯预览同样直出海报墙已选图，方便「只取图」时不必加载 LLM
-            wall_tensor, wall_kept, wall_placeholder = _wall_selected_images()
-            if wall_kept:
-                ui_text.append(
-                    "\n── SELECTED_IMAGES ( posters walls ) ──\n"
-                    + "\n".join(f"img{i} = {label}" for i, (_id, _p, label) in enumerate(wall_kept, 1))
-                )
+            wall_tensor, wall_kept, wall_info = _wall_selected_images(slot=getattr(self, "_wall_slot", 0))
+            ui_text.append("\n" + wall_info)
             return {
                 "ui": {"text": ui_text, "merged_text": [merged_text]},
                 "result": (enhanced_out, "", "", merged_text, "",
@@ -2220,17 +2282,8 @@ class BSAI_Qwen_Prompt_Enhancer:
             f"\n── Merged text preview (MERGED_TEXT output) ──\n{merged_text}",
         ]
         # 海报墙已选图 → SELECTED_IMAGES（与文本输出互不依赖，纯预览/正常增强都直出）
-        wall_tensor, wall_kept, wall_placeholder = _wall_selected_images()
-        if wall_kept:
-            ui_text.append(
-                "\n── SELECTED_IMAGES ( posters walls ) ──\n"
-                + "\n".join(f"img{i} = {label}" for i, (_id, _p, label) in enumerate(wall_kept, 1))
-            )
-        else:
-            ui_text.append(
-                "\n── SELECTED_IMAGES ──\nNo image picked on the poster walls -> 64x64 white placeholder "
-                "(wire it only after picking images on a wall)."
-            )
+        wall_tensor, wall_kept, wall_info = _wall_selected_images(slot=getattr(self, "_wall_slot", 0))
+        ui_text.append("\n" + wall_info)
         return {"ui": {"text": ui_text, "merged_text": [merged_text]},
                 "result": (enhanced, wh_ratio, ratio_follow, raw, thinking_text,
                            int(steps), float(cfg), sampler, scheduler, merged_text, wall_tensor)}
