@@ -31,6 +31,7 @@ BSAI Qwen Prompt Enhancer — 四合一增强通道节点
 模型目录（相对路径）：ComfyUI/models/LLM  —  放置所有 GGUF / HF 模型文件
 """
 import gc
+import hashlib
 import inspect
 import json
 import os
@@ -1335,6 +1336,24 @@ class BSAI_Qwen_Prompt_Enhancer:
             # must not reach the trust_remote_code loader.
             return False
         return True
+
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        """海报墙选择清单是节点外部状态（不在 inputs 里，墙页点卡只写服务端 JSON）。
+
+        不把它纳入缓存键的话，墙上换图后输入没变 → ComfyUI 命中缓存、节点不重跑 →
+        SELECTED_IMAGES 永远吐旧图（下游看不到你刚选的那张）。这里对三面墙的
+        *_selection.json 内容做 SHA1，内容一变就强制重跑。
+        """
+        parts = []
+        for wall_key, _label in _WALL_SELECTION_ORDER:
+            try:
+                lib = _load_wall_library(wall_key)
+                with open(lib.SELECTION_PATH, "r", encoding="utf-8") as f:
+                    parts.append(f.read())
+            except Exception:
+                parts.append("")
+        return hashlib.sha1("|".join(parts).encode("utf-8")).hexdigest()
 
     @classmethod
     def INPUT_TYPES(cls):

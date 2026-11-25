@@ -323,6 +323,10 @@
       <h2>🧩 Reference List <span class="badge-n" id="sel-count">0</span></h2>
       <div class="hint">Order = input order — item 1 → <b>image_1</b>, item 2 → <b>image_2</b>…</div>
       <div class="sel-list" id="sel-list"></div>
+      <label style="display:flex;align-items:center;gap:8px;font-size:12px;color:#cbd5e1;margin:8px 0 6px;cursor:pointer;user-select:none;">
+        <input type="checkbox" id="chk-pick-close" checked>
+        <span>Click a card = pick it, run &amp; close wall</span>
+      </label>
       <div class="acts">
         <button class="btn" id="btn-copy-num">📋 Copy numbered list</button>
         <button class="btn" id="btn-copy-name">📋 Copy filenames</button>
@@ -462,6 +466,7 @@ async function persistSelection() {
   } catch (e) { /* 后端不可用时不影响本地使用 */ }
 }
 function toggleSelect(id) {
+  if (pickCloseOn()) { pickAndRun(id); return; }
   const i = selIndex(id);
   if (i >= 0) SELECTED.splice(i, 1);
   else SELECTED.push(id);
@@ -470,6 +475,45 @@ function toggleSelect(id) {
   renderSelection();
   renderCards();
   updateStats();
+}
+
+/* ── 单点直出：点卡 → 只保留这张 → 写入选择清单 → 触发 Queue → 关墙 ──
+   墙上勾选只是服务端 JSON，节点执行时才读取；所以必须 Queue 一次，
+   下游 SELECTED_IMAGES 才会拿到新图（配合节点 IS_CHANGED 突破缓存）。 */
+const PICKCLOSE_KEY = "bsai_wall_pickclose_v1";
+function initPickClose() {
+  const el = $("chk-pick-close");
+  if (!el) return;
+  try { if (localStorage.getItem(PICKCLOSE_KEY) === "0") el.checked = false; } catch (e) {}
+  el.onchange = () => { try { localStorage.setItem(PICKCLOSE_KEY, el.checked ? "1" : "0"); } catch (e) {} };
+}
+function pickCloseOn() { const el = $("chk-pick-close"); return el ? el.checked : true; }
+
+function queueWallRun() {
+  const app = getOpenerApp();
+  if (!app) { toast("Wall is not connected to ComfyUI", "err"); return; }
+  try {
+    const node = findEnhancerNode(app);
+    if (node && node.widgets) {
+      const slotW = node.widgets.find(w => w.name === "wall_image_slot");
+      if (slotW) { slotW.value = 0; if (typeof slotW.callback === "function") slotW.callback(0); }
+      const pv = node.widgets.find(w => w.name === "preview_only");
+      if (pv) { pv.value = true; if (typeof pv.callback === "function") pv.callback(true); }
+      try { node.setDirtyCanvas?.(true, true); } catch (e) {}
+    }
+  } catch (e) { console.warn("[BSAI.PoseWall] set node widgets failed:", e); }
+  setTimeout(() => {
+    try { app.queuePrompt(); } catch (e) { console.warn("[BSAI.PoseWall] queuePrompt failed:", e); }
+    setTimeout(() => { try { window.close(); } catch (e) {} }, 500);
+  }, 250);
+}
+
+async function pickAndRun(id) {
+  SELECTED = [id];
+  saveSelectionLocal();
+  try { await persistSelection(); } catch (e) {}
+  renderSelection(); renderCards(); updateStats();
+  queueWallRun();
 }
 
 /* ── 渲染：筛选条 ───────────────────────────────────── */
@@ -905,6 +949,7 @@ document.addEventListener("keydown", ev => {
 });
 
 function toggleUsageLang() { $("usage").classList.toggle("show-zh"); }
+initPickClose();
 
 // 顶部提示：已连接 ComfyUI
 if (NODE_ID || POSE_NODE_ID) {
