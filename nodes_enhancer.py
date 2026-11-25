@@ -20,10 +20,12 @@ BSAI Qwen Prompt Enhancer — 四合一增强通道节点
   · 本地HF 专属：hf_model_name / hf_task / hf_device / hf_keep_loaded
   · API 专属：api_base / api_key / api_model_name / timeout
 
-输出统一 10 路（四个后端一致）：
+输出统一 11 路（四个后端一致）：
   ENHANCED_PROMPT / WH_RATIO / RATIO_FOLLOW / RAW_OUTPUT / THINKING /
   RECOMMENDED_STEPS / RECOMMENDED_CFG / RECOMMENDED_SAMPLER / RECOMMENDED_SCHEDULER /
-  MERGED_TEXT
+  MERGED_TEXT / SELECTED_IMAGES
+  · SELECTED_IMAGES：海报墙（姿势→服装→人脸）当前选中的图片直接作为 IMAGE batch 输出给下游，
+    无需另接 LoadImage / 手工保存；未选中时输出 64x64 白色占位并打印提示。
 
 模型目录（相对路径）：ComfyUI/models/LLM  —  放置所有 GGUF / HF 模型文件
 """
@@ -1113,6 +1115,130 @@ def _clear_cache():
 
 
 # ============================================================
+# 海报墙已选图 → IMAGE 直出（SELECTED_IMAGES）
+# ============================================================
+# 三面海报墙的读取顺序（= SELECTED_IMAGES 的 batch 顺序）：
+#   Pose Wall（姿势）→ Clothing Wall（服装）→ Face Wall（人脸）
+# 每面墙内部顺序 = 墙上勾选顺序，两侧顺序一致，方便下游按 image_1..image_N 对应。
+_WALL_SELECTION_ORDER = (
+    ("pose", "姿势墙"),
+    ("clothing", "服装墙"),
+    ("face", "人脸墙"),
+)
+
+_MAX_SELECTED_WALL_IMAGES = 16
+_PLACEHOLDER_SIDE = 64
+
+
+def _load_wall_library(wall_key):
+    """按墙名取对应的 library 模块（延迟导入，避免包内循环 import）。"""
+    if wall_key == "pose":
+        from . import pose_library as lib
+        return lib
+    if wall_key == "clothing":
+        from . import clothing_library as lib
+        return lib
+    if wall_key == "face":
+        from . import face_library as lib
+        return lib
+    return None
+
+
+def _collect_wall_selections():
+    """读取三面海报墙的已选清单。
+    返回 [(wall_key, wall_label, entry_id, abs_path, label_text)]，按 _WALL_SELECTION_ORDER 排序。
+    只接受 manifest 白名单里的 entry，墙外路径一律忽略。"""
+    picks = []
+    for wall_key, wall_label in _WALL_SELECTION_ORDER:
+        try:
+            lib = _load_wall_library(wall_key)
+            if lib is None:
+                continue
+            items = lib.load_selection() or []
+            root = lib.get_library_root()
+        except Exception as e:
+            print(f"[BSAI_Qwen_Prompt_Enhancer] 读取{wall_label}选择清单失败: {e}")
+            continue
+        for eid in items:
+            try:
+                entry = lib.find_entry(eid)
+                if not entry:
+                    print(f"[BSAI_Qwen_Prompt_Enhancer] {wall_label}条目不在清单白名单内，已忽略: {eid}")
+                    continue
+                path = os.path.join(root, entry["file"])
+                if not os.path.isfile(path):
+                    print(f"[BSAI_Qwen_Prompt_Enhancer] {wall_label}图片文件缺失，已忽略: {path}")
+                    continue
+                desc = entry.get("group_label") or entry.get("sec_label") or entry.get("cat_label") or ""
+                picks.append((wall_key, wall_label, eid, path, f"{wall_label} · {desc}".strip(" ·")))
+            except Exception as e:
+                print(f"[BSAI_Qwen_Prompt_Enhancer] 解析{wall_label}条目失败 ({eid}): {e}")
+    return picks
+
+
+def _placeholder_image(reason=""):
+    """占位图：64x64 纯白，保证下游节点不断链（同时打印原因，避免静默出白图）。"""
+    print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 输出 {_PLACEHOLDER_SIDE}x{_PLACEHOLDER_SIDE} 白色占位图"
+          + (f"（{reason}）" if reason else ""))
+    try:
+        import torch
+        return torch.ones((1, _PLACEHOLDER_SIDE, _PLACEHOLDER_SIDE, 3), dtype=torch.float32), [], True
+    except Exception as e:
+        print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: torch 不可用，无法生成占位图: {e}")
+        return None, [], True
+
+
+def _wall_selected_images(max_items=_MAX_SELECTED_WALL_IMAGES):
+    """把海报墙当前选中的图合成一个 IMAGE batch（顺序 = 姿势墙 → 服装墙 → 人脸墙，墙内按勾选顺序）。
+    · 尺寸不一致时按最大画布居中白底 letterbox 补齐（不拉伸、不变形）
+    · 没选中任何图 → 64x64 白色占位 + 打印提示，节点其余输出照常可用
+    · 返回 (image_tensor, [(id, path, label)], used_placeholder)
+    """
+    picks = _collect_wall_selections()
+    if not picks:
+        return _placeholder_image("海报墙没有选中任何图")
+
+    if len(picks) > max_items:
+        print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 已选 {len(picks)} 张，超过上限 {max_items}，只输出前 {max_items} 张")
+        picks = picks[:max_items]
+
+    try:
+        import numpy as np
+        import torch
+        from PIL import Image
+    except Exception as e:
+        return _placeholder_image(f"图像库不可用: {e}")
+
+    arrays = []
+    kept = []
+    for wall_key, wall_label, eid, path, label in picks:
+        try:
+            with Image.open(path) as im:
+                arrays.append(np.asarray(im.convert("RGB")))
+            kept.append((eid, path, label))
+        except Exception as e:
+            print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 读取失败，跳过 {path}: {e}")
+
+    if not arrays:
+        return _placeholder_image("选中的图全部读取失败")
+
+    max_h = max(a.shape[0] for a in arrays)
+    max_w = max(a.shape[1] for a in arrays)
+    batch = np.full((len(arrays), max_h, max_w, 3), 255, dtype=np.uint8)
+    for i, a in enumerate(arrays):
+        h, w = a.shape[0], a.shape[1]
+        y0 = (max_h - h) // 2
+        x0 = (max_w - w) // 2
+        batch[i, y0:y0 + h, x0:x0 + w] = a
+
+    tensor = torch.from_numpy(batch.astype(np.float32) / 255.0)
+    print(f"[BSAI_Qwen_Prompt_Enhancer] SELECTED_IMAGES: 输出 {len(kept)} 张 · 画布 {max_w}x{max_h}")
+    for i, (eid, path, label) in enumerate(kept, 1):
+        print(f"    img{i} = {label} | {path}")
+    return tensor, kept, False
+
+
+# ============================================================
 # 三合一增强节点
 # ============================================================
 class BSAI_Qwen_Prompt_Enhancer:
@@ -1261,10 +1387,10 @@ class BSAI_Qwen_Prompt_Enhancer:
             },
         }
 
-    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "INT", "FLOAT", "STRING", "STRING", "STRING")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "STRING", "STRING", "INT", "FLOAT", "STRING", "STRING", "STRING", "IMAGE")
     RETURN_NAMES = ("ENHANCED_PROMPT", "WH_RATIO", "RATIO_FOLLOW", "RAW_OUTPUT", "THINKING",
                     "RECOMMENDED_STEPS", "RECOMMENDED_CFG", "RECOMMENDED_SAMPLER", "RECOMMENDED_SCHEDULER",
-                    "MERGED_TEXT")
+                    "MERGED_TEXT", "SELECTED_IMAGES")
     FUNCTION = "enhance"
     CATEGORY = "BSAI/Qwen Image 2.1"
     OUTPUT_NODE = True
@@ -1278,8 +1404,11 @@ class BSAI_Qwen_Prompt_Enhancer:
         "(3) Local HF (Transformers): loads HuggingFace safetensors models under models/LLM, "
         "covering Florence-2 (vision caption-to-prompt, requires image_1) and text LLMs such as Llama/Gemma (chat_template generation).\n"
         "(4) API (OpenAI-compatible): configure api_base / api_key / model_name to call an online or local API.\n"
-        "Shared parameters apply to all backends; outputs are unified across 10 ports. Pick a speed_preset and the RECOMMENDED_* ports "
+        "Shared parameters apply to all backends; outputs are unified across 11 ports. Pick a speed_preset and the RECOMMENDED_* ports "
         "output the matching KSampler settings; on a KSampler right-click steps/cfg -> Convert to input to apply them in one click. "
+        "SELECTED_IMAGES (IMAGE, last port) directly outputs the images currently picked on the poster walls "
+        "(Pose Wall -> Clothing Wall -> Face Wall, selection order kept; letterbox-padded to one batch; 64x64 white placeholder when nothing is picked), "
+        "so the picked reference image can feed a downstream VAE Encode / edit node without LoadImage. "
         "Qwen Image 2.1 is a CFG-distilled architecture; the official recommendation is cfg=1.0. Acceleration presets are based on official day-0 settings (25 steps/cfg1/euler/simple). "
         "v1.08.0 adds distilled-LoRA presets: Viggle Turbo 6 steps (official node) / Pruna 5-8 steps (community conversion) / Alibaba PAI Fun-Acc 4 steps (experimental). "
         "Distilled presets require the matching LoRA and fixed sigmas (Viggle Turbo Sigmas / ManualSigmas / PDD); see ACCELERATION_GUIDE.md."
@@ -1382,10 +1511,17 @@ class BSAI_Qwen_Prompt_Enhancer:
             # 无论后端模式，选模板后提示词统一走 ENHANCED_PROMPT 展示模板效果（用户需求）。
             # 无模板且无用户要求时 merged_text 为空 → 回退用户原文 prompt_text，防空条件出沙土图。
             enhanced_out = merged_text if (merged_text or "").strip() else (prompt_text or "")
+            # 纯预览同样直出海报墙已选图，方便「只取图」时不必加载 LLM
+            wall_tensor, wall_kept, wall_placeholder = _wall_selected_images()
+            if wall_kept:
+                ui_text.append(
+                    "\n── SELECTED_IMAGES ( posters walls ) ──\n"
+                    + "\n".join(f"img{i} = {label}" for i, (_id, _p, label) in enumerate(wall_kept, 1))
+                )
             return {
                 "ui": {"text": ui_text, "merged_text": [merged_text]},
                 "result": (enhanced_out, "", "", merged_text, "",
-                           int(steps), float(cfg), sampler, scheduler, merged_text),
+                           int(steps), float(cfg), sampler, scheduler, merged_text, wall_tensor),
             }
 
         images = collect_images(image_1, image_2, image_3, image_4, image_5, image_6,
@@ -2083,9 +2219,21 @@ class BSAI_Qwen_Prompt_Enhancer:
             f"do not use old 20B Lightning LoRA (different architecture)",
             f"\n── Merged text preview (MERGED_TEXT output) ──\n{merged_text}",
         ]
+        # 海报墙已选图 → SELECTED_IMAGES（与文本输出互不依赖，纯预览/正常增强都直出）
+        wall_tensor, wall_kept, wall_placeholder = _wall_selected_images()
+        if wall_kept:
+            ui_text.append(
+                "\n── SELECTED_IMAGES ( posters walls ) ──\n"
+                + "\n".join(f"img{i} = {label}" for i, (_id, _p, label) in enumerate(wall_kept, 1))
+            )
+        else:
+            ui_text.append(
+                "\n── SELECTED_IMAGES ──\nNo image picked on the poster walls -> 64x64 white placeholder "
+                "(wire it only after picking images on a wall)."
+            )
         return {"ui": {"text": ui_text, "merged_text": [merged_text]},
                 "result": (enhanced, wh_ratio, ratio_follow, raw, thinking_text,
-                           int(steps), float(cfg), sampler, scheduler, merged_text)}
+                           int(steps), float(cfg), sampler, scheduler, merged_text, wall_tensor)}
 
     @staticmethod
     def _build_preview_merged(system_template, custom_system_prompt, user_requirement):
