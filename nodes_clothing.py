@@ -4,8 +4,10 @@ BSAI Qwen Prompt Enhancer — AI clothing reference node
 Node: BSAI_Qwen_Clothing_Wall
 """
 import os
+import hashlib
 
 from . import clothing_library as cl
+from . import wall_images as wi
 
 
 class BSAI_Qwen_Clothing_Wall:
@@ -28,16 +30,25 @@ class BSAI_Qwen_Clothing_Wall:
             },
         }
 
-    RETURN_TYPES = ("STRING", "STRING", "STRING")
-    RETURN_NAMES = ("REFERENCE_LIST", "PROMPT_SNIPPET", "SUMMARY")
+    RETURN_TYPES = ("STRING", "STRING", "STRING", "IMAGE")
+    RETURN_NAMES = ("REFERENCE_LIST", "PROMPT_SNIPPET", "SUMMARY", "IMAGE")
     FUNCTION = "get_clothing_references"
     CATEGORY = "BSAI/Qwen Image 2.1"
     OUTPUT_NODE = True
 
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        """服装墙选择清单是节点外部状态，按 selection.json 内容哈希强制重跑。"""
+        try:
+            with open(cl.SELECTION_PATH, "r", encoding="utf-8") as f:
+                return hashlib.sha1(f.read().encode("utf-8")).hexdigest()
+        except Exception:
+            return ""
+
     DESCRIPTION = (
         "AI clothing reference library: reads outfits selected in the Clothing Wall (🖼 button below the node), "
         "and outputs a numbered reference list (REFERENCE_LIST), an English prompt snippet (PROMPT_SNIPPET), "
-        "and a stats summary (SUMMARY).\n"
+        "a stats summary (SUMMARY), and the selected reference images as an IMAGE batch (IMAGE).\n"
         "Order = input order: item 1 maps to the enhancer node's image_1, item 2 to image_2..."
     )
 
@@ -68,7 +79,8 @@ class BSAI_Qwen_Clothing_Wall:
         if not items:
             summary += " | (no outfits selected — click the 🖼 Clothing Wall button below to pick)"
 
-        return (ref_list, prompt, summary)
+        image, _kept, _info = wi.load_wall_images(cl, "Clothing Wall")
+        return (ref_list, prompt, summary, image)
 
 
 NODE_CLASS_MAPPINGS = {
