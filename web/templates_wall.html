@@ -688,7 +688,7 @@ function render(cat) {
     card.title = NODE_ID ? "Click to use this template" : "Open from the node button for auto-fill";
     card.innerHTML = `
       <div class="thumb">
-        <img src="${WALL_BASE}/thumbnails/${t.id}.png?v=${WALL_VER}" alt="${t.name}" loading="lazy" class="thumb-img"
+        <img src="${WALL_BASE}/thumbnails/${t.id}.png?v=${WALL_VER}" alt="${t.name}" class="thumb-img"
              onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
         <div style="display:none;position:absolute;inset:0;align-items:center;justify-content:center">${svgFor(t)}</div>
         <img src="${WALL_BASE}/logo.png?v=${WALL_VER}" class="logo-badge" alt="BSAI">

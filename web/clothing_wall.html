@@ -201,7 +201,7 @@
 <div class="toast" id="toast"></div>
 
 <script>
-const WALL_VER = "20261030-v1-en";
+const WALL_VER = "20261125-v2-en";
 let MANIFEST = { entries: [], categories: [] };
 let SELECTED = [];
 let FILTER = { cat: "all", query: "" };
@@ -272,13 +272,15 @@ function applyFilter() {
 function renderWall() {
   const wall = $("wall");
   wall.innerHTML = "";
-  VIEW_ENTRIES.forEach(e => {
+  VIEW_ENTRIES.forEach((e, i) => {
     const idx = SELECTED.indexOf(e.id);
     const card = document.createElement("div");
     card.className = "card" + (idx >= 0 ? " selected" : "");
     card.title = e.file;
+    // 前 96 张强制 eager：ComfyUI 内嵌 webview / 后台窗口里原生 lazy 可能永不触发，
+    // 会导致整面墙卡片全空。首屏+前几行必须直接加载。
     card.innerHTML =
-      '<img loading="lazy" src="' + thumbUrl(e.id) + '" alt="' + e.file + '">' +
+      '<img src="' + thumbUrl(e.id) + '" alt="' + e.file + '">' +
       (idx >= 0 ? '<div class="badge">@img' + (idx+1) + '</div>' : '') +
       '<div class="cat-tag">' + e.category_label + '</div>' +
       '<div class="zoom" title="Zoom">🔍</div>';
@@ -335,6 +337,7 @@ async function pickAndRun(eid) {
   SELECTED = [eid];
   try { await persistSelection(); } catch (e) {}
   renderSelection(); renderWall();
+  try { writeUserRequirement(false, false); } catch (e) { console.warn("[BSAI.ClothingWall] write prompt failed:", e); }
   queueWallRun();
 }
 
@@ -507,7 +510,7 @@ async function persistSelection() {
 
 async function loadManifest() {
   try {
-    const r = await fetch("/api/bsai/clothing");
+    const r = await fetch("/api/bsai/clothing", { cache: "no-store" });
     MANIFEST = await r.json();
   } catch(e) {
     document.querySelector(".wall").innerHTML =
@@ -549,7 +552,7 @@ $("btn-rescan").onclick = async function() {
     const r = await fetch("/bsai_clothing_rescan", { method: "POST" });
     const j = await r.json();
     toast("Rescan done: " + j.count + " images (thumbs " + j.thumbs_ok + "/" + (j.thumbs_ok + j.thumbs_fail) + ")");
-    MANIFEST = await (await fetch("/api/bsai/clothing")).json();
+    MANIFEST = await (await fetch("/api/bsai/clothing", { cache: "no-store" })).json();
     renderCats(); applyFilter(); renderSelection();
   } catch(e) { toast("Rescan failed: " + e.message, "err"); }
   this.textContent = "🔄 Rescan"; this.disabled = false;

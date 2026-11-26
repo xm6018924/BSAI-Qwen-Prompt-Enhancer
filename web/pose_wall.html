@@ -513,6 +513,9 @@ async function pickAndRun(id) {
   saveSelectionLocal();
   try { await persistSelection(); } catch (e) {}
   renderSelection(); renderCards(); updateStats();
+  /* 提示词也要跟着变：把"这张图"的参考块写进 user_requirement + Show Text，
+     否则节点里还是上一次的旧文本，下游 MERGED_TEXT 跟选中的图对不上。 */
+  try { writeUserRequirement(false, false); } catch (e) { console.warn("[BSAI.PoseWall] write prompt failed:", e); }
   queueWallRun();
 }
 
@@ -577,7 +580,7 @@ function renderCards() {
     card.title = e.file + "\nClick to add to reference list";
     card.innerHTML =
       '<div class="thumb">' +
-        '<img src="' + thumbUrl(e.id) + '" alt="' + e.file + '" loading="lazy">' +
+        '<img src="' + thumbUrl(e.id) + '" alt="' + e.file + '">' +
         (idx >= 0 ? '<div class="badge">' + (idx + 1) + "</div>" : "") +
         '<div class="zoom" title="Zoom">🔍</div>' +
       "</div>" +
@@ -626,7 +629,7 @@ function renderCompare() {
       if (e) {
         const idx = selIndex(e.id);
         cell.innerHTML =
-          '<div class="ph"><img src="' + thumbUrl(e.id) + '" alt="' + e.file + '" loading="lazy"></div>' +
+          '<div class="ph"><img src="' + thumbUrl(e.id) + '" alt="' + e.file + '"></div>' +
           '<div class="cap">' + e.view_label + (idx >= 0 ? " · @img" + (idx + 1) : "") + "</div>";
         cell.addEventListener("click", () => toggleSelect(e.id));
         cell.addEventListener("dblclick", () => openLightbox(e.id));

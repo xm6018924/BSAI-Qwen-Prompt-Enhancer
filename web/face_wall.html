@@ -297,7 +297,7 @@ function renderWall() {
     card.className = "card" + (idx >= 0 ? " selected" : "");
     card.title = e.file + (e.style ? " · " + e.style : "");
     card.innerHTML =
-      '<img loading="lazy" src="' + thumbUrl(e.id) + '" alt="' + e.file + '">' +
+      '<img src="' + thumbUrl(e.id) + '" alt="' + e.file + '">' +
       (idx >= 0 ? '<div class="badge">@img' + (idx+1) + '</div>' : '') +
       '<div class="hair-tag">' + (e.hair_label || "-") + '</div>' +
       '<div class="cat-tag">' + (e.sec_label || "-") + '</div>' +
@@ -355,6 +355,7 @@ async function pickAndRun(eid) {
   SELECTED = [eid];
   try { await persistSelection(); } catch (e) {}
   renderSelection(); renderWall();
+  try { writeUserRequirement(false, false); } catch (e) { console.warn("[BSAI.FaceWall] write prompt failed:", e); }
   queueWallRun();
 }
 

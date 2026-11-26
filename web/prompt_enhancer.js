@@ -428,7 +428,7 @@ app.registerExtension({
             `&widget=${widget.name}` +
             `&merged_id=${node.id}` +
             `&tnode_id=${findFirstTemplateNodeId() || ""}`;
-          window.open(url, "_blank", "width=1400,height=900,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1400,height=900");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] 注入海报墙按钮失败:", e);
@@ -453,7 +453,7 @@ app.registerExtension({
             `/bsai_templates_wall` +
             `?tnode_id=${node.id}` +
             `&widget=template_name`;
-          window.open(url, "_blank", "width=1400,height=900,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1400,height=900");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] 模板节点注入海报墙按钮失败:", e);
@@ -565,7 +565,7 @@ app.registerExtension({
             `/bsai_pose_wall` +
             `?pose_node_id=${node.id}` +
             (eid ? `&node_id=${eid}` : "");
-          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1600,height=1000");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] pose wall button inject failed:", e);
@@ -581,7 +581,7 @@ app.registerExtension({
             `/bsai_clothing_wall` +
             `?clothing_node_id=${node.id}` +
             (eid ? `&node_id=${eid}` : "");
-          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1600,height=1000");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] clothing wall button inject failed:", e);
@@ -597,7 +597,7 @@ app.registerExtension({
             `/bsai_face_wall` +
             `?face_node_id=${node.id}` +
             (eid ? `&node_id=${eid}` : "");
-          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1600,height=1000");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] face wall button inject failed:", e);
@@ -613,7 +613,7 @@ app.registerExtension({
             `/bsai_pose_wall` +
             `?node_id=${node.id}` +
             (pid ? `&pose_node_id=${pid}` : "");
-          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1600,height=1000");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] pose wall button inject failed:", e);
@@ -625,7 +625,7 @@ app.registerExtension({
             `/bsai_clothing_wall` +
             `?node_id=${node.id}` +
             (cid ? `&clothing_node_id=${cid}` : "");
-          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1600,height=1000");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] clothing wall button inject failed:", e);
@@ -637,7 +637,7 @@ app.registerExtension({
             `/bsai_face_wall` +
             `?node_id=${node.id}` +
             (fid ? `&face_node_id=${fid}` : "");
-          window.open(url, "_blank", "width=1600,height=1000,noopener=0");
+          window.open(window.location.origin + url, "_blank", "width=1600,height=1000");
         });
       } catch (e) {
         console.warn("[BSAI.PromptEnhancer] face wall button inject failed:", e);
